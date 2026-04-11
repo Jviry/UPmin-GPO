@@ -17,4 +17,88 @@ model Admin {
   email    String @unique
   name     String
   role     String
+  announcements Announcement[]
+}
+
+model Announcement {
+  announcement_id     Int    @id @default(autoincrement())
+  title               String
+  content_description String
+  admin_id            Int
+  admin               Admin  @relation(fields: [admin_id], references: [admin_id])
+  date_posted          DateTime @default(now())
+}
+
+model Office {
+  office_id     Int    @id @default(autoincrement())
+  name          String
+  logo          String
+  objectives    String
+  location      String
+  contact_info  String
+  email         String @unique
+}
+
+model College {
+  college_id    Int    @id @default(autoincrement())
+  name          String
+  dean          String
+  contact_info  String
+  programs      GraduateProgram[]
+  faculty       Faculty[]
+}
+
+model Faculty {
+  faculty_id      Int    @id @default(autoincrement())
+  name            String
+  photo           String
+  position        String
+  contact_info    String
+  email           String @unique
+  college_id      Int
+  college         College @relation(fields: [college_id], references: [college_id])
+}
+
+model GraduateProgram {
+  program_id          Int    @id @default(autoincrement())
+  name                String
+  description         String
+  years               Int
+  history             String
+  qualifications      String
+  application_process String
+  application_url     String
+  college_id          Int
+  college             College @relation(fields: [college_id], references: [college_id])
+  program_courses     ProgramCourse[]
+  downloadable_resources DownloadableResource[]
+}
+
+model Course {
+  course_id       Int    @id @default(autoincrement())
+  name            String
+  code            String
+  description     String
+  type            String
+  units           Int
+  program_courses ProgramCourse[]
+}
+
+model ProgramCourse {
+  program_course_id Int    @id @default(autoincrement())
+  program_id        Int
+  course_id         Int
+  year              Int
+  semester          Int
+  program           GraduateProgram @relation(fields: [program_id], references: [program_id])
+  course            Course          @relation(fields: [course_id], references: [course_id])
+}
+
+model DownloadableResource {
+  resource_id   Int    @id @default(autoincrement())
+  title         String
+  category      String
+  file_url      String
+  program_id    Int
+  program       GraduateProgram @relation(fields: [program_id], references: [program_id])
 }
