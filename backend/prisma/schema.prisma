@@ -4,7 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -13,69 +13,70 @@ datasource db {
 }
 
 model Admin {
-  admin_id Int    @id @default(autoincrement())
-  email    String @unique
-  name     String
-  role     String
+  admin_id      Int            @id @default(autoincrement())
+  email         String         @unique
+  name          String
+  password      String
+  role          String
   announcements Announcement[]
 }
 
 model Announcement {
-  announcement_id     Int    @id @default(autoincrement())
+  announcement_id     Int      @id @default(autoincrement())
   title               String
   content_description String
   admin_id            Int
-  admin               Admin  @relation(fields: [admin_id], references: [admin_id])
-  date_posted          DateTime @default(now())
+  admin               Admin    @relation(fields: [admin_id], references: [admin_id])
+  date_posted         DateTime @default(now())
 }
 
 model Office {
-  office_id     Int    @id @default(autoincrement())
-  name          String
-  logo          String
-  objectives    String
-  location      String
-  contact_info  String
-  email         String @unique
+  office_id    Int    @id @default(autoincrement())
+  name         String
+  logo         String
+  objectives   String
+  location     String
+  contact_info String
+  email        String @unique
 }
 
 model College {
-  college_id    Int    @id @default(autoincrement())
-  name          String
-  dean          String
-  contact_info  String
-  programs      GraduateProgram[]
-  faculty       Faculty[]
+  college_id   Int               @id @default(autoincrement())
+  name         String
+  dean         String
+  contact_info String
+  programs     GraduateProgram[]
+  faculty      Faculty[]
 }
 
 model Faculty {
-  faculty_id      Int    @id @default(autoincrement())
-  name            String
-  photo           String
-  position        String
-  contact_info    String
-  email           String @unique
-  college_id      Int
-  college         College @relation(fields: [college_id], references: [college_id])
+  faculty_id   Int     @id @default(autoincrement())
+  name         String
+  photo        String
+  position     String
+  contact_info String
+  email        String  @unique
+  college_id   Int
+  college      College @relation(fields: [college_id], references: [college_id])
 }
 
 model GraduateProgram {
-  program_id          Int    @id @default(autoincrement())
-  name                String
-  description         String
-  years               Int
-  history             String
-  qualifications      String
-  application_process String
-  application_url     String
-  college_id          Int
-  college             College @relation(fields: [college_id], references: [college_id])
-  program_courses     ProgramCourse[]
+  program_id             Int                    @id @default(autoincrement())
+  name                   String
+  description            String
+  years                  Int
+  history                String
+  qualifications         String
+  application_process    String
+  application_url        String
+  college_id             Int
+  college                College                @relation(fields: [college_id], references: [college_id])
+  program_courses        ProgramCourse[]
   downloadable_resources DownloadableResource[]
 }
 
 model Course {
-  course_id       Int    @id @default(autoincrement())
+  course_id       Int             @id @default(autoincrement())
   name            String
   code            String
   description     String
@@ -85,7 +86,7 @@ model Course {
 }
 
 model ProgramCourse {
-  program_course_id Int    @id @default(autoincrement())
+  program_course_id Int             @id @default(autoincrement())
   program_id        Int
   course_id         Int
   year              Int
@@ -95,10 +96,10 @@ model ProgramCourse {
 }
 
 model DownloadableResource {
-  resource_id   Int    @id @default(autoincrement())
-  title         String
-  category      String
-  file_url      String
-  program_id    Int
-  program       GraduateProgram @relation(fields: [program_id], references: [program_id])
+  resource_id Int             @id @default(autoincrement())
+  title       String
+  category    String
+  file_url    String
+  program_id  Int
+  program     GraduateProgram @relation(fields: [program_id], references: [program_id])
 }
