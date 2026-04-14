@@ -72,16 +72,40 @@ router.post('/admins', authenticate, authenticateRole('superadmin'), async (req,
   }
 });
 
+router.put('/admins/:id', authenticate, authenticateRole('superadmin'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({ message: "New password required" });
+    }
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    const updatedAdmin = await prisma.admin.update({
+      where: { admin_id: Number(id) },
+      data: { password: hashedNewPassword },
+    });
+
+    res.status(200).json({
+      message: `Admin ${id} password updated`,
+      updatedAdmin,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
-    const { admin_id } = req.params;
+    const { id } = req.params;
     const deletedUser = await prisma.user.delete({
       where: {
-        admin_id,
+        admin_id: Number(id),
       },
     });
     res.status(200).json({
-      message: `User ${admin_id} deleted successfully!`,
+      message: `User ${id} deleted successfully!`,
       deletedUser,
     });
   } catch (error) {
