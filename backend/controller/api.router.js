@@ -1,4 +1,4 @@
-import adminRoute from 'admin.controller.js';
+import adminRoute from './admin.controller.js';
 
 
 export const apiController = (app) => {

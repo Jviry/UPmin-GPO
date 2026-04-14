@@ -1,9 +1,10 @@
 import express from "express";
+import { apiController } from "./controller/api.router.js";
 
 const app = express();
 
 //middleware
-app.use(express.json);
+app.use(express.json());
 
 //route
 apiController(app);
