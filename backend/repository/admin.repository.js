@@ -1,5 +1,3 @@
-import { hash } from "node:crypto";
-
 export function createAdminRepository(prisma) {
   return {
     async findByEmail(email) {
