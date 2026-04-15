@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { createAdminRepository } from '../repository/admin.repository.js';
 import { createLoginUsecase } from '../usecase/admin/login.usecase.js';
 import { createAdminUsecase } from '../usecase/admin/createAdmin.usecase.js';
+import { createUpdatePasswordUsecase } from '../usecase/admin/updatePassword.usecase.js'
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
@@ -29,6 +30,12 @@ const login = createLoginUsecase({
 const createAdmin = createAdminUsecase({
   adminRepo,
   hashPassword: (pw) => bcrypt.hash(pw, 10)
+});
+
+const updatePassword = createUpdatePasswordUsecase({
+  adminRepo,
+  hashPassword: (pw) => bcrypt.hash(pw, 10),
+  comparePassword: bcrypt.compare
 });
 
 router.post('/auth/login', async (req, res) => {
@@ -66,21 +73,16 @@ router.put('/admins/:id', authenticate, authenticateRole('superadmin'), async (r
     const { id } = req.params;
     const { newPassword } = req.body;
 
-    if (!newPassword) {
-      return res.status(400).json({ message: "New password required" });
-    }
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-
-    const updatedAdmin = await prisma.admin.update({
-      where: { admin_id: Number(id) },
-      data: { password: hashedNewPassword },
-    });
+    const result = updatePassword(id, newPassword);
 
     res.status(200).json({
       message: `Admin ${id} password updated`,
-      updatedAdmin,
+      ...result,
     });
   } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
     res.status(500).json({ message: error.message });
   }
 });

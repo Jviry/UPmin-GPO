@@ -6,6 +6,12 @@ export function createAdminRepository(prisma) {
       });
     },
 
+    async findByID(id) {
+      return prisma.admin.findUnique({
+        where: { admin_id: id },
+      });
+    },
+
     async create({ email, name, password }) {
       return prisma.admin.create({
         data: {

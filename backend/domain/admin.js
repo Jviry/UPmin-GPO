@@ -17,3 +17,6 @@ export function validateNewPassword(newPassword) {
   if (!newPassword) throw new DomainError('New password required');
 }
 
+export function validateAdminID(id) {
+  if (!id) throw new DomainError('Null admin ID');
+}
