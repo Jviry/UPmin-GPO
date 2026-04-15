@@ -99,7 +99,7 @@ router.put('/admins/:id', authenticate, authenticateRole('superadmin'), async (r
 router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedUser = await prisma.user.delete({
+    const deletedUser = await prisma.admin.delete({
       where: {
         admin_id: Number(id),
       },
