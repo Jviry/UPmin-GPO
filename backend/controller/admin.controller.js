@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv';
 import { createAdminRepository } from '../repository/admin.repository.js';
 import { createLoginUsecase } from '../usecase/admin/login.usecase.js';
+import { createAdminUsecase } from '../usecase/admin/createAdmin.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
@@ -18,10 +19,16 @@ if (!JWT_SECRET) {
 }
 
 const adminRepo = createAdminRepository(prisma);
+
 const login = createLoginUsecase({
   adminRepo,
   comparePassword: bcrypt.compare,
   signToken: (payload) => jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" })
+});
+
+const createAdmin = createAdminUsecase({
+  adminRepo,
+  hashPassword: (pw) => bcrypt.hash(pw, 10)
 });
 
 router.post('/auth/login', async (req, res) => {
@@ -41,26 +48,15 @@ router.post('/auth/login', async (req, res) => {
 
 router.post('/admins', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
-    const { email, name, password } = req.body;
-    if (!email || !name || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newAdmin = await prisma.admin.create({
-      data: {
-        email,
-        name,
-        password: hashedPassword,
-        role: 'admin',
-      },
-    });
-
+    const result = createAdmin(req.body);
     res.status(200).json({
       message: "Admin created",
-      newAdmin
+      ...result
     });
   } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
     res.status(500).json({ message: error.message });
   }
 });
