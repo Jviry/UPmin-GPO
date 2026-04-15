@@ -3,6 +3,8 @@ import { prisma } from '../db/db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv';
+import { createAdminRepository } from '../repository/admin.repository.js';
+import { createLoginUsecase } from '../usecase/admin/login.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
@@ -14,34 +16,25 @@ if (!JWT_SECRET) {
   console.error("CRITICAL ERROR: JWT_SECRET is not defined in .env");
   process.exit(1);
 }
+
+const adminRepo = createAdminRepository(prisma);
+const login = createLoginUsecase({
+  adminRepo,
+  comparePassword: bcrypt.compare,
+  signToken: (payload) => jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" })
+});
+
 router.post('/auth/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    const user = await prisma.admin.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      return res.status(400).json('Email invalid!');
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json('Invalid password Desu ga');
-    }
-
-    const token = jwt.sign(
-      { admin_id: user.admin_id, role: user.role },
-      JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
+    const result = login(req.body);
     res.status(200).json({
       message: "Logged in successfully",
-      token
+      ...result
     });
   } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
     res.status(500).json({ mesasage: error.message });
   }
 });
