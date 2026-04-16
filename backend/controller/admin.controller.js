@@ -7,6 +7,7 @@ import { createAdminRepository } from '../repository/admin.repository.js';
 import { createLoginUsecase } from '../usecase/admin/login.usecase.js';
 import { createAdminUsecase } from '../usecase/admin/createAdmin.usecase.js';
 import { createUpdatePasswordUsecase } from '../usecase/admin/updatePassword.usecase.js'
+import { createDeleteAdminUsecase } from '../usecase/admin/deleteAdmin.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
@@ -37,6 +38,10 @@ const updatePassword = createUpdatePasswordUsecase({
   hashPassword: (pw) => bcrypt.hash(pw, 10),
   comparePassword: bcrypt.compare
 });
+
+const deleteAdmin = createDeleteAdminUsecase(
+  adminRepo
+);
 
 router.post('/auth/login', async (req, res) => {
   try {
@@ -90,14 +95,12 @@ router.put('/admins/:id', authenticate, authenticateRole('superadmin'), async (r
 router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedUser = await prisma.admin.delete({
-      where: {
-        admin_id: Number(id),
-      },
-    });
+
+    const result = deleteAdmin(id);
+
     res.status(200).json({
       message: `User ${id} deleted successfully!`,
-      deletedUser,
+      ...result,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
