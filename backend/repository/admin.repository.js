@@ -8,7 +8,7 @@ export function createAdminRepository(prisma) {
 
     async findByID(id) {
       return prisma.admin.findUnique({
-        where: { admin_id: id },
+        where: { admin_id: Number(id) },
       });
     },
 
