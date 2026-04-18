@@ -40,6 +40,8 @@ JWT_SECRET=your_secret
 
 ```bash
 npx prisma migrate deploy
+npx prisma db seed  # ←  get default data
+
 npx prisma generate
 ```
 
@@ -55,6 +57,13 @@ To create a new migration after changing the schema:
 
 ```bash
 npx prisma migrate dev --name <migration_name>
+```
+
+For resetting db
+
+```bash
+# reset db
+npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 ```
 
 ## API Endpoints
@@ -73,6 +82,12 @@ npx prisma migrate dev --name <migration_name>
 | PUT | `/admins/:id` | Superadmin | Update an admin's password |
 | DELETE | `/admins/:id` | Superadmin | Delete an admin |
 
+### Office
+
+| Method | Endpoint  | Access | Description              |
+| ------ | --------- | ------ | ------------------------ |
+| GET    | `/office` | Public | Get office data (seeded) |
+
 ## Authentication
 
 Protected routes require a Bearer token in the `Authorization` header:
@@ -80,3 +95,12 @@ Protected routes require a Bearer token in the `Authorization` header:
 ```
 Authorization: Bearer <your_token>
 ```
+
+## Static Files (Pictures/logos)
+
+All uploaded files are served from:
+Base URL:
+<http://localhost:3000>
+
+Frontend usage:
+<img src={`http://localhost:3000${data.logo}`} />
