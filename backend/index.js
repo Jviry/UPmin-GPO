@@ -6,6 +6,10 @@ const app = express();
 //middleware
 app.use(express.json());
 
+//serve 
+app.use('/uploads', express.static('uploads'));
+app.use('/public', express.static('public'));
+
 //route
 apiController(app);
 
