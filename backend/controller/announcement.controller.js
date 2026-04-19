@@ -5,6 +5,7 @@ import { createAnnouncementUsecase } from '../usecase/announcement/createAnnounc
 import { deleteAnnouncementUsecase } from '../usecase/announcement/deleteAnnouncement.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { updateAnnouncementUsecase } from '../usecase/announcement/updateAnnouncement.usecase.js';
+import { getAnnouncementByIdUsecase } from '../usecase/announcement/getAnnouncementById.usecase.js';
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ const announcementRepo = createAnnouncementRepository(prisma);
 const createAnnouncement = createAnnouncementUsecase({ announcementRepo });
 const deleteAnnouncement = deleteAnnouncementUsecase({ announcementRepo });
 const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo });
+const getAnnouncementById = getAnnouncementByIdUsecase({ announcementRepo });
 
 // A. Create announcement (authenticated admin only)
 router.post('/announcements', authenticate, async (req, res) => {
@@ -38,7 +40,27 @@ router.post('/announcements', authenticate, async (req, res) => {
   }
 });
 
-// B. Update announcement (authenticated admin only)
+// B. Get announcement by ID 
+router.get('/announcements/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await getAnnouncementById(id);
+
+    res.status(200).json({
+      message: `Announcement ${id} retrieved successfully`,
+      announcement: result.announcement,
+    });
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    console.error('Get announcement error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// C. Update announcement (authenticated admin only)
 router.put('/announcements/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -59,7 +81,7 @@ router.put('/announcements/:id', authenticate, async (req, res) => {
   }
 });
 
-// C. Delete announcement
+// D. Delete announcement
 router.delete('/announcements/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
