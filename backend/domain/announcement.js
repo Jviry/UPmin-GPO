@@ -1,6 +1,6 @@
-import { DomainError } from "./errors.js";
+import { DomainError } from './errors.js';
 
-function validateCreateAnnouncement({ title, content_description, admin_id }) {
+export function validateCreateAnnouncement({ title, content_description, admin_id }) {
   if (!title || title.trim() === '') {
     throw new DomainError('Title is required');
   }
@@ -12,11 +12,20 @@ function validateCreateAnnouncement({ title, content_description, admin_id }) {
   }
 }
 
-function validateAnnouncementId(id) {
+export function validateAnnouncementId(id) {
   if (!id) {
     throw new DomainError('Announcement ID is required');
   }
   if (isNaN(parseInt(id))) {
     throw new DomainError('Invalid announcement ID');
+  }
+}
+
+export function validateUpdateAnnouncement({ title, content_description }) {
+  if (!title || title.trim() === '') {
+    throw new DomainError('Title is required');
+  }
+  if (!content_description || content_description.trim() === '') {
+    throw new DomainError('Content description is required');
   }
 }
