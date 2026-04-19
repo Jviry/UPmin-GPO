@@ -13,6 +13,7 @@ backend/
 ├── domain/           ← business rules and validation
 ├── middleware/       ← authentication, role checks
 ├── prisma/           ← schema and migrations
+├── public/           ← media assets(pictures)
 └── index.js
 ```
 
@@ -87,6 +88,7 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | Method | Endpoint  | Access | Description              |
 | ------ | --------- | ------ | ------------------------ |
 | GET    | `/office` | Public | Get office data (seeded) |
+| PUT    | `/office` | Public(to be updated) | Update office attributes |
 
 ## Authentication
 
