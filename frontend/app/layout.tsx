@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'UPmin-GPO',
-  description: 'GPO Management System',
+  title: 'Graduate Programs Office',
+  description: 'Graduate Programs Office landing page',
 };
 
 export default function RootLayout({

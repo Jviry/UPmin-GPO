@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --page-bg: #f5f2ed;
+  --surface: #ffffff;
+  --surface-muted: #dcd7cf;
+  --header-height: 72px;
+  --hero-bg: #474747;
+  --announcement-bg: #d9d9d9;
+  --announcement-card: #5d5d5d;
+  --line: rgba(48, 41, 35, 0.16);
+  --line-strong: rgba(48, 41, 35, 0.28);
+  --text-primary: #171717;
+  --text-secondary: #4f4b46;
+  --text-muted: #76706a;
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: Arial, Helvetica, sans-serif;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,9 +27,63 @@
 
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  background: var(--page-bg);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modern-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(23, 23, 23, 0.45) transparent;
+  scrollbar-gutter: stable;
+}
+
+.modern-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(23, 23, 23, 0.55), rgba(23, 23, 23, 0.2));
+  background-clip: content-box;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(23, 23, 23, 0.75), rgba(23, 23, 23, 0.35));
+  background-clip: content-box;
+}
+
+.modern-carousel {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.modern-carousel::-webkit-scrollbar {
+  display: none;
 }

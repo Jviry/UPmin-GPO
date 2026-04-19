@@ -1,12 +1,19 @@
+import { Footer } from "@/components/footer";
+import { HomeAnnouncements } from "@/components/home-announcements";
+import { HomeAbout } from "@/components/home-about";
+import { HomeHero } from "@/components/home-hero";
+import { HomePrograms } from "@/components/home-programs";
+import { SiteHeader } from "@/components/site-header";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold text-blue-600 mb-4">
-        Welcome to UPmin-GPO
-      </h1>
-      <p className="text-lg text-gray-600">
-        GPO Management System Frontend
-      </p>
+    <main className="min-h-screen bg-[var(--page-bg)] text-[var(--text-primary)]">
+      <SiteHeader />
+      <HomeHero />
+      <HomeAbout />
+      <HomePrograms />
+      <HomeAnnouncements />
+      <Footer />
     </main>
   );
 }
