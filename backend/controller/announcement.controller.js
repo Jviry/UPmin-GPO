@@ -17,6 +17,14 @@ function validateCreateAnnouncement({ title, content_description, admin_id }) {
   }
 }
 
+function validateAnnouncementId(id) {
+  if (!id) {
+    throw new DomainError('Announcement ID is required');
+  }
+  if (isNaN(parseInt(id))) {
+    throw new DomainError('Invalid announcement ID');
+  }
+}
 
 // MOVE TO REPOSITORY LATER
 const createAnnouncementRepository = (prisma) => {
@@ -39,6 +47,22 @@ const createAnnouncementRepository = (prisma) => {
         },
       });
     },
+
+    async delete(id) {
+      return prisma.announcement.delete({
+        where: {
+          announcement_id: parseInt(id),
+        },
+      });
+    },
+
+    async findByID(id) {
+      return prisma.announcement.findUnique({
+        where: {
+          announcement_id: parseInt(id),
+        },
+      });
+    },
   };
 };
 
@@ -57,11 +81,27 @@ const createCreateAnnouncementUsecase = ({ announcementRepo }) => {
   };
 };
 
-// INITIALIZE REPOSITORY and USECASES 
+const createDeleteAnnouncementUsecase = ({ announcementRepo }) => {
+  return async function(id) {
+    validateAnnouncementId(id);
+
+    // Check if announcement exists before deleting
+    const existing = await announcementRepo.findByID(id);
+    if (!existing) {
+      throw new DomainError(`Announcement with ID ${id} not found`);
+    }
+
+    const deletedAnnouncement = await announcementRepo.delete(id);
+
+    return { deletedAnnouncement };
+  };
+};
+
+// KEEP HERE
 const announcementRepo = createAnnouncementRepository(prisma);
 const createAnnouncement = createCreateAnnouncementUsecase({ announcementRepo });
+const deleteAnnouncement = createDeleteAnnouncementUsecase({ announcementRepo });
 
-// KEEP HERE IN CONTROLLER
 // A. Create announcement
 router.post('/announcements', async (req, res) => {
   try {
@@ -73,7 +113,7 @@ router.post('/announcements', async (req, res) => {
       admin_id,
     });
 
-    res.status(201).json({
+    res.status(200).json({
       message: 'Announcement created successfully',
       announcement: result.announcement,
     });
@@ -82,6 +122,26 @@ router.post('/announcements', async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     console.error('Create announcement error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Delete announcement (authenticated admin only)
+router.delete('/announcements/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await deleteAnnouncement(id);
+
+    res.status(200).json({
+      message: `Announcement ${id} deleted successfully`,
+      deletedAnnouncement: result.deletedAnnouncement,
+    });
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    console.error('Delete announcement error:', error);
     res.status(500).json({ message: error.message });
   }
 });
