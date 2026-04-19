@@ -1,6 +1,6 @@
 import express from 'express';
 import { prisma } from '../db/db.js';
-import { createProgramRepository } from '../repository/progmram.repository.js';
+import { createProgramRepository } from '../repository/program.repository.js';
 import { createGetProgramUsecase } from '../usecase/program/getPrograms.usecase.js';
 
 const router = express.Router();
