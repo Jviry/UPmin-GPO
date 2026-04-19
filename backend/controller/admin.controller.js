@@ -107,4 +107,15 @@ router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async
   }
 });
 
+// Test
+router.get('/colleges', async (req, res) => {
+  try {
+    const colleges = await prisma.college.findMany();
+    res.json(colleges);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch colleges" });
+  }
+});
+
 export default router;
