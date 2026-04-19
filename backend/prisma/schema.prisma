@@ -31,13 +31,25 @@ model Announcement {
 }
 
 model Office {
-  office_id    Int    @id @default(autoincrement())
-  name         String
-  logo         String
-  objectives   String
+  office_id  Int    @id @default(autoincrement())
+  name       String
+  logo       String
+  objectives String
+  history    String
+
   location     String
   contact_info String
-  email        String @unique
+  email        String
+
+  featuredPhotos FeaturedPhoto[]
+}
+
+model FeaturedPhoto {
+  featured_photo_id Int    @id @default(autoincrement())
+  url               String
+
+  office_id Int
+  office    Office @relation(fields: [office_id], references: [office_id])
 }
 
 model College {

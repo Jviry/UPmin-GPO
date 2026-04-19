@@ -3,6 +3,9 @@ export function createOfficeRepository(prisma) {
     async findByID(id) {
       return prisma.office.findUnique({
         where: { office_id: id },
+        include: {
+          featuredPhotos: true
+        },
       });
     },
 
