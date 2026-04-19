@@ -22,6 +22,30 @@ async function main() {
       }
     }
   });
+  await prisma.college.createMany({
+    data: [
+      {
+        name: "College of Science and Mathematics (CSM)",
+        dean: "Dr. Maria Santos",
+        contact_info: "csm@university.edu | +63 912 345 6789",
+      },
+      {
+        name: "College of Humanities and Social Sciences (CHSS)",
+        dean: "Dr. Juan Dela Cruz",
+        contact_info: "chss@university.edu | +63 917 123 4567",
+      },
+      {
+        name: "School of Management (SOM)",
+        dean: "Dr. Ana Reyes",
+        contact_info: "som@university.edu | +63 905 678 1234",
+      },
+      {
+        name: "College of Engineering",
+        dean: "Dr. Carlo Mendoza",
+        contact_info: "engineering@university.edu | +63 918 222 3333",
+      },
+    ],
+  });
 
   console.log('Seed data inserted!');
 }
