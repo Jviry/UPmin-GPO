@@ -6,4 +6,4 @@ export const apiController = (app) => {
   app.use('/', adminRoute); //routers
   app.use('/', programRoute);
   app.use('/', officeRoute);
-}
+};
