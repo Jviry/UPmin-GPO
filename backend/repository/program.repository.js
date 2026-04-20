@@ -1,7 +1,9 @@
 export function createProgramRepository(prisma) {
   return {
-    async getAll() {
-      return await prisma.graduateProgram.findMany();
+    async getAllNames() {
+      return await prisma.graduateProgram.findMany({
+        select: { name: true, program_id: true }
+      });
     }
   }
 }
