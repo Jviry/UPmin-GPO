@@ -94,7 +94,7 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 
 | Method | Endpoint  | Access | Description              |
 | ------ | --------- | ------ | ------------------------ |
-| GET    | `/program` | Public | Get program names (seeded) |
+| GET    | `/programs` | Public | Get program names (seeded) |
 
 ## Authentication
 
