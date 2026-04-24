@@ -8,7 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Add custom colors here as needed
+        'up-maroon': '#76090c',
+        'up-green': '#014421',
+        'up-gold': '#F3AA2C',
       },
     },
   },

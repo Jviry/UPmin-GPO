@@ -3,18 +3,33 @@
 @tailwind utilities;
 
 :root {
-  --page-bg: #f5f2ed;
+  /* UP Brand colors */
+  --up-maroon: #76090c;
+  --up-green: #014421;
+  --up-gold: #F3AA2C;
+
+  /* Surface & layout */
+  --page-bg: #f8f4ef;
   --surface: #ffffff;
-  --surface-muted: #dcd7cf;
+  --surface-muted: #e8edea;
   --header-height: 72px;
-  --hero-bg: #474747;
-  --announcement-bg: #d9d9d9;
-  --announcement-card: #5d5d5d;
-  --line: rgba(48, 41, 35, 0.16);
-  --line-strong: rgba(48, 41, 35, 0.28);
-  --text-primary: #171717;
-  --text-secondary: #4f4b46;
-  --text-muted: #76706a;
+
+  /* Section backgrounds */
+  --hero-bg: #1c1c1c;          /* fallback until hero photo is set */
+  /* To set hero photo: add backgroundImage on the section or set via CSS:  */
+  /* --hero-image: url('/images/hero.jpg');                                  */
+  --announcement-bg: #012d17;
+  --announcement-card: #014421;
+
+  /* Dividers */
+  --line: rgba(60, 5, 8, 0.12);
+  --line-strong: rgba(60, 5, 8, 0.24);
+
+  /* Typography (Spot Black) */
+  --text-primary: #3a3a3a;
+  --text-secondary: #5a5450;
+  --text-muted: #857e78;
+
   --font-display: Georgia, "Times New Roman", serif;
   --font-body: Arial, Helvetica, sans-serif;
 }
