@@ -30,8 +30,9 @@
   --text-secondary: #5a5450;
   --text-muted: #857e78;
 
-  --font-display: Georgia, "Times New Roman", serif;
-  --font-body: Arial, Helvetica, sans-serif;
+  /* next/font injects --font-playfair (Playfair Display) and --font-lora (Lora) via html class vars */
+  --font-display: var(--font-playfair, Georgia, "Times New Roman", serif);
+  --font-body: var(--font-lora, Georgia, "Times New Roman", serif);
 }
 
 * {

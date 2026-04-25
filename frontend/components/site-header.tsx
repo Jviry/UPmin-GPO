@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 const navItems = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
@@ -10,9 +12,14 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[rgba(255,255,255,0.92)] backdrop-blur">
       <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-10">
         <a href="#home" className="flex items-center gap-3 text-[var(--text-primary)]">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--up-maroon)] bg-[var(--up-maroon)] text-[11px] font-semibold tracking-[0.35em] text-white">
-            LOGO
-          </span>
+          <Image
+            src="/Unibersidad_ng_Pilipinas_Mindanao.png"
+            alt="University of the Philippines Mindanao"
+            width={44}
+            height={44}
+            className="rounded-full"
+            style={{ width: 44, height: 'auto' }}
+          />
           <div className="leading-tight">
             <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[var(--text-muted)]">University of the Philippines - Mindanao</p>
             <p className="text-sm font-semibold">Graduate Programs Office</p>

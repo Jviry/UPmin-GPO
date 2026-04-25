@@ -1,9 +1,11 @@
+import Image from 'next/image';
+
 export function HomeHero() {
   return (
     <section
       id="home"
       className="relative isolate h-[calc(100dvh-var(--header-height))] overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{ backgroundColor: 'var(--hero-bg)' }}
+      style={{ backgroundImage: "url('/hero-section-background.jpg')", backgroundColor: 'var(--hero-bg)' }}
     >
       {/* Dark overlay — sits over the background photo */}
       <div className="absolute inset-0 bg-[rgba(0,0,0,0.55)]" />
@@ -12,9 +14,14 @@ export function HomeHero() {
       <div className="relative mx-auto flex h-full w-full max-w-[1400px] items-center px-4 py-16 sm:px-6 lg:px-10">
         <div className="max-w-4xl">
           <div className="mb-8 flex flex-col items-start gap-8 md:flex-row md:items-center">
-            <div className="flex h-28 w-28 items-center justify-center rounded-full border border-[rgba(243,170,44,0.55)] bg-[rgba(255,255,255,0.12)] text-sm font-semibold tracking-[0.4em] text-white md:h-36 md:w-36">
-              LOGO
-            </div>
+            <Image
+              src="/Unibersidad_ng_Pilipinas_Mindanao.png"
+              alt="University of the Philippines Mindanao"
+              width={144}
+              height={144}
+              className="object-contain"
+              style={{ width: 144, height: 'auto' }}
+            />
             <div>
               <p className="mb-2 text-xs uppercase tracking-[0.4em] text-[rgba(255,255,255,0.72)]">Placeholder Office Tagline</p>
               <h1 className="max-w-3xl font-[var(--font-display)] text-5xl leading-[0.95] text-white sm:text-6xl lg:text-7xl">
