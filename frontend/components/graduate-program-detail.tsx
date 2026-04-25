@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import PlaceholderProfileImg from '@/components/PlaceholderProfileImg';
 
 type ActiveTab = 'structure' | 'application' | 'faculty';
 
@@ -277,9 +278,37 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
       )}
 
       {activeTab === 'faculty' && (
-        <div className="flex min-h-[40vh] items-center justify-center border-b-4 border-[var(--up-gold)] px-4 py-20 sm:px-6 lg:px-10">
-          <p className="text-[var(--text-muted)]">[Faculty section coming soon]</p>
-        </div>
+        <section className="border-b-4 border-[var(--up-gold)] bg-white py-14">
+          <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-10">
+            <h2 className="[font-family:var(--font-display)] mb-8 text-4xl font-bold text-[var(--up-maroon)]">
+              Faculty
+            </h2>
+            <div className="flex flex-row flex-wrap">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex w-1/2 flex-col border-r border-[var(--line)] px-6 pb-8 pt-2 last:border-r-0 sm:w-1/3 lg:w-1/4"
+                >
+                  <div className="relative aspect-[3/4] w-full bg-[var(--surface-muted)]">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <PlaceholderProfileImg className="rounded-none border-0" />
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-3 bg-[var(--up-gold)]" />
+                  </div>
+                  <div className="pt-4">
+                    <span className="inline-block rounded-full bg-[var(--up-maroon)] px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white">
+                      Program
+                    </span>
+                  </div>
+                  <div className="pt-3">
+                    <div className="text-base font-bold uppercase tracking-wider text-[var(--text-primary)]">Name</div>
+                    <div className="mt-1 text-xs uppercase tracking-widest text-[var(--text-secondary)]">Position | Email</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       )}
     </>
   );
