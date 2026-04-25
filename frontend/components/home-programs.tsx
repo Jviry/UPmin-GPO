@@ -1,13 +1,15 @@
+import Link from 'next/link';
+
 const programs = [
-  "Program Alpha",
-  "Program Beta",
-  "Program Gamma",
-  "Program Delta",
-  "Program Epsilon",
-  "Program Zeta",
-  "Program Eta",
-  "Program Theta",
-  "Program Iota",
+  { title: 'Program Alpha', slug: 'program-alpha' },
+  { title: 'Program Beta', slug: 'program-beta' },
+  { title: 'Program Gamma', slug: 'program-gamma' },
+  { title: 'Program Delta', slug: 'program-delta' },
+  { title: 'Program Epsilon', slug: 'program-epsilon' },
+  { title: 'Program Zeta', slug: 'program-zeta' },
+  { title: 'Program Eta', slug: 'program-eta' },
+  { title: 'Program Theta', slug: 'program-theta' },
+  { title: 'Program Iota', slug: 'program-iota' },
 ];
 
 export function HomePrograms() {
@@ -31,8 +33,9 @@ export function HomePrograms() {
             <div className="modern-scrollbar h-full min-h-0 overflow-y-auto pr-3 [scrollbar-gutter:stable]">
               <div className="grid gap-4 pb-2 sm:gap-5 md:grid-cols-2 xl:gap-6">
                 {programs.map((program) => (
-                  <article
-                    key={program}
+                  <Link
+                    key={program.slug}
+                    href={`/programs/${program.slug}`}
                     className="group relative aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)]"
                   >
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(0,0,0,0.12))]" />
@@ -42,10 +45,10 @@ export function HomePrograms() {
                     <div className="absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.84))]" />
                     <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
                       <p className="max-w-[75%] text-sm font-semibold uppercase tracking-[0.18em] text-white sm:text-[0.95rem]">
-                        {program}
+                        {program.title}
                       </p>
                     </div>
-                  </article>
+                  </Link>
                 ))}
               </div>
             </div>
