@@ -79,12 +79,12 @@ export function HomeAbout() {
             </div>
 
             <div className="mt-8 flex justify-end">
-              <button
-                type="button"
+              <a
+                href="/about-gpo"
                 className="inline-flex items-center justify-center border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-colors duration-200 hover:bg-[#5c0709] hover:border-[#5c0709]"
               >
                 Read More
-              </button>
+              </a>
             </div>
           </div>
         </div>
