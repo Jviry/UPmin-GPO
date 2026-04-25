@@ -235,7 +235,7 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
           </div>
         </div>
 
-        <div className="h-16 bg-[var(--page-bg)]" />
+        <div className="h-8 bg-[var(--page-bg)]" />
 
         {/* Instructions for Applicants + Application Requirements + Apply button */}
         {/* Instructions for Applicants */}
@@ -252,7 +252,7 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
           </div>
         </div>
 
-        <div className="h-16 bg-[var(--page-bg)]" />
+        <div className="h-8 bg-[var(--page-bg)]" />
 
         {/* Application Requirements */}
         <div className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 py-20 sm:px-6 lg:px-10">
@@ -280,7 +280,7 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
       {activeTab === 'faculty' && (
         <section className="border-b-4 border-[var(--up-gold)] bg-white py-14">
           <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-10">
-            <h2 className="[font-family:var(--font-display)] mb-8 text-4xl font-bold text-[var(--up-maroon)]">
+            <h2 className="[font-family:var(--font-display)] mb-8 text-4xl font-bold text-[var(--up-maroon)] md:text-5xl lg:text-[4rem]">
               Faculty
             </h2>
             <div className="flex flex-row flex-wrap">
