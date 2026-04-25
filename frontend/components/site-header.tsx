@@ -103,7 +103,7 @@ export function SiteHeader() {
             )}
           </div>
 
-          <a href="/#forms" className="transition-colors duration-200 hover:text-[var(--up-maroon)]">Forms</a>
+          <a href="/forms" className="transition-colors duration-200 hover:text-[var(--up-maroon)]">Forms</a>
         </nav>
 
         <a
