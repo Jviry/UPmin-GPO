@@ -4,7 +4,7 @@ export function HomeHero() {
   return (
     <section
       id="home"
-      className="relative isolate h-[calc(100dvh-var(--header-height))] overflow-hidden bg-cover bg-center bg-no-repeat"
+      className="relative isolate h-[calc(100dvh-var(--header-height))] overflow-hidden border-b-4 border-[var(--up-gold)] bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/hero-section-background.jpg')", backgroundColor: 'var(--hero-bg)' }}
     >
       {/* Dark overlay — sits over the background photo */}
