@@ -12,12 +12,12 @@ const programs = [
 
 export function HomePrograms() {
   return (
-    <section id="programs" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--surface)] px-4 py-0 sm:px-6 lg:px-10">
+    <section id="programs" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--surface)] px-6 py-0 sm:px-10 lg:px-16">
       <div className="mx-auto flex h-[calc(100dvh-var(--header-height))] max-w-[1400px] flex-col py-6 sm:py-8 lg:py-10">
         <div className="grid flex-1 min-h-0 gap-8 overflow-hidden lg:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] lg:gap-10">
           <aside className="border-b border-[var(--line)] pb-5 lg:border-b-0 lg:border-r lg:border-[var(--line)] lg:pr-8 lg:pb-0 lg:pt-2">
             <div className="lg:max-w-[280px]">
-              <h2 className="font-[var(--font-display)] text-[2.75rem] leading-[0.95] text-[var(--text-primary)] sm:text-5xl lg:text-[4rem]">
+              <h2 className="[font-family:var(--font-display)] text-[2.75rem] font-semibold leading-[0.95] text-[var(--up-maroon)] sm:text-5xl lg:text-[4rem]">
                 Graduate Programs
               </h2>
               <p className="mt-5 max-w-sm text-sm leading-7 text-[var(--text-secondary)] sm:text-base lg:text-[1.02rem] lg:leading-8">

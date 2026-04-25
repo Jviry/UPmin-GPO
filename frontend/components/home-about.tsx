@@ -1,8 +1,8 @@
 export function HomeAbout() {
   return (
-    <section id="about" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--surface)] px-4 py-0 sm:px-6 lg:px-10">
+    <section id="about" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--surface)] px-6 py-0 sm:px-10 lg:px-16">
       <div className="mx-auto flex h-[calc(100dvh-var(--header-height))] max-w-[1400px] flex-col py-6 sm:py-8 lg:py-10">
-        <h2 className="font-[var(--font-display)] text-4xl text-[var(--text-primary)] sm:text-5xl lg:text-[4rem]">
+        <h2 className="text-4xl font-semibold text-[var(--up-maroon)] sm:text-5xl lg:text-[4rem]" style={{ fontFamily: 'var(--font-display)' }}>
           About Office
         </h2>
 

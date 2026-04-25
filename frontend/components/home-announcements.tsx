@@ -93,11 +93,11 @@ export function HomeAnnouncements() {
   };
 
   return (
-    <section id="announcements" className="relative overflow-hidden border-t border-[rgba(255,255,255,0.08)] bg-[var(--announcement-bg)] px-4 py-0 sm:px-6 lg:px-10">
+    <section id="announcements" className="relative overflow-hidden border-y-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-6 py-0 sm:px-10 lg:px-16">
       <div className="mx-auto flex h-[calc(100dvh-var(--header-height))] max-w-[1400px] flex-col py-6 sm:py-8 lg:py-10">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <h2 className="font-[var(--font-display)] text-4xl text-white sm:text-5xl lg:text-[4rem]">Announcements</h2>
+            <h2 className="[font-family:var(--font-display)] text-4xl font-semibold text-white sm:text-5xl lg:text-[4rem]">Announcements</h2>
             <div className="mt-3 h-[3px] w-16 bg-[var(--up-gold)]" />
           </div>
           <p className="hidden text-[0.65rem] uppercase tracking-[0.35em] text-[rgba(255,255,255,0.45)] md:block">Latest updates</p>
@@ -105,10 +105,10 @@ export function HomeAnnouncements() {
 
         <div className="relative flex flex-1 min-h-0 items-stretch">
           {canScrollLeft && (
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-[linear-gradient(90deg,var(--announcement-bg)_0%,rgba(1,45,23,0)_100%)] sm:w-24 lg:w-28" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-[linear-gradient(90deg,var(--up-maroon)_0%,rgba(118,9,12,0)_100%)] sm:w-24 lg:w-28" />
           )}
           {canScrollRight && (
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-[linear-gradient(270deg,var(--announcement-bg)_0%,rgba(1,45,23,0)_100%)] sm:w-24 lg:w-28" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-[linear-gradient(270deg,var(--up-maroon)_0%,rgba(118,9,12,0)_100%)] sm:w-24 lg:w-28" />
           )}
 
           {canScrollLeft && (
@@ -116,7 +116,7 @@ export function HomeAnnouncements() {
               type="button"
               aria-label="Previous announcements"
               onClick={() => scrollTrack(-1)}
-              className="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(1,68,33,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(1,68,33,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)]"
+              className="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(90,6,9,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(90,6,9,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)]"
             >
               <span className="-translate-x-px leading-none transition-transform duration-200 hover:-translate-x-0.5">←</span>
             </button>
@@ -158,7 +158,7 @@ export function HomeAnnouncements() {
               type="button"
               aria-label="Next announcements"
               onClick={() => scrollTrack(1)}
-              className="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(1,68,33,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(1,68,33,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)]"
+              className="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(90,6,9,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(90,6,9,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)]"
             >
               <span className="translate-x-px leading-none transition-transform duration-200 hover:translate-x-0.5">→</span>
             </button>
