@@ -102,7 +102,7 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
     <>
       <section id="introduction" className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 pb-20 pt-16 text-white sm:px-6 lg:px-10 lg:pt-20">
         <div className="mx-auto w-full max-w-[1200px]">
-          <h1 className="max-w-[14ch] font-[var(--font-display)] text-[2.75rem] leading-[0.94] sm:text-[3.6rem] lg:text-[4.35rem]">
+          <h1 className="max-w-[14ch] [font-family:var(--font-display)] text-[2.75rem] font-bold leading-[0.94] sm:text-[3.6rem] lg:text-[4.35rem]">
             {programTitle}
           </h1>
 
