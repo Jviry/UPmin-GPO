@@ -1,17 +1,17 @@
 import Image from 'next/image';
 
 const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Programs", href: "#programs" },
-  { label: "Forms", href: "#forms" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about-gpo" },
+  { label: "Programs", href: "/#programs" },
+  { label: "Forms", href: "/#forms" },
 ];
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[rgba(255,255,255,0.92)] backdrop-blur">
       <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-10">
-        <a href="#home" className="flex items-center gap-3 text-[var(--text-primary)]">
+        <a href="/" className="flex items-center gap-3 text-[var(--text-primary)]">
           <Image
             src="/Unibersidad_ng_Pilipinas_Mindanao.png"
             alt="University of the Philippines Mindanao"
