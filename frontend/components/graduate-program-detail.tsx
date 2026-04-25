@@ -1,3 +1,9 @@
+'use client';
+
+import { useState } from 'react';
+
+type ActiveTab = 'structure' | 'application' | 'faculty';
+
 type GraduateProgramDetailProps = {
   programTitle: string;
 };
@@ -69,7 +75,28 @@ function StructureSummaryRows() {
   );
 }
 
+const placeholderList10 = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Nunc euismod facilisis dapibus.',
+  'Nullam posuere dignissim dapibus.',
+  'Ut a ex sem. Integer ultrices augue vel blandit imperdiet.',
+  'Duis mollis consectetur nisi quis ullamcorper.',
+  'Aenean lacinia leo eget ultrices sagittis.',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Cras massa nulla, fermentum sed eleifend sed, consequat vel ipsum.',
+  'Maecenas maximus, dui a gravida ullamcorper, odio risus suscipit risus, eu dignissim arcu quam id lorem.',
+  'Duis sapien sem, scelerisque a pretium id, lobortis vitae tellus.',
+];
+
+const placeholderList12 = [
+  ...placeholderList10,
+  'Pellentesque accumsan, lacus facilisis laoreet finibus, nunc turpis lacinia dui, ac lacinia ligula nisl quis est.',
+  'Sed elementum porttitor dui dignissim finibus. Sed et nunc sem.',
+];
+
 export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailProps) {
+  const [activeTab, setActiveTab] = useState<ActiveTab>('structure');
+
   return (
     <>
       <section id="introduction" className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 pb-20 pt-16 text-white sm:px-6 lg:px-10 lg:pt-20">
@@ -88,20 +115,26 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
 
       <div className="sticky top-[var(--header-height)] z-40 -mt-10 px-4 sm:px-6 lg:px-10">
         <div className="mx-auto w-full max-w-[1200px] bg-[var(--up-green)] px-4 py-3 shadow-[0_10px_22px_rgba(0,0,0,0.22)] sm:px-8">
-          <nav className="grid grid-cols-3 gap-2 text-center text-xs font-medium uppercase tracking-[0.18em] text-[rgba(255,255,255,0.92)] sm:text-sm sm:tracking-[0.22em]">
-            <a href="#program-structure" className="rounded px-2 py-2 transition-colors duration-200 hover:text-[var(--up-gold)]">
-              Structure
-            </a>
-            <a href="#application" className="rounded px-2 py-2 transition-colors duration-200 hover:text-[var(--up-gold)]">
-              Application
-            </a>
-            <a href="#faculty" className="rounded px-2 py-2 transition-colors duration-200 hover:text-[var(--up-gold)]">
-              Faculty
-            </a>
+          <nav className="grid grid-cols-3 gap-2 text-center text-xs font-medium uppercase tracking-[0.18em] sm:text-sm sm:tracking-[0.22em]">
+            {(['structure', 'application', 'faculty'] as ActiveTab[]).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`rounded px-2 py-2 transition-colors duration-200 ${
+                  activeTab === tab
+                    ? 'text-[var(--up-gold)]'
+                    : 'text-[rgba(255,255,255,0.92)] hover:text-[var(--up-gold)]'
+                }`}
+              >
+                {tab === 'structure' ? 'Structure' : tab === 'application' ? 'Application' : 'Faculty'}
+              </button>
+            ))}
           </nav>
         </div>
       </div>
 
+      {activeTab === 'structure' && (
+      <>
       <section id="program-structure" className="border-b-4 border-[var(--up-gold)] px-4 pb-16 pt-20 sm:px-6 lg:px-10">
         <div className="mx-auto w-full max-w-[1200px]">
           <div className="space-y-6">
@@ -182,8 +215,72 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
         </div>
       </section>
 
-      <section id="application" className="h-px w-full" aria-hidden="true" />
-      <section id="faculty" className="h-px w-full" aria-hidden="true" />
+      </>
+      )}
+
+      {activeTab === 'application' && (
+        <>
+        <div className="h-16 bg-[var(--page-bg)]" />
+
+        {/* Qualifications */}
+        <div className="bg-[var(--up-maroon)] px-4 py-20 sm:px-6 lg:px-10">
+          <div className="mx-auto grid w-full max-w-[1200px] items-center gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-14">
+            <h2 className="[font-family:var(--font-display)] text-3xl font-bold leading-tight text-white sm:text-4xl">
+              Qualifications
+            </h2>
+            <p className="text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem]">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc euismod facilisis dapibus. Nullam posuere dignissim dapibus. Ut a ex sem. Integer ultrices augue vel blandit imperdiet. Duis mollis consectetur nisi quis ullamcorper. Aenean lacinia leo eget ultrices sagittis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras massa nulla, fermentum sed eleifend sed, consequat vel ipsum. Maecenas maximus, dui a gravida ullamcorper, odio risus suscipit risus, eu dignissim arcu quam id lorem. Duis sapien sem, scelerisque a pretium id, lobortis vitae tellus. Pellentesque accumsan, lacus facilisis laoreet finibus, nunc turpis lacinia dui, ac lacinia ligula nisl quis est. Sed elementum porttitor dui dignissim finibus. Sed et nunc sem.
+            </p>
+          </div>
+        </div>
+
+        <div className="h-16 bg-[var(--page-bg)]" />
+
+        {/* Instructions for Applicants + Application Requirements + Apply button */}
+        {/* Instructions for Applicants */}
+        <div className="bg-[var(--up-maroon)] px-4 py-20 sm:px-6 lg:px-10">
+          <div className="mx-auto grid w-full max-w-[1200px] items-center gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-14">
+            <h2 className="[font-family:var(--font-display)] text-3xl font-bold leading-tight text-white sm:text-4xl">
+              Instructions<br />for Applicants
+            </h2>
+            <ol className="list-decimal space-y-1 pl-5 text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem]">
+              {placeholderList10.map((item, i) => (
+                <li key={i} className="font-semibold">{item}</li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        <div className="h-16 bg-[var(--page-bg)]" />
+
+        {/* Application Requirements */}
+        <div className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 py-20 sm:px-6 lg:px-10">
+          <div className="mx-auto grid w-full max-w-[1200px] items-center gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-14">
+            <h2 className="[font-family:var(--font-display)] text-3xl font-bold leading-tight text-white sm:text-4xl">
+              Application<br />Requirements
+            </h2>
+            <ol className="list-decimal space-y-1 pl-5 text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem]">
+              {placeholderList12.map((item, i) => (
+                <li key={i} className="font-semibold">{item}</li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        {/* Apply button */}
+        <div className="flex justify-center bg-[var(--page-bg)] px-4 py-12 sm:px-6 lg:px-10">
+          <button className="rounded-sm bg-[var(--up-green)] px-10 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]">
+            Apply Now
+          </button>
+        </div>
+        </>
+      )}
+
+      {activeTab === 'faculty' && (
+        <div className="flex min-h-[40vh] items-center justify-center border-b-4 border-[var(--up-gold)] px-4 py-20 sm:px-6 lg:px-10">
+          <p className="text-[var(--text-muted)]">[Faculty section coming soon]</p>
+        </div>
+      )}
     </>
   );
 }
