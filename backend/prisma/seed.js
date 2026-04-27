@@ -47,6 +47,32 @@ async function main() {
     ],
   });
 
+  await prisma.admin.create({
+    data: {
+      email: "superadmin@gmail.com",
+      name: "Super Admin",
+      password: "$2a$10$n/eU5FSZBdSC/K5HHv/HTuiGStK6CPSVmP1JXhmDOGuVZvlt7Rivq", //123
+      role: "superadmin",
+
+      announcements: {
+        create: [
+          {
+            title: "Welcome to Graduate Studies",
+            content_description: "We are excited to welcome all new graduate students this semester."
+          },
+          {
+            title: "Application Deadline Extended",
+            content_description: "The deadline for graduate applications has been extended by two weeks."
+          },
+          {
+            title: "New Programs Available",
+            content_description: "We are launching new graduate programs this academic year."
+          }
+        ]
+      }
+    }
+  });
+
   console.log('Seed data inserted!');
 }
 
