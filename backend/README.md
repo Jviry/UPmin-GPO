@@ -100,6 +100,12 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | PUT    | `/announcements/:id` | Admin/Superadmin | Update announcement attributes |
 | DELETE | `/announcement/:id` | Admin/Superadmin | Delete an announcement |
 
+### Program
+
+| Method | Endpoint  | Access | Description              |
+| ------ | --------- | ------ | ------------------------ |
+| GET    | `/programs` | Public | Get program names (seeded) |
+
 ## Authentication
 
 Protected routes require a Bearer token in the `Authorization` header:
@@ -112,7 +118,7 @@ Authorization: Bearer <your_token>
 
 All uploaded files are served from:
 Base URL:
-<http://localhost:3000>
+<http://localhost:3001>
 
 Frontend usage:
-<img src={`http://localhost:3000${data.logo}`} />
+<img src={`http://localhost:3001${data.logo}`} />

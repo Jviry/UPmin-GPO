@@ -46,6 +46,78 @@ async function main() {
       },
     ],
   });
+  // 1. Create Courses
+  await prisma.course.createMany({
+    data: [
+      { name: "Data Structures", code: "CMSC 127", description: "Basic data structures", type: "Core", units: 3 },
+      { name: "Algorithms", code: "CMSC 128", description: "Algorithm design", type: "Core", units: 3 },
+      { name: "Database Systems", code: "CMSC 131", description: "Relational databases", type: "Core", units: 3 },
+      { name: "Operating Systems", code: "CMSC 132", description: "OS principles", type: "Core", units: 3 },
+      { name: "Software Engineering", code: "CMSC 198", description: "Software dev lifecycle", type: "Core", units: 3 },
+      { name: "Machine Learning", code: "CMSC 180", description: "Intro to ML", type: "Elective", units: 3 },
+      { name: "Computer Networks", code: "CMSC 135", description: "Networking basics", type: "Core", units: 3 },
+      { name: "Thesis", code: "CMSC 200", description: "Graduate thesis", type: "Capstone", units: 6 },
+    ],
+  });
+
+  // 2. Fetch created courses (needed for relations)
+  const allCourses = await prisma.course.findMany();
+
+  const getCourse = (code) =>
+    allCourses.find(c => c.code === code);
+
+  // 3. Create Graduate Program
+  const program = await prisma.graduateProgram.create({
+    data: {
+      name: "MS Computer Science",
+      description: "Advanced study in computer science.",
+      years: 2,
+      history: "Established to advance computing research.",
+      qualifications: "BS Computer Science or related field.",
+      application_process: "Submit documents and pass evaluation.",
+      application_url: "https://example.com/apply",
+      college_id: 1, // make sure this exists
+    },
+  });
+
+  // 4. Create Study Plan (ProgramCourses)
+  await prisma.programCourse.createMany({
+    data: [
+      // YEAR 1 - SEM 1
+      { program_id: program.program_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1 },
+      { program_id: program.program_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1 },
+      { program_id: program.program_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1 },
+
+      // YEAR 1 - SEM 2
+      { program_id: program.program_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2 },
+      { program_id: program.program_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2 },
+      { program_id: program.program_id, course_id: getCourse("CMSC 180").course_id, year: 1, semester: 2 },
+
+      // YEAR 2 - SEM 1
+      { program_id: program.program_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1 },
+
+      // YEAR 2 - SEM 2
+      { program_id: program.program_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2 },
+    ],
+  });
+
+  // 5. Downloadable Resources
+  await prisma.downloadableResource.createMany({
+    data: [
+      {
+        title: "Curriculum Guide",
+        category: "Curriculum",
+        file_url: "https://example.com/curriculum.pdf",
+        program_id: program.program_id,
+      },
+      {
+        title: "Application Form",
+        category: "Forms",
+        file_url: "https://example.com/form.pdf",
+        program_id: program.program_id,
+      },
+    ],
+  });
 
   await prisma.admin.create({
     data: {
