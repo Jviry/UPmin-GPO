@@ -6,6 +6,7 @@ import { deleteAnnouncementUsecase } from '../usecase/announcement/deleteAnnounc
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { updateAnnouncementUsecase } from '../usecase/announcement/updateAnnouncement.usecase.js';
 import { getAnnouncementByIdUsecase } from '../usecase/announcement/getAnnouncementById.usecase.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo });
 const getAnnouncementById = getAnnouncementByIdUsecase({ announcementRepo });
 
 // A. Create announcement (authenticated admin only)
-router.post('/announcements', authenticate, async (req, res) => {
+router.post('/announcements', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
     const admin_id = req.user.admin_id;
     const { title, content_description } = req.body;
@@ -41,7 +42,7 @@ router.post('/announcements', authenticate, async (req, res) => {
 });
 
 // B. Get announcement by ID 
-router.get('/announcements/:id', authenticate, async (req, res) => {
+router.get('/announcements/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -61,7 +62,7 @@ router.get('/announcements/:id', authenticate, async (req, res) => {
 });
 
 // C. Update announcement (authenticated admin only)
-router.put('/announcements/:id', authenticate, async (req, res) => {
+router.put('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
     const { id } = req.params;
     const { title, content_description } = req.body;
@@ -82,7 +83,7 @@ router.put('/announcements/:id', authenticate, async (req, res) => {
 });
 
 // D. Delete announcement
-router.delete('/announcements/:id', authenticate, async (req, res) => {
+router.delete('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
     const { id } = req.params;
 
