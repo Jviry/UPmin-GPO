@@ -90,6 +90,12 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | GET    | `/office` | Public | Get office data (seeded) |
 | PUT    | `/office` | Public(to be updated) | Update office attributes |
 
+### Program
+
+| Method | Endpoint  | Access | Description              |
+| ------ | --------- | ------ | ------------------------ |
+| GET    | `/programs` | Public | Get program names (seeded) |
+
 ## Authentication
 
 Protected routes require a Bearer token in the `Authorization` header:
@@ -102,7 +108,7 @@ Authorization: Bearer <your_token>
 
 All uploaded files are served from:
 Base URL:
-<http://localhost:3000>
+<http://localhost:3001>
 
 Frontend usage:
-<img src={`http://localhost:3000${data.logo}`} />
+<img src={`http://localhost:3001${data.logo}`} />
