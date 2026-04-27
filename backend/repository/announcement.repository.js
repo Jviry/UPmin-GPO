@@ -55,5 +55,16 @@ export function createAnnouncementRepository(prisma) {
         },
       });
     },
+
+    async findAnnouncements() {
+      return prisma.announcement.findMany({
+        select: {
+          announcement_id: true,
+          title: true,
+          content_description: true,
+          date_posted: true
+        }
+      });
+    }
   };
 }

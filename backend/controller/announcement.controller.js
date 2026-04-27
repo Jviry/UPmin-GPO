@@ -3,9 +3,10 @@ import { prisma } from '../db/db.js';
 import { createAnnouncementRepository } from '../repository/announcement.repository.js';
 import { createAnnouncementUsecase } from '../usecase/announcement/createAnnouncement.usecase.js';
 import { deleteAnnouncementUsecase } from '../usecase/announcement/deleteAnnouncement.usecase.js';
+import { getAnnouncementByIdUsecase } from '../usecase/announcement/getAnnouncementById.usecase.js';
+import { getAnnouncementsUsecase } from '../usecase/announcement/getAnnouncements.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { updateAnnouncementUsecase } from '../usecase/announcement/updateAnnouncement.usecase.js';
-import { getAnnouncementByIdUsecase } from '../usecase/announcement/getAnnouncementById.usecase.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
 const router = express.Router();
@@ -15,8 +16,8 @@ const createAnnouncement = createAnnouncementUsecase({ announcementRepo });
 const deleteAnnouncement = deleteAnnouncementUsecase({ announcementRepo });
 const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo });
 const getAnnouncementById = getAnnouncementByIdUsecase({ announcementRepo });
+const getAnnouncements = getAnnouncementsUsecase({ announcementRepo });
 
-// A. Create announcement (authenticated admin only)
 router.post('/announcements', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
     const admin_id = req.user.admin_id;
@@ -24,8 +25,8 @@ router.post('/announcements', authenticate, authenticateRole('admin', 'superadmi
 
     const result = await createAnnouncement({
       title,
-      content_description,
       admin_id,
+      content_description,
     });
 
     res.status(200).json({
@@ -41,7 +42,6 @@ router.post('/announcements', authenticate, authenticateRole('admin', 'superadmi
   }
 });
 
-// B. Get announcement by ID 
 router.get('/announcements/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -61,7 +61,24 @@ router.get('/announcements/:id', async (req, res) => {
   }
 });
 
-// C. Update announcement (authenticated admin only)
+router.get('/announcements', async (req, res) => {
+  try {
+
+    const result = await getAnnouncements();
+
+    res.status(200).json({
+      message: `Announcements retrieved successfully`,
+      announcements: result
+    });
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    console.error('Get announcement error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.put('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
     const { id } = req.params;
@@ -82,7 +99,6 @@ router.put('/announcements/:id', authenticate, authenticateRole('admin', 'supera
   }
 });
 
-// D. Delete announcement
 router.delete('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
     const { id } = req.params;
