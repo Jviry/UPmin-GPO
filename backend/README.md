@@ -90,6 +90,16 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | GET    | `/office` | Public | Get office data (seeded) |
 | PUT    | `/office` | Public(to be updated) | Update office attributes |
 
+### Announcement
+
+| Method | Endpoint  | Access | Description              |
+| ------ | --------- | ------ | ------------------------ |
+| GET    | `/announcements` | Public | Get all announcements (seeded) |
+| GET    | `/announcements/:id` | Public | Get announcement by id (seeded) |
+| POST | `/announcements` | Admin/Superadmin | Create a new announcement |
+| PUT    | `/announcements/:id` | Admin/Superadmin | Update announcement attributes |
+| DELETE | `/announcement/:id` | Admin/Superadmin | Delete an announcement |
+
 ### Program
 
 | Method | Endpoint  | Access | Description              |
