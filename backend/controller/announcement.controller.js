@@ -83,9 +83,8 @@ router.put('/announcements/:id', authenticate, authenticateRole('admin', 'supera
   try {
     const { admin_id } = req.user.admin_id;
     const { id } = req.params;
-    const { title, content_description } = req.body;
 
-    const result = await updateAnnouncement(id, { title, content_description });
+    const result = await updateAnnouncement(id, req.body);
 
     res.status(200).json({
       message: `Announcement ${id} updated successfully`,

@@ -10,15 +10,12 @@ export function createAnnouncementRepository(prisma) {
       });
     },
 
-    async update(id, { title, content_description }) {
+    async update(id, attribute) {
       return prisma.announcement.update({
         where: {
           announcement_id: parseInt(id),
         },
-        data: {
-          title,
-          content_description,
-        },
+        data: attribute,
       });
     },
 

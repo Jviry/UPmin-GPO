@@ -1,10 +1,10 @@
-import { validateAnnouncementId, validateUpdateAnnouncement } from '../../domain/announcement.js';
+import { validateAnnouncementId, validateAnnouncementUpdates } from '../../domain/announcement.js';
 import { DomainError } from '../../domain/errors.js';
 
 export function updateAnnouncementUsecase({ announcementRepo }) {
-  return async function(id, { title, content_description }) {
+  return async function(id, updates) {
     validateAnnouncementId(id);
-    validateUpdateAnnouncement({ title, content_description });
+    validateAnnouncementUpdates(updates);
 
     // Check if announcement exists before updating
     const existing = await announcementRepo.findByID(id);
@@ -12,10 +12,7 @@ export function updateAnnouncementUsecase({ announcementRepo }) {
       throw new DomainError(`Announcement with ID ${id} not found`);
     }
 
-    const updatedAnnouncement = await announcementRepo.update(id, {
-      title,
-      content_description,
-    });
+    const updatedAnnouncement = await announcementRepo.update(id, updates);
 
     return { updatedAnnouncement };
   };
