@@ -10,6 +10,6 @@ export function createAnnouncementUsecase({ announcementRepo }) {
       admin_id,
     });
 
-    return { announcement: newAnnouncement };
+    return { newAnnouncement };
   };
 }

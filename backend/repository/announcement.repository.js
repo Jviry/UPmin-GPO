@@ -7,15 +7,6 @@ export function createAnnouncementRepository(prisma) {
           content_description,
           admin_id: parseInt(admin_id),
         },
-        include: {
-          admin: {
-            select: {
-              admin_id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
       });
     },
 
@@ -27,15 +18,6 @@ export function createAnnouncementRepository(prisma) {
         data: {
           title,
           content_description,
-        },
-        include: {
-          admin: {
-            select: {
-              admin_id: true,
-              name: true,
-              email: true,
-            },
-          },
         },
       });
     },

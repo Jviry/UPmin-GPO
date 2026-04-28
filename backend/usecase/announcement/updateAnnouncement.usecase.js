@@ -17,6 +17,6 @@ export function updateAnnouncementUsecase({ announcementRepo }) {
       content_description,
     });
 
-    return { announcement: updatedAnnouncement };
+    return { updatedAnnouncement };
   };
 }
