@@ -3,8 +3,6 @@ import { DomainError } from "../../domain/errors.js";
 
 export function createLoginUsecase({ adminRepo, comparePassword, signToken }) {
   return async function({ email, password }) {
-    console.log(email);
-    console.log(password);
     validateLoginInput({ email, password });
 
     const admin = await adminRepo.findByEmail(email);

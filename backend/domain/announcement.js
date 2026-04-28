@@ -21,11 +21,11 @@ export function validateAnnouncementId(id) {
   }
 }
 
-export function validateUpdateAnnouncement({ title, content_description }) {
-  if (!title || title.trim() === '') {
-    throw new DomainError('Title is required');
-  }
-  if (!content_description || content_description.trim() === '') {
-    throw new DomainError('Content description is required');
+export function validateAnnouncementUpdates(updates) {
+  const allowed = ['title', 'content_description']
+  const invalid = Object.keys(updates).filter(key => !allowed.includes(key));
+
+  if (invalid.lenth > 0) {
+    throw new DomainError(`Invalid fields: ${invalid.join(', ')}`);
   }
 }

@@ -31,7 +31,7 @@ router.post('/announcements', authenticate, authenticateRole('admin', 'superadmi
 
     res.status(200).json({
       message: 'Announcement created successfully',
-      announcement: result.announcement,
+      announcement: result.newAnnouncement,
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -68,7 +68,7 @@ router.get('/announcements', async (req, res) => {
 
     res.status(200).json({
       message: `Announcements retrieved successfully`,
-      announcements: result
+      announcements: result.announcements
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -81,14 +81,15 @@ router.get('/announcements', async (req, res) => {
 
 router.put('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
+    const { admin_id } = req.user.admin_id;
     const { id } = req.params;
-    const { title, content_description } = req.body;
 
-    const result = await updateAnnouncement(id, { title, content_description });
+    const result = await updateAnnouncement(id, req.body);
 
     res.status(200).json({
       message: `Announcement ${id} updated successfully`,
-      announcement: result.announcement,
+      announcement: result.updatedAnnouncement,
+      admin_id
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -101,6 +102,7 @@ router.put('/announcements/:id', authenticate, authenticateRole('admin', 'supera
 
 router.delete('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
   try {
+    const { admin_id } = req.user.admin_id;
     const { id } = req.params;
 
     const result = await deleteAnnouncement(id);
@@ -108,6 +110,7 @@ router.delete('/announcements/:id', authenticate, authenticateRole('admin', 'sup
     res.status(200).json({
       message: `Announcement ${id} deleted successfully`,
       deletedAnnouncement: result.deletedAnnouncement,
+      admin_id
     });
   } catch (error) {
     if (error.isDomainError) {

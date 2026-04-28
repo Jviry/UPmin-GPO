@@ -7,36 +7,15 @@ export function createAnnouncementRepository(prisma) {
           content_description,
           admin_id: parseInt(admin_id),
         },
-        include: {
-          admin: {
-            select: {
-              admin_id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
       });
     },
 
-    async update(id, { title, content_description }) {
+    async update(id, attribute) {
       return prisma.announcement.update({
         where: {
           announcement_id: parseInt(id),
         },
-        data: {
-          title,
-          content_description,
-        },
-        include: {
-          admin: {
-            select: {
-              admin_id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
+        data: attribute,
       });
     },
 

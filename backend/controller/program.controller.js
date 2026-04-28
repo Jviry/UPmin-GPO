@@ -13,8 +13,8 @@ router.get('/programs', async (req, res) => {
     const result = await getProgramNames();
 
     res.status(200).json({
-      message: "Got the programs brah",
-      result
+      message: "Programs retrieved successfully",
+      programs: result,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
