@@ -14,10 +14,10 @@ datasource db {
 
 model Admin {
   admin_id      Int            @id @default(autoincrement())
-  email         String         @unique
-  name          String
+  admin_email   String         @unique
+  admin_name    String
   password      String
-  role          String
+  admin_role          String
   announcements Announcement[]
   scholarships   Scholarship[]
 }
@@ -42,23 +42,26 @@ model Scholarship {
   application_url           String
   recommendation_url        String?
   contact_info              String   @unique
+
   admin_id                  Int
   admin                     Admin    @relation(fields: [admin_id], references: [admin_id])
 }
 
 model Office {
   office_id  Int    @id @default(autoincrement())
-  name       String
-  logo       String
-  objectives String
-  history    String
-
-  location     String
-  contact_info String
-  email        String
+  office_name   String
+  logo          String
+  mission       String
+  vision        String
+  core_values   String
+  history       String
+  office_phone  String
+  office_email  String
 
   featuredPhotos FeaturedPhoto[]
 }
+
+
 
 model FeaturedPhoto {
   featured_photo_id Int    @id @default(autoincrement())
@@ -78,30 +81,30 @@ model Testimony {
 
 model College {
   college_id   Int               @id @default(autoincrement())
-  name         String
-  dean         String
+  college_name String
+  current_dean String
 
   departments  Department[]
 }
 
 model Department {
   department_id Int     @id @default(autoincrement())
-  name          String
-  head          String
+  department_name  String
+  department_head  String
   contact_info  String  @unique
 
   college_id    Int
   college       College @relation(fields: [college_id], references: [college_id])
 
-  programs      GraduateProgram[]
+  programs      Program[]
   faculty       Faculty[]
 }
 
 model Faculty {
   faculty_id           Int     @id @default(autoincrement())
-  name                 String
-  email                String  @unique
-  photo                String
+  faculty_name         String
+  faculty_email        String  @unique
+  faculty_photo        String
   position             String
   university_graduated String
 
@@ -109,12 +112,13 @@ model Faculty {
   department           Department @relation(fields: [department_id], references: [department_id])
 }
 
-model GraduateProgram {
+model Program {
   program_id             Int                    @id @default(autoincrement())
-  name                   String
-  description            String
-  years                  Int
-  history                String
+  program_type           String // e.g., "Diploma Program", "Graduate Program"
+  program_name           String 
+  program_description    String
+  num_of_years           Int
+  program_history        String
   qualifications         String
   application_instructions String
   application_url        String
@@ -127,10 +131,10 @@ model GraduateProgram {
 
 model Course {
   course_id       Int             @id @default(autoincrement())
-  name            String
-  code            String
-  description     String
-  type            String
+  course_name     String
+  course_code     String
+  course_description  String
+  course_type     String
   units           Int
 
   program_courses ProgramCourse[]
@@ -143,7 +147,7 @@ model ProgramCourse {
 
   program_id        Int
   course_id         Int
-  program           GraduateProgram @relation(fields: [program_id], references: [program_id])
+  program           Program @relation(fields: [program_id], references: [program_id])
   course            Course          @relation(fields: [course_id], references: [course_id])
 }
 
