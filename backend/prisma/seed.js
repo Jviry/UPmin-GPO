@@ -1,195 +1,161 @@
 import { prisma } from '../db/db.js';
+
 async function main() {
+  // =======================
+  // OFFICE
+  // =======================
   await prisma.office.create({
     data: {
-      name: 'Graduate Studies Office',
       logo: '/public/seed-assets/office/default-logo.png',
-      objectives: 'Excellence in graduate education',
-      history: 'Established to oversee all graduate programs and academic standards.',
-      location: 'Admin Building',
-      contact_info: '123-4567',
+      mission: 'Provide high-quality graduate education.',
+      vision: 'To be a center of excellence in research.',
+      core_values: 'Integrity, Excellence, Innovation',
+      history: 'Established to oversee all graduate programs.',
+      phone: '123-4567',
       email: 'grad@university.edu',
 
       featuredPhotos: {
         create: [
-          {
-            url: '/public/seed-assets/office/photo1.jpg',
-          },
-          {
-            url: '/public/seed-assets/office/photo2.jpg',
-          }
+          { url: '/public/seed-assets/office/photo1.jpg' },
+          { url: '/public/seed-assets/office/photo2.jpg' }
         ]
       }
     }
   });
-  await prisma.college.createMany({
-    data: [
-      {
-        name: "College of Science and Mathematics (CSM)",
-        dean: "Dr. Maria Santos",
-        contact_info: "csm@university.edu | +63 912 345 6789",
-      },
-      {
-        name: "College of Humanities and Social Sciences (CHSS)",
-        dean: "Dr. Juan Dela Cruz",
-        contact_info: "chss@university.edu | +63 917 123 4567",
-      },
-      {
-        name: "School of Management (SOM)",
-        dean: "Dr. Ana Reyes",
-        contact_info: "som@university.edu | +63 905 678 1234",
-      },
-      {
-        name: "College of Engineering",
-        dean: "Dr. Carlo Mendoza",
-        contact_info: "engineering@university.edu | +63 918 222 3333",
-      },
-    ],
+
+  // =======================
+  // COLLEGE + DEPARTMENTS
+  // =======================
+  const college = await prisma.college.create({
+    data: {
+      name: "College of Science and Mathematics",
+      current_dean: "Dr. Maria Santos",
+
+      departments: {
+        create: [
+          {
+            name: "Computer Science",
+            head: "Dr. Juan Dela Cruz",
+            contact_info: "cs@university.edu",
+
+            faculty: {
+              create: [
+                {
+                  name: "Dr. Maria Santos",
+                  email: "maria.santos@univ.edu",
+                  photo: "https://example.com/maria.jpg",
+                  position: "Program Coordinator",
+                  university_graduated: "UP Diliman"
+                },
+                {
+                  name: "Prof. Juan Dela Cruz",
+                  email: "juan.delacruz@univ.edu",
+                  photo: "https://example.com/juan.jpg",
+                  position: "Program Coordinator",
+                  university_graduated: "Ateneo"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    include: {
+      departments: true
+    }
   });
-  await prisma.faculty.createMany({
-    data: [
-      {
-        name: "Dr. Maria Santos",
-        photo: "https://example.com/photos/maria.jpg",
-        position: "Program Coordinator",
-        contact_info: "09171234567",
-        email: "maria.santos@univ.edu",
-        college_id: 1,
-      },
-      {
-        name: "Prof. Juan Dela Cruz",
-        photo: "https://example.com/photos/juan.jpg",
-        position: "Program Coordinator",
-        contact_info: "09981234567",
-        email: "juan.delacruz@univ.edu",
-        college_id: 1,
-      },
-      {
-        name: "Engr. Ana Reyes",
-        photo: "https://example.com/photos/ana.jpg",
-        position: "Program Coordinator",
-        contact_info: "09221234567",
-        email: "ana.reyes@univ.edu",
-        college_id: 2,
-      },
-      {
-        name: "Dr. Carlo Mendoza",
-        photo: "https://example.com/photos/carlo.jpg",
-        position: "Program Coordinator",
-        contact_info: "09331234567",
-        email: "carlo.mendoza@univ.edu",
-        college_id: 2,
-      },
-      {
-        name: "Ms. Liza Bautista",
-        photo: "https://example.com/photos/liza.jpg",
-        position: "Program Coordinator",
-        contact_info: "09441234567",
-        email: "liza.bautista@univ.edu",
-        college_id: 3,
-      },
-    ],
-  });
-  // 1. Create Courses
+
+  const departmentId = college.departments[0].department_id;
+
+  // =======================
+  // COURSES
+  // =======================
   await prisma.course.createMany({
     data: [
-      { name: "Data Structures", code: "CMSC 127", description: "Basic data structures", type: "Core", units: 3 },
-      { name: "Algorithms", code: "CMSC 128", description: "Algorithm design", type: "Core", units: 3 },
-      { name: "Database Systems", code: "CMSC 131", description: "Relational databases", type: "Core", units: 3 },
-      { name: "Operating Systems", code: "CMSC 132", description: "OS principles", type: "Core", units: 3 },
-      { name: "Software Engineering", code: "CMSC 198", description: "Software dev lifecycle", type: "Core", units: 3 },
-      { name: "Machine Learning", code: "CMSC 180", description: "Intro to ML", type: "Elective", units: 3 },
-      { name: "Computer Networks", code: "CMSC 135", description: "Networking basics", type: "Core", units: 3 },
-      { name: "Thesis", code: "CMSC 200", description: "Graduate thesis", type: "Capstone", units: 6 },
-    ],
+      { name: "Data Structures", code: "CMSC 127", type: "Core", units: 3, department_id: departmentId },
+      { name: "Algorithms", code: "CMSC 128", type: "Core", units: 3, department_id: departmentId },
+      { name: "Database Systems", code: "CMSC 131", type: "Core", units: 3, department_id: departmentId },
+      { name: "Operating Systems", code: "CMSC 132", type: "Core", units: 3, department_id: departmentId },
+      { name: "Software Engineering", code: "CMSC 198", type: "Core", units: 3, department_id: departmentId },
+      { name: "Machine Learning", code: "CMSC 180", type: "Elective", units: 3, department_id: departmentId },
+      { name: "Computer Networks", code: "CMSC 135", type: "Core", units: 3, department_id: departmentId },
+      { name: "Thesis", code: "CMSC 200", type: "Capstone", units: 6, department_id: departmentId },
+    ]
   });
 
-  // 2. Fetch created courses (needed for relations)
-  const allCourses = await prisma.course.findMany();
+  const courses = await prisma.course.findMany();
+  const getCourse = (code) => courses.find(c => c.code === code);
 
-  const getCourse = (code) =>
-    allCourses.find(c => c.code === code);
-
-  // 3. Create Graduate Program
-  const program = await prisma.graduateProgram.create({
+  // =======================
+  // PROGRAM
+  // =======================
+  const program = await prisma.program.create({
     data: {
+      type: "Graduate Program",
       name: "MS Computer Science",
       description: "Advanced study in computer science.",
-      years: 2,
-      history: "Established to advance computing research.",
+      history: "Established for advanced computing research.",
       qualifications: "BS Computer Science or related field.",
-      application_process: "Submit documents and pass evaluation.",
+      application_instructions: "Submit documents and pass evaluation.",
       application_url: "https://example.com/apply",
-      college_id: 1, // make sure this exists
-    },
+
+      department_id: departmentId,
+    }
   });
 
-  // 4. Create Study Plan (ProgramCourses)
+  // =======================
+  // STUDY PLAN
+  // =======================
+  const studyPlan = await prisma.studyPlan.create({
+    data: {
+      years: 2,
+      program_id: program.program_id
+    }
+  });
+
+  // =======================
+  // PROGRAM COURSES
+  // =======================
   await prisma.programCourse.createMany({
     data: [
-      // YEAR 1 - SEM 1
-      { program_id: program.program_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1 },
-      { program_id: program.program_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1 },
-      { program_id: program.program_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1 },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1, is_placed: true },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1, is_placed: true },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1, is_placed: true },
 
-      // YEAR 1 - SEM 2
-      { program_id: program.program_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2 },
-      { program_id: program.program_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2 },
-      { program_id: program.program_id, course_id: getCourse("CMSC 180").course_id, year: 1, semester: 2 },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2, is_placed: true },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2, is_placed: true },
 
-      // YEAR 2 - SEM 1
-      { program_id: program.program_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1 },
-
-      // YEAR 2 - SEM 2
-      { program_id: program.program_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2 },
-    ],
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1, is_placed: true },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2, is_placed: true },
+    ]
   });
 
-  // 5. Downloadable Resources
-  await prisma.downloadableResource.createMany({
-    data: [
-      {
-        title: "Curriculum Guide",
-        category: "Curriculum",
-        file_url: "https://example.com/curriculum.pdf",
-        program_id: program.program_id,
-      },
-      {
-        title: "Application Form",
-        category: "Forms",
-        file_url: "https://example.com/form.pdf",
-        program_id: program.program_id,
-      },
-    ],
-  });
-
+  // =======================
+  // ADMIN + ANNOUNCEMENTS
+  // =======================
   await prisma.admin.create({
     data: {
       email: "superadmin@gmail.com",
       name: "Super Admin",
-      password: "$2a$10$n/eU5FSZBdSC/K5HHv/HTuiGStK6CPSVmP1JXhmDOGuVZvlt7Rivq", //123
+      password: "$2a$10$n/eU5FSZBdSC/K5HHv/HTuiGStK6CPSVmP1JXhmDOGuVZvlt7Rivq",
       role: "superadmin",
 
       announcements: {
         create: [
           {
             title: "Welcome to Graduate Studies",
-            content_description: "We are excited to welcome all new graduate students this semester."
+            content_description: "We are excited to welcome students."
           },
           {
             title: "Application Deadline Extended",
-            content_description: "The deadline for graduate applications has been extended by two weeks."
-          },
-          {
-            title: "New Programs Available",
-            content_description: "We are launching new graduate programs this academic year."
+            content_description: "Deadline extended by two weeks."
           }
         ]
       }
     }
   });
 
-  console.log('Seed data inserted!');
+  console.log("✅ Seed data inserted!");
 }
 
 main()
