@@ -25,7 +25,7 @@ export function validateAnnouncementUpdates(updates) {
   const allowed = ['title', 'content_description']
   const invalid = Object.keys(updates).filter(key => !allowed.includes(key));
 
-  if (invalid.lenth > 0) {
+  if (invalid.length > 0) {
     throw new DomainError(`Invalid fields: ${invalid.join(', ')}`);
   }
 }

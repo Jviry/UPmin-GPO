@@ -18,7 +18,7 @@ router.get('/office', async (req, res) => {
 
     res.status(200).json({
       message: "Get office successful",
-      office: { ...result },
+      office: result.office,
     });
 
   } catch (error) {
@@ -35,7 +35,7 @@ router.put('/office', authenticate, authenticateRole('superadmin'), async (req, 
 
     res.status(200).json({
       message: "Updated the office!",
-      office: { ...result },
+      office: result.updatedOffice,
     });
   } catch (error) {
     if (error.isDomainError) {

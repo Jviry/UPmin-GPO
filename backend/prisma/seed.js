@@ -46,6 +46,50 @@ async function main() {
       },
     ],
   });
+  await prisma.faculty.createMany({
+    data: [
+      {
+        name: "Dr. Maria Santos",
+        photo: "https://example.com/photos/maria.jpg",
+        position: "Program Coordinator",
+        contact_info: "09171234567",
+        email: "maria.santos@univ.edu",
+        college_id: 1,
+      },
+      {
+        name: "Prof. Juan Dela Cruz",
+        photo: "https://example.com/photos/juan.jpg",
+        position: "Program Coordinator",
+        contact_info: "09981234567",
+        email: "juan.delacruz@univ.edu",
+        college_id: 1,
+      },
+      {
+        name: "Engr. Ana Reyes",
+        photo: "https://example.com/photos/ana.jpg",
+        position: "Program Coordinator",
+        contact_info: "09221234567",
+        email: "ana.reyes@univ.edu",
+        college_id: 2,
+      },
+      {
+        name: "Dr. Carlo Mendoza",
+        photo: "https://example.com/photos/carlo.jpg",
+        position: "Program Coordinator",
+        contact_info: "09331234567",
+        email: "carlo.mendoza@univ.edu",
+        college_id: 2,
+      },
+      {
+        name: "Ms. Liza Bautista",
+        photo: "https://example.com/photos/liza.jpg",
+        position: "Program Coordinator",
+        contact_info: "09441234567",
+        email: "liza.bautista@univ.edu",
+        college_id: 3,
+      },
+    ],
+  });
   // 1. Create Courses
   await prisma.course.createMany({
     data: [

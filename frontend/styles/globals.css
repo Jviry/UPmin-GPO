@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* UP Brand colors */
+  --up-maroon: #76090c;
+  --up-green: #014421;
+  --up-gold: #F3AA2C;
+
+  /* Surface & layout */
+  --page-bg: #f8f4ef;
+  --surface: #ffffff;
+  --surface-muted: #e8edea;
+  --header-height: 72px;
+
+  /* Section backgrounds */
+  --hero-bg: #1c1c1c;          /* fallback until hero photo is set */
+  /* To set hero photo: add backgroundImage on the section or set via CSS:  */
+  /* --hero-image: url('/images/hero.jpg');                                  */
+  --announcement-bg: #012d17;
+  --announcement-card: #014421;
+
+  /* Dividers */
+  --line: rgba(60, 5, 8, 0.12);
+  --line-strong: rgba(60, 5, 8, 0.24);
+
+  /* Typography (Spot Black) */
+  --text-primary: #3a3a3a;
+  --text-secondary: #5a5450;
+  --text-muted: #857e78;
+
+  /* next/font injects --font-playfair (Playfair Display) and --font-lora (Lora) via html class vars */
+  --font-display: var(--font-playfair, Georgia, "Times New Roman", serif);
+  --font-body: var(--font-lora, Georgia, "Times New Roman", serif);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,9 +43,63 @@
 
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  background: var(--page-bg);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modern-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(23, 23, 23, 0.45) transparent;
+  scrollbar-gutter: stable;
+}
+
+.modern-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(23, 23, 23, 0.55), rgba(23, 23, 23, 0.2));
+  background-clip: content-box;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(23, 23, 23, 0.75), rgba(23, 23, 23, 0.35));
+  background-clip: content-box;
+}
+
+.modern-carousel {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.modern-carousel::-webkit-scrollbar {
+  display: none;
 }
