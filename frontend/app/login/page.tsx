@@ -112,8 +112,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
-                required
-                className="w-full rounded-lg border border-[var(--line-strong)] bg-white px-4 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none transition focus:border-[var(--up-maroon)] focus:ring-2 focus:ring-[rgba(118,9,12,0.15)]"
+                required                  suppressHydrationWarning                className="w-full rounded-lg border border-[var(--line-strong)] bg-white px-4 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none transition focus:border-[var(--up-maroon)] focus:ring-2 focus:ring-[rgba(118,9,12,0.15)]"
               />
             </div>
 
@@ -131,8 +130,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                required
-                className="w-full rounded-lg border border-[var(--line-strong)] bg-white px-4 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none transition focus:border-[var(--up-maroon)] focus:ring-2 focus:ring-[rgba(118,9,12,0.15)]"
+                required                  suppressHydrationWarning                className="w-full rounded-lg border border-[var(--line-strong)] bg-white px-4 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none transition focus:border-[var(--up-maroon)] focus:ring-2 focus:ring-[rgba(118,9,12,0.15)]"
               />
             </div>
 
