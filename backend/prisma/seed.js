@@ -118,15 +118,15 @@ async function main() {
   // =======================
   await prisma.programCourse.createMany({
     data: [
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1, is_placed: true },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1 },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1 },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1 },
 
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2, is_placed: true },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2 },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2 },
 
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2, is_placed: true },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1 },
+      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2 },
     ]
   });
 

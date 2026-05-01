@@ -123,6 +123,7 @@ model Program {
   department_id Int
   department    Department @relation(fields: [department_id], references: [department_id])
 
+  courses         Course[]
   program_courses ProgramCourse[]
   study_plans     StudyPlan[]
 }
@@ -151,7 +152,6 @@ model ProgramCourse {
   year              Int?
   semester          Int?
   is_elective_slot  Boolean    @default(false)
-  is_placed         Boolean    @default(false) // false = still in pool, true = placed in study plan
   study_plan_id     Int?
   course_id         Int?
   program_id        Int
@@ -166,7 +166,9 @@ model Course {
   code      String
   type      String
   units     Int
-
+  
+  program_id    Int?
+  program       Program? @relation(fields: [program_id], references: [program_id])
   department_id Int?
   department    Department? @relation(fields: [department_id], references: [department_id])
 
