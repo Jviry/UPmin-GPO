@@ -1,16 +1,29 @@
-const programs = [
-  "Program Alpha",
-  "Program Beta",
-  "Program Gamma",
-  "Program Delta",
-  "Program Epsilon",
-  "Program Zeta",
-  "Program Eta",
-  "Program Theta",
-  "Program Iota",
-];
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getPrograms } from '../services/apiServices'; // Adjust this path if necessary
 
 export function HomePrograms() {
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProgramsData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getPrograms();
+        setPrograms(data);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load programs');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProgramsData();
+  }, []);
+
   return (
     <section id="programs" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--surface)] px-6 py-0 sm:px-10 lg:px-16">
       <div className="mx-auto flex h-[calc(100dvh-var(--header-height))] max-w-[1400px] flex-col py-6 sm:py-8 lg:py-10">
@@ -29,25 +42,51 @@ export function HomePrograms() {
 
           <div className="flex min-h-0 flex-col justify-stretch lg:pl-8">
             <div className="modern-scrollbar h-full min-h-0 overflow-y-auto pr-3 [scrollbar-gutter:stable]">
-              <div className="grid gap-4 pb-2 sm:gap-5 md:grid-cols-2 xl:gap-6">
-                {programs.map((program) => (
-                  <article
-                    key={program}
-                    className="group relative aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)]"
-                  >
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(0,0,0,0.12))]" />
-                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold tracking-[0.45em] text-[rgba(0,0,0,0.18)] transition-transform duration-300 group-hover:scale-[1.02]">
-                      PLACEHOLDER
-                    </div>
-                    <div className="absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.84))]" />
-                    <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                      <p className="max-w-[75%] text-sm font-semibold uppercase tracking-[0.18em] text-white sm:text-[0.95rem]">
-                        {program}
-                      </p>
-                    </div>
-                  </article>
-                ))}
-              </div>
+              
+              {/* Loading State UI */}
+              {isLoading && (
+                <div className="py-10 text-center text-[var(--text-secondary)]">
+                  Loading programs...
+                </div>
+              )}
+
+              {/* Error State UI */}
+              {error && (
+                <div className="py-10 text-center text-red-500">
+                  {error}
+                </div>
+              )}
+
+              {/* Empty State UI */}
+              {!isLoading && !error && programs.length === 0 && (
+                <div className="py-10 text-center text-[var(--text-secondary)]">
+                  No programs found.
+                </div>
+              )}
+
+              {/* Data UI */}
+              {!isLoading && !error && programs.length > 0 && (
+                <div className="grid gap-4 pb-2 sm:gap-5 md:grid-cols-2 xl:gap-6">
+                  {programs.map((program) => (
+                    <article
+                      key={program.program_id} // Changed to use the unique database ID
+                      className="group relative aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)]"
+                    >
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(0,0,0,0.12))]" />
+                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold tracking-[0.45em] text-[rgba(0,0,0,0.18)] transition-transform duration-300 group-hover:scale-[1.02]">
+                        PLACEHOLDER
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.84))]" />
+                      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                        <p className="max-w-[75%] text-sm font-semibold uppercase tracking-[0.18em] text-white sm:text-[0.95rem]">
+                          {program.name} {/* Extracted the 'name' string from the object */}
+                        </p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+
             </div>
           </div>
         </div>
