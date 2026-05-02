@@ -1,29 +1,19 @@
 import express from 'express';
 import { prisma } from '../db/db.js';
 import { createCourseRepository } from '../repository/course.repository.js';
-import { createCoreCourseUsecase } from '../usecase/course/createCoreCourse.usecase.js';
+import { createCourseUsecase } from '../usecase/course/createCourse.usecase.js';
 
 const router = express.Router();
 
 const courseRepo = createCourseRepository(prisma);
-const addCoreCourse = createCoreCourseUsecase(courseRepo);
+const addCourse = createCourseUsecase(courseRepo);
 
 router.post('/course', async (req, res) => {
   try {
-    const { type, ...courseData } = req.body;
-
-    let course;
-
-    if (type === "core") {
-      course = await addCoreCourse(courseData);
-    } else if (type === "elective") {
-
-    } else {
-      return res.status(400).json({ message: "Invalid course type" })
-    }
-
+    const course = await addCourse(req.body);
+    console.log(course);
     res.status(200).json({
-      message: `{type} Course added successfully!`,
+      message: `Course added successfully!`,
       course
     });
   } catch (error) {
