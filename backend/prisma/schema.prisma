@@ -48,14 +48,15 @@ model Scholarship {
 }
 
 model Office {
-  office_id   Int    @id @default(autoincrement())
-  logo        String
-  mission     String
-  vision      String
-  core_values String
-  history     String
-  phone       String
-  email       String
+  office_id     Int    @id @default(autoincrement())
+  logo          String
+  mission       String
+  vision        String
+  core_values   String
+  history       String
+  phone         String
+  email         String
+  org_chart_url String
 
   featuredPhotos FeaturedPhoto[]
 }
