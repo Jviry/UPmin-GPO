@@ -19,27 +19,43 @@ model Admin {
   password      String
   role          String
   announcements Announcement[]
+  scholarships  Scholarship[]
 }
 
 model Announcement {
   announcement_id     Int      @id @default(autoincrement())
   title               String
+  image_url           String?
   content_description String
+  attached_link       String?
   admin_id            Int
   admin               Admin    @relation(fields: [admin_id], references: [admin_id])
   date_posted         DateTime @default(now())
 }
 
-model Office {
-  office_id  Int    @id @default(autoincrement())
-  name       String
-  logo       String
-  objectives String
-  history    String
+model Scholarship {
+  scholarship_id           Int     @id @default(autoincrement())
+  name                     String
+  description              String
+  covered_programs         String
+  application_instructions String
+  application_url          String
+  recommendation_url       String?
+  contact_info             String  @unique
 
-  location     String
-  contact_info String
-  email        String
+  admin_id Int
+  admin    Admin @relation(fields: [admin_id], references: [admin_id])
+}
+
+model Office {
+  office_id   Int    @id @default(autoincrement())
+  logo        String
+  mission     String
+  vision      String
+  core_values String
+  history     String
+  phone       String
+  email       String
 
   featuredPhotos FeaturedPhoto[]
 }
@@ -52,66 +68,108 @@ model FeaturedPhoto {
   office    Office @relation(fields: [office_id], references: [office_id])
 }
 
+model Testimony {
+  testimony_id             Int    @id @default(autoincrement())
+  alumnus_photo            String
+  alumnus_name             String
+  testimony_description    String
+  alumnus_graduate_program String
+}
+
 model College {
-  college_id   Int               @id @default(autoincrement())
+  college_id   Int    @id @default(autoincrement())
   name         String
-  dean         String
-  contact_info String
-  programs     GraduateProgram[]
-  faculty      Faculty[]
+  current_dean String
+
+  departments Department[]
+}
+
+model Department {
+  department_id Int    @id @default(autoincrement())
+  name          String
+  head          String
+  contact_info  String @unique
+
+  college_id Int
+  college    College @relation(fields: [college_id], references: [college_id])
+
+  courses  Course[]
+  programs Program[]
+  faculty  Faculty[]
 }
 
 model Faculty {
-  faculty_id   Int     @id @default(autoincrement())
-  name         String
-  photo        String
-  position     String
-  contact_info String
-  email        String  @unique
-  college_id   Int
-  college      College @relation(fields: [college_id], references: [college_id])
+  faculty_id           Int    @id @default(autoincrement())
+  name                 String
+  email                String @unique
+  photo                String
+  position             String
+  university_graduated String
+
+  department_id Int
+  department    Department @relation(fields: [department_id], references: [department_id])
 }
 
-model GraduateProgram {
-  program_id             Int                    @id @default(autoincrement())
-  name                   String
-  description            String
-  years                  Int
-  history                String
-  qualifications         String
-  application_process    String
-  application_url        String
-  college_id             Int
-  college                College                @relation(fields: [college_id], references: [college_id])
-  program_courses        ProgramCourse[]
-  downloadable_resources DownloadableResource[]
-}
+model Program {
+  program_id               Int    @id @default(autoincrement())
+  type                     String // e.g., "Diploma Program", "Graduate Program"
+  name                     String
+  description              String
+  history                  String
+  qualifications           String
+  application_instructions String
+  application_url          String
 
-model Course {
-  course_id       Int             @id @default(autoincrement())
-  name            String
-  code            String
-  description     String
-  type            String
-  units           Int
+  department_id Int
+  department    Department @relation(fields: [department_id], references: [department_id])
+
   program_courses ProgramCourse[]
+  study_plans     StudyPlan[]
+}
+
+model StudyPlan {
+  study_plan_id Int @id @default(autoincrement())
+  years         Int
+
+  program_courses ProgramCourse[]
+  elective_pool   ElectivePool[]
+  program_id      Int
+  program         Program         @relation(fields: [program_id], references: [program_id])
+}
+
+model ElectivePool {
+  elective_pool_id Int @id @default(autoincrement())
+
+  study_plan_id Int
+  study_plan    StudyPlan @relation(fields: [study_plan_id], references: [study_plan_id])
+  course_id     Int
+  course        Course    @relation(fields: [course_id], references: [course_id])
 }
 
 model ProgramCourse {
-  program_course_id Int             @id @default(autoincrement())
+  program_course_id Int        @id @default(autoincrement())
+  year              Int?
+  semester          Int?
+  is_elective_slot  Boolean    @default(false)
+  is_placed         Boolean    @default(false) // false = still in pool, true = placed in study plan
+  study_plan_id     Int?
+  course_id         Int?
   program_id        Int
-  course_id         Int
-  year              Int
-  semester          Int
-  program           GraduateProgram @relation(fields: [program_id], references: [program_id])
-  course            Course          @relation(fields: [course_id], references: [course_id])
+  program           Program    @relation(fields: [program_id], references: [program_id])
+  study_plan        StudyPlan? @relation(fields: [study_plan_id], references: [study_plan_id])
+  course            Course?    @relation(fields: [course_id], references: [course_id])
 }
 
-model DownloadableResource {
-  resource_id Int             @id @default(autoincrement())
-  title       String
-  category    String
-  file_url    String
-  program_id  Int
-  program     GraduateProgram @relation(fields: [program_id], references: [program_id])
+model Course {
+  course_id Int    @id @default(autoincrement())
+  name      String
+  code      String
+  type      String
+  units     Int
+
+  department_id Int?
+  department    Department? @relation(fields: [department_id], references: [department_id])
+
+  elective_pool   ElectivePool[]
+  program_courses ProgramCourse[]
 }
