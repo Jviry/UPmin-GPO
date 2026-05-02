@@ -2,7 +2,8 @@ export function createFacultyRepository(prisma) {
   return {
     async findByPosition(position) {
       return prisma.faculty.findMany({
-        where: { position }
+        where: { position },
+        include: { department: true }
       });
     }
   }
