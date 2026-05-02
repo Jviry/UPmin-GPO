@@ -48,5 +48,30 @@ export function createProgramRepository(prisma) {
         where: { program_id: parseInt(id) },
       });
     },
+
+    async updateProgram(id, data) {
+      return prisma.program.update({
+        where: {
+          program_id: parseInt(id),
+        },
+        data: {
+          type: data.type,
+          name: data.name,
+          description: data.description,
+          history: data.history,
+          qualifications: data.qualifications,
+          application_instructions: data.application_instructions,
+          application_url: data.application_url
+        },
+        include: {
+          department: {
+            select: {
+              department_id: true,
+              name: true
+            }
+          }
+        }
+  });
+}
   };
 }

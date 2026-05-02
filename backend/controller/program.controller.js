@@ -5,6 +5,7 @@ import { createProgramUsecase } from '../usecase/program/createProgram.usecase.j
 import { getAllProgramsUsecase } from '../usecase/program/getAllPrograms.usecase.js';
 import { getProgramByIdUsecase } from '../usecase/program/getProgramById.usecase.js';
 import { deleteProgramUsecase } from '../usecase/program/deleteProgram.usecase.js';
+import { updateProgramUsecase } from '../usecase/program/updateProgram.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 
 const router = express.Router();
@@ -15,6 +16,7 @@ const createProgram = createProgramUsecase({ programRepo });
 const getAllPrograms = getAllProgramsUsecase({ programRepo });
 const getProgramById = getProgramByIdUsecase({ programRepo });
 const deleteProgram = deleteProgramUsecase({ programRepo });
+const updateProgram = updateProgramUsecase({ programRepo });
 
 // Public routes (no authentication required)
 router.get('/programs', async (req, res) => {
@@ -88,4 +90,23 @@ router.delete('/admin/programs/:id', authenticate, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+router.put('/admin/programs/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await updateProgram(id, req.body);
+
+    res.status(200).json({
+      message: `Program ${id} updated successfully`,
+      program: result.program,
+    });
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    console.error('Update program error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;
