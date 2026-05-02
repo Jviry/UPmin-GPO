@@ -71,7 +71,6 @@ model FeaturedPhoto {
 
 model Testimony {
   testimony_id             Int    @id @default(autoincrement())
-  alumnus_photo            String
   alumnus_name             String
   testimony_description    String
   alumnus_graduate_program String
