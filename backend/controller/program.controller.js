@@ -17,6 +17,8 @@ router.get('/programs', async (req, res) => {
       programs: result,
     });
   } catch (error) {
+    console.error("PROGRAMS API ERROR:", error); 
+    
     res.status(500).json({ message: error.message });
   }
 });
