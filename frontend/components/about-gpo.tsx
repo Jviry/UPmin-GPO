@@ -1,57 +1,6 @@
 import React from "react";
 import PlaceholderProfileImg from "@/components/PlaceholderProfileImg";
 
-const orgChart = {
-  name: "Placeholder Name",
-  position: "Position Title",
-  children: [
-    {
-      name: "Placeholder Name",
-      position: "Position Title",
-      children: [
-        {
-          name: "Placeholder Name",
-          position: "Position Title",
-          children: [
-            {
-              name: "Placeholder Name",
-              position: "Position Title",
-              children: [],
-            },
-            {
-              name: "Placeholder Name",
-              position: "Position Title",
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "Placeholder Name",
-      position: "Position Title",
-      children: [
-        {
-          name: "Placeholder Name",
-          position: "Position Title",
-          children: [
-            {
-              name: "Placeholder Name",
-              position: "Position Title",
-              children: [],
-            },
-            {
-              name: "Placeholder Name",
-              position: "Position Title",
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
 const programs = [
   "Program Alpha",
   "Program Beta",
@@ -89,54 +38,6 @@ const testimonies = [
   },
 ];
 
-function OrgCard({ node }: { node: any }) {
-  return (
-    <div className="bg-white rounded-md shadow-lg px-3 py-2 flex flex-row items-center gap-3 w-[180px] shrink-0">
-      <div className="w-10 h-10 shrink-0"><PlaceholderProfileImg /></div>
-      <div className="flex flex-col justify-center min-w-0">
-        <div className="font-bold text-[10px] uppercase tracking-wider text-[var(--text-primary)] truncate">{node.name}</div>
-        <div className="text-[8px] uppercase tracking-wider text-[var(--text-secondary)] mt-0.5 truncate">{node.position}</div>
-      </div>
-    </div>
-  );
-}
-
-function OrgChartNode({ node, level = 0 }: { node: any; level?: number }) {
-  const hasChildren = node.children && node.children.length > 0;
-  const childCount: number = node.children?.length ?? 0;
-
-  const hLineStyle = (idx: number): React.CSSProperties => {
-    if (childCount === 1) return { display: 'none' };
-    if (idx === 0) return { background: 'linear-gradient(to right, transparent 50%, rgba(255,255,255,0.4) 50%)' };
-    if (idx === childCount - 1) return { background: 'linear-gradient(to left, transparent 50%, rgba(255,255,255,0.4) 50%)' };
-    return { background: 'rgba(255,255,255,0.4)' };
-  };
-
-  return (
-    <div className="flex flex-col items-center">
-      <OrgCard node={node} />
-      {hasChildren && (
-        <>
-          {/* vertical stub down from card */}
-          <div className="w-px bg-white/40 h-8" />
-          {/* children row */}
-          <div className="flex flex-row items-start">
-            {node.children.map((child: any, idx: number) => (
-              <div key={idx} className="flex flex-col items-center px-2">
-                {/* horizontal connector segment */}
-                <div className="w-full h-px" style={hLineStyle(idx)} />
-                {/* vertical stub down to child */}
-                <div className="w-px bg-white/40 h-8" />
-                <OrgChartNode node={child} level={level + 1} />
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
 export default function AboutGPO() {
   return (
     <div className="w-full">
@@ -150,9 +51,9 @@ export default function AboutGPO() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
         </div>
-        <div className="bg-[var(--up-maroon)] border-t-4 border-[var(--up-gold)] py-12 w-full overflow-x-auto">
-          <div className="flex flex-col items-center w-fit mx-auto px-4">
-            <OrgChartNode node={orgChart} />
+        <div className="bg-[var(--up-maroon)] border-t-4 border-[var(--up-gold)] py-12 w-full">
+          <div className="max-w-6xl mx-auto px-4 h-96">
+            <PlaceholderProfileImg className="h-full" />
           </div>
         </div>
       </section>
