@@ -3,7 +3,7 @@ import { prisma } from '../db/db.js';
 import { createCourseRepository } from '../repository/course.repository.js';
 import { createCourseUsecase } from '../usecase/course/createCourse.usecase.js';
 import { getCourseByTypeUsecase } from '../usecase/course/getCourseByType.usecase.js';
-import { deleteCourseUsecase } from '../usecase/course/deleteCourse.Usecase.js';
+import { deleteCourseUsecase } from '../usecase/course/deleteCourse.usecase.js';
 
 const router = express.Router();
 
@@ -12,9 +12,9 @@ const addCourse = createCourseUsecase(courseRepo);
 const getCourseByType = getCourseByTypeUsecase(courseRepo);
 const deleteCourse = deleteCourseUsecase(courseRepo);
 
-router.get('/course/type', async (req, res) => {
+router.get('/course/:type', async (req, res) => {
   try {
-    const { type } = req.query;
+    const { type } = req.params;
     const courses = await getCourseByType(type);
 
     res.status(200).json({
@@ -28,6 +28,8 @@ router.get('/course/type', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
 
 router.post('/course', async (req, res) => {
   try {

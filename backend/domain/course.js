@@ -1,8 +1,7 @@
-import e from 'express';
 import { DomainError } from './errors.js';
 
 export function validateCourseType(type) {
-  if (type !== 'core' || type !== 'pool') {
+  if (type !== 'core' && type !== 'pool') {
     throw new DomainError(`Invalid course type`);
   }
 }
