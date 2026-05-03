@@ -136,8 +136,8 @@ model StudyPlan {
 }
 
 model CoursePool {
-  course_pool_id   Int    @id @default(autoincrement())
-  course_pool_name String
+  course_pool_id Int    @id @default(autoincrement())
+  name           String
 
   program_id Int
   program    Program @relation(fields: [program_id], references: [program_id])

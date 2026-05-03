@@ -108,7 +108,7 @@ async function main() {
   // =======================
   const coursePool = await prisma.coursePool.create({
     data: {
-      course_pool_name: "Specialization Electives",
+      name: "Specialization Electives",
       program_id: program.program_id,
 
       entries: {
