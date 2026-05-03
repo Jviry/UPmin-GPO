@@ -60,9 +60,7 @@ async function main() {
         ]
       }
     },
-    include: {
-      departments: true
-    }
+    include: { departments: true }
   });
 
   const departmentId = college.departments[0].department_id;
@@ -72,14 +70,16 @@ async function main() {
   // =======================
   await prisma.course.createMany({
     data: [
-      { name: "Data Structures", code: "CMSC 127", type: "Core", units: 3, department_id: departmentId },
-      { name: "Algorithms", code: "CMSC 128", type: "Core", units: 3, department_id: departmentId },
-      { name: "Database Systems", code: "CMSC 131", type: "Core", units: 3, department_id: departmentId },
-      { name: "Operating Systems", code: "CMSC 132", type: "Core", units: 3, department_id: departmentId },
-      { name: "Software Engineering", code: "CMSC 198", type: "Core", units: 3, department_id: departmentId },
-      { name: "Machine Learning", code: "CMSC 180", type: "Elective", units: 3, department_id: departmentId },
-      { name: "Computer Networks", code: "CMSC 135", type: "Core", units: 3, department_id: departmentId },
-      { name: "Thesis", code: "CMSC 200", type: "Capstone", units: 6, department_id: departmentId },
+      { name: "Data Structures", code: "CMSC 127", type: "core", units: 3 },
+      { name: "Algorithms", code: "CMSC 128", type: "core", units: 3 },
+      { name: "Database Systems", code: "CMSC 131", type: "core", units: 3 },
+      { name: "Operating Systems", code: "CMSC 132", type: "core", units: 3 },
+      { name: "Software Engineering", code: "CMSC 198", type: "core", units: 3 },
+      { name: "Computer Networks", code: "CMSC 135", type: "core", units: 3 },
+      { name: "Thesis", code: "CMSC 200", type: "core", units: 6 },
+      { name: "Machine Learning", code: "CMSC 180", type: "pool", units: 3 },
+      { name: "Computer Vision", code: "CMSC 181", type: "pool", units: 3 },
+      { name: "Natural Language Processing", code: "CMSC 182", type: "pool", units: 3 },
     ]
   });
 
@@ -98,8 +98,25 @@ async function main() {
       qualifications: "BS Computer Science or related field.",
       application_instructions: "Submit documents and pass evaluation.",
       application_url: "https://example.com/apply",
-
       department_id: departmentId,
+    }
+  });
+
+  // =======================
+  // COURSE POOL
+  // =======================
+  const coursePool = await prisma.coursePool.create({
+    data: {
+      course_pool_name: "Specialization Electives",
+      program_id: program.program_id,
+
+      entries: {
+        create: [
+          { course_id: getCourse("CMSC 180").course_id },
+          { course_id: getCourse("CMSC 181").course_id },
+          { course_id: getCourse("CMSC 182").course_id },
+        ]
+      }
     }
   });
 
@@ -109,7 +126,7 @@ async function main() {
   const studyPlan = await prisma.studyPlan.create({
     data: {
       years: 2,
-      program_id: program.program_id
+      program_id: program.program_id,
     }
   });
 
@@ -118,15 +135,24 @@ async function main() {
   // =======================
   await prisma.programCourse.createMany({
     data: [
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1 },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1 },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1 },
+      // Year 1 Sem 1
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1, is_elective_slot: false },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1, is_elective_slot: false },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1, is_elective_slot: false },
 
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2 },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2 },
+      // Year 1 Sem 2
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2, is_elective_slot: false },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2, is_elective_slot: false },
 
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1 },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2 },
+      // Year 2 Sem 1
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1, is_elective_slot: false },
+      // elective slot — student picks from pool
+      { study_plan_id: studyPlan.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+
+      // Year 2 Sem 2
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2, is_elective_slot: false },
+      // elective slot — student picks from pool
+      { study_plan_id: studyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
     ]
   });
 
