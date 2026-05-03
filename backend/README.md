@@ -96,15 +96,19 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | ------ | --------- | ------ | ------------------------ |
 | GET    | `/announcements` | Public | Get all announcements (seeded) |
 | GET    | `/announcements/:id` | Public | Get announcement by id (seeded) |
-| POST | `/announcements` | Admin/Superadmin | Create a new announcement |
+| POST   | `/announcements` | Admin/Superadmin | Create a new announcement |
 | PUT    | `/announcements/:id` | Admin/Superadmin | Update announcement attributes |
 | DELETE | `/announcement/:id` | Admin/Superadmin | Delete an announcement |
 
 ### Program
 
-| Method | Endpoint  | Access | Description              |
-| ------ | --------- | ------ | ------------------------ |
-| GET    | `/programs` | Public | Get program names (seeded) |
+| Method | Endpoint             | Access     | Description             |
+| ------ | -------------------- | ---------- | ----------------------- |
+| GET    | `/programs`          | Public     | Get all program names   |
+| GET    | `/programs/:id`      | Public     | Get program by its ID   |
+| POST   | `admin/programs`     | Superadmin | Create new program      |
+| DELETE | `admin/programs/:id` | Superadmin | Delete existing program |
+| PUT    | `admin/programs/:id` | Superadmin | Edit program info       |
 
 ## Authentication
 

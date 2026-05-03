@@ -13,6 +13,7 @@ async function main() {
       history: 'Established to oversee all graduate programs.',
       phone: '123-4567',
       email: 'grad@university.edu',
+      org_chart_url: '/public/seed-assets/office/GPO-Organizational-Chart.png',
 
       featuredPhotos: {
         create: [
@@ -127,6 +128,38 @@ async function main() {
 
       { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1, is_placed: true },
       { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2, is_placed: true },
+    ]
+  });
+  // ==================
+  // testimony
+  // ==================
+  await prisma.testimony.createMany({
+    data: [
+      {
+        alumnus_name: "Maria Santos",
+        testimony_description: "The program helped me build a strong foundation in research and opened doors to international opportunities.",
+        alumnus_graduate_program: "MS Computer Science"
+      },
+      {
+        alumnus_name: "Juan Dela Cruz",
+        testimony_description: "Excellent faculty and hands-on experience. I was able to land a job right after graduation.",
+        alumnus_graduate_program: "MS Information Technology"
+      },
+      {
+        alumnus_name: "Angela Reyes",
+        testimony_description: "The curriculum was challenging but rewarding. It really prepared me for real-world problems.",
+        alumnus_graduate_program: "PhD Data Science"
+      },
+      {
+        alumnus_name: "Mark Villanueva",
+        testimony_description: "I gained both technical and soft skills that helped me grow professionally.",
+        alumnus_graduate_program: "MS Software Engineering"
+      },
+      {
+        alumnus_name: "Liza Fernandez",
+        testimony_description: "Great community and support system. The experience was truly life-changing.",
+        alumnus_graduate_program: "MS Information Systems"
+      }
     ]
   });
 
