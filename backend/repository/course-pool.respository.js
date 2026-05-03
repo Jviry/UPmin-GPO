@@ -7,6 +7,16 @@ export function createCoursePoolRepository(prisma) {
           program_id
         }
       });
+    },
+
+    async findCoursePools() {
+      return prisma.coursePool.findMany();
+    },
+
+    async findCoursePoolByProgramID(program_id) {
+      return prisma.coursePool.findMany({
+        where: { program_id: Number(program_id) }
+      })
     }
   }
 }
