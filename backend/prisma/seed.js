@@ -13,7 +13,7 @@ async function main() {
       history: 'Established to oversee all graduate programs.',
       phone: '123-4567',
       email: 'grad@university.edu',
-      org_chart_url: 'public/seed-assets/office/GPO-Organizationa-Chart.png',
+      org_chart_url: '/public/seed-assets/office/GPO-Organizational-Chart.png',
 
       featuredPhotos: {
         create: [

@@ -51,9 +51,16 @@ export default function AboutGPO() {
           </p>
         </div>
         <div className="bg-[var(--up-maroon)] border-t-4 border-[var(--up-gold)] py-12 w-full">
-          <div className="max-w-6xl mx-auto px-4 h-96">
-             {/* If you have an Org Chart image in your Office schema later, you can replace this */}
-            <PlaceholderProfileImg className="h-full" />
+          <div className="max-w-6xl mx-auto px-4">
+            {office?.org_chart_url ? (
+              <img 
+                src={`http://localhost:3001${office.org_chart_url}`} 
+                alt="Organization Chart" 
+                className="w-full h-full object-cover" 
+              />
+            ) : (
+              <PlaceholderProfileImg className="border-0 rounded-none" />
+            )}
           </div>
         </div>
       </section>
