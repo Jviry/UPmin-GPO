@@ -6,6 +6,6 @@ export function getCoursePoolByProgramIDUsecase({ coursePoolRepo, programRepo })
       throw new DomainError('Program not found');
     }
 
-    return await coursePoolRepo.findCoursePoolByProgramID(program_id);
+    return await coursePoolRepo.findByProgramID(program_id);
   }
 }

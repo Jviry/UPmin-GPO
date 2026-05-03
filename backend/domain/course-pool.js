@@ -5,4 +5,11 @@ export function validateCoursePoolName(name) {
     throw new DomainError('Course Pool Name is required');
   }
 }
-
+export function validateCoursePoolID(id) {
+  if (!id) {
+    throw new DomainError('Course Pool ID is required');
+  }
+  if (isNaN(parseInt(id))) {
+    throw new DomainError('Invalid Course Pool ID');
+  }
+}

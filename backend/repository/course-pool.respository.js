@@ -9,13 +9,30 @@ export function createCoursePoolRepository(prisma) {
       });
     },
 
-    async findCoursePools() {
-      return prisma.coursePool.findMany();
+    async syncEntries({ course_pool_id, course_ids }) {
+      return prisma.$transaction([
+        prisma.coursePoolEntry.deleteMany({
+          where: { course_pool_id: Number(course_pool_id) }
+        }),
+        prisma.coursePoolEntry.createMany({
+          data: course_ids.map(course_id => ({
+            course_pool_id: Number(course_pool_id),
+            course_id: Number(course_id)
+          }))
+        })
+      ]);
     },
 
-    async findCoursePoolByProgramID(program_id) {
+    async findCoursePools() {
       return prisma.coursePool.findMany({
-        where: { program_id: Number(program_id) }
+        include: { entries: { include: { course: true } } }
+      });
+    },
+
+    async findByProgramID(program_id) {
+      return prisma.coursePool.findMany({
+        where: { program_id: Number(program_id) },
+        include: { entries: { include: { course: true } } }
       })
     }
   }
