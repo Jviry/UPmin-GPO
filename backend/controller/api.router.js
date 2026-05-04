@@ -4,6 +4,7 @@ import programRoute from './program.controller.js'
 import officeRoute from './office.controller.js';
 import facultyRoute from './faculty.controller.js';
 import testimonyRoute from './testimony.controller.js';
+import scholarshipRoute from './scholarship.controller.js';
 
 export const apiController = (app) => {
   app.use('/', adminRoute); //routers
@@ -12,4 +13,5 @@ export const apiController = (app) => {
   app.use('/', announcementRoute);
   app.use('/', facultyRoute);
   app.use('/', testimonyRoute);
+  app.use('/', scholarshipRoute);
 };

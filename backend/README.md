@@ -100,6 +100,14 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | PUT    | `/announcements/:id` | Admin/Superadmin | Update announcement attributes |
 | DELETE | `/announcement/:id` | Admin/Superadmin | Delete an announcement |
 
+### Scholarship
+| Method | Endpoint                 | Access           | Description                     |
+| ------ | ------------------------ | ---------------- | ------------------------------- |
+| GET    | `/scholarships`          | Public           | Get all available scholarships  |
+| POST   | `admin/scholarships`     | Admin/Superadmin | Create new scholarship          |
+| DELETE | `admin/scholarships/:id` | Admin/Superadmin | Delete existing scholarship     |
+| PUT    | `admin/scholarships/:id` | Admin/Superadmin | Edit scholarship info           |
+
 ### Program
 
 | Method | Endpoint             | Access     | Description             |
