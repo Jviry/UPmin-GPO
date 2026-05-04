@@ -9,7 +9,7 @@ import { getCoursePoolByProgramIDUsecase } from '../usecase/course-pool/getCours
 import { syncCoursePoolEntriesUsecase } from '../usecase/course-pool/syncCoursePoolEntries.usecase.js';
 
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const coursePoolRepo = createCoursePoolRepository(prisma);
 const programRepo = createProgramRepository(prisma);
 const courseRepo = createCourseRepository(prisma);
@@ -29,7 +29,8 @@ const syncPoolEntries = syncCoursePoolEntriesUsecase({
 
 router.post('/course-pool', async (req, res) => {
   try {
-    const coursePool = await addCoursePool(req.body);
+    const { program_id } = req.params;
+    const coursePool = await addCoursePool({ ...req.body, program_id });
 
     res.status(200).json({
       message: "Course pool created successfully",
@@ -43,23 +44,23 @@ router.post('/course-pool', async (req, res) => {
   }
 });
 
+// router.get('/course-pool', async (req, res) => {
+//   try {
+//     const coursePools = await getAllCoursePools();
+//
+//     res.status(200).json({
+//       message: "Course Pools retrieved",
+//       coursePools
+//     })
+//   } catch (error) {
+//     if (error.isDomainError) {
+//       return res.status(400).json({ message: error.message });
+//     }
+//     res.status(500).json({ message: error.message });
+//   }
+// });
+
 router.get('/course-pool', async (req, res) => {
-  try {
-    const coursePools = await getAllCoursePools();
-
-    res.status(200).json({
-      message: "Course Pools retrieved",
-      coursePools
-    })
-  } catch (error) {
-    if (error.isDomainError) {
-      return res.status(400).json({ message: error.message });
-    }
-    res.status(500).json({ message: error.message });
-  }
-});
-
-router.get('/course-pool/:program_id', async (req, res) => {
   try {
     const { program_id } = req.params;
     const coursePools = await getCoursePoolByProgramID(program_id);

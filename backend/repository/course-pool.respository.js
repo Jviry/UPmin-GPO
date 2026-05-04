@@ -4,7 +4,7 @@ export function createCoursePoolRepository(prisma) {
       return prisma.coursePool.create({
         data: {
           name,
-          program_id
+          program_id: Number(program_id)
         }
       });
     },
