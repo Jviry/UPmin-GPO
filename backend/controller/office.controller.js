@@ -3,6 +3,8 @@ import { prisma } from '../db/db.js';
 import { createOfficeRepository } from '../repository/office.repository.js';
 import { createGetOfficeUsecase } from '../usecase/office/getOffice.Usecase.js';
 import { createUpdateOfficeUsecase } from '../usecase/office/updateOffice.Usecase.js';
+import { authenticate } from '../middleware/authenticate.middleware.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
 const router = express.Router();
 
@@ -16,7 +18,7 @@ router.get('/office', async (req, res) => {
 
     res.status(200).json({
       message: "Get office successful",
-      ...result
+      office: result.office,
     });
 
   } catch (error) {
@@ -27,13 +29,13 @@ router.get('/office', async (req, res) => {
   }
 });
 
-router.put('/office', async (req, res) => {
+router.put('/office', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
     const result = await updateOffice(req.body);
 
     res.status(200).json({
       message: "Updated the office!",
-      ...result
+      office: result.updatedOffice,
     });
   } catch (error) {
     if (error.isDomainError) {
