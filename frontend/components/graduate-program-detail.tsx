@@ -269,9 +269,12 @@ export function GraduateProgramDetail({ programTitle }: GraduateProgramDetailPro
         </div>
 
         {/* Apply button */}
-        <div className="flex justify-center bg-[var(--page-bg)] px-4 py-12 sm:px-6 lg:px-10">
-          <button className="rounded-sm bg-[var(--up-green)] px-10 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]">
+        <div className="flex justify-center gap-4 bg-[var(--page-bg)] px-4 py-12 sm:px-6 lg:px-10">
+          <button className="flex-1 max-w-[200px] rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]">
             Apply Now
+          </button>
+          <button className="flex-1 max-w-[200px] rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]">
+            Recommendation Letter
           </button>
         </div>
         </>
