@@ -152,8 +152,8 @@ model CoursePoolEntry {
   course_pool_id Int
   course_id      Int
 
-  course_pool CoursePool @relation(fields: [course_pool_id], references: [course_pool_id])
-  course      Course     @relation(fields: [course_id], references: [course_id])
+  course_pool CoursePool @relation(fields: [course_pool_id], references: [course_pool_id], onDelete: Cascade)
+  course      Course     @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
 
   @@unique([course_pool_id, course_id])
 }
@@ -167,8 +167,8 @@ model ProgramCourse {
   study_plan_id Int
   course_id     Int?
 
-  study_plan StudyPlan @relation(fields: [study_plan_id], references: [study_plan_id])
-  course     Course?   @relation(fields: [course_id], references: [course_id])
+  study_plan StudyPlan @relation(fields: [study_plan_id], references: [study_plan_id], onDelete: Cascade)
+  course     Course?   @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
 }
 
 model Course {

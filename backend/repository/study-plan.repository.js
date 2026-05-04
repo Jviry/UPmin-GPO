@@ -10,21 +10,24 @@ export function createStudyPlanRepository(prisma) {
       });
     },
 
-    async syncEntries({ course_pool_id, course_ids }) {
+    async syncEntries({ study_plan_id, courses }) {
       return prisma.$transaction(async (tx) => {
-        await tx.coursePoolEntry.deleteMany({
-          where: { course_pool_id: Number(course_pool_id) }
+        await tx.programCourse.deleteMany({
+          where: { study_plan_id: Number(study_plan_id) }
         });
 
-        await tx.coursePoolEntry.createMany({
-          data: course_ids.map(course_id => ({
-            course_pool_id: Number(course_pool_id),
-            course_id: Number(course_id)
+        await tx.programCourse.createMany({
+          data: courses.map(({ course_id, year, semester, is_elective_slot }) => ({
+            study_plan_id: Number(study_plan_id),
+            course_id: Number(course_id),
+            year: Number(year),
+            semester: Number(semester),
+            is_elective_slot: Boolean(is_elective_slot)
           }))
         });
 
-        return tx.coursePoolEntry.findMany({
-          where: { course_pool_id: Number(course_pool_id) },
+        return tx.programCourse.findMany({
+          where: { study_plan_id: Number(study_plan_id) },
           include: { course: true }
         });
       });
@@ -40,6 +43,18 @@ export function createStudyPlanRepository(prisma) {
       return prisma.studyPlan.findMany({
         where: { program_id: Number(program_id) },
         include: { program_courses: { include: { course: true } } }
+      })
+    },
+
+    async delete(study_plan_id) {
+      return prisma.studyPlan.delete({
+        where: { study_plan_id: Number(study_plan_id) }
+      });
+    },
+
+    async findByID(study_plan_id) {
+      return prisma.studyPlan.findUnique({
+        where: { study_plan_id: Number(study_plan_id) }
       })
     }
   }

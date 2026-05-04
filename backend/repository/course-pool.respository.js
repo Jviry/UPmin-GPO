@@ -40,6 +40,18 @@ export function createCoursePoolRepository(prisma) {
         where: { program_id: Number(program_id) },
         include: { entries: { include: { course: true } } }
       })
+    },
+
+    async delete(course_pool_id) {
+      return prisma.coursePool.delete({
+        where: { course_pool_id: Number(course_pool_id) }
+      });
+    },
+
+    async findByID(course_pool_id) {
+      return prisma.coursePool.findUnique({
+        where: { course_pool_id: Number(course_pool_id) }
+      });
     }
   }
 }

@@ -7,6 +7,7 @@ import { createCourseRepository } from '../repository/course.repository.js';
 import { getCoursePoolsUsecase } from '../usecase/course-pool/getCoursePools.usecase.js';
 import { getCoursePoolByProgramIDUsecase } from '../usecase/course-pool/getCoursePoolByProgramID.usecase.js';
 import { syncCoursePoolEntriesUsecase } from '../usecase/course-pool/syncCoursePoolEntries.usecase.js';
+import { deleteCoursePoolUsecase } from '../usecase/course-pool/deleteCoursePool.usecase.js';
 
 
 const router = express.Router({ mergeParams: true });
@@ -26,6 +27,7 @@ const syncPoolEntries = syncCoursePoolEntriesUsecase({
   coursePoolRepo,
   courseRepo
 });
+const deleteCoursePool = deleteCoursePoolUsecase(coursePoolRepo);
 
 router.post('/course-pool', async (req, res) => {
   try {
@@ -87,6 +89,23 @@ router.post('/course-pool/:id/entries', async (req, res) => {
       message: `Course Pool Entries saved!`,
       coursePoolEntries: entries,
     })
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/course-pool/:id', async (req, res) => {
+  try {
+    const { id: course_pool_id } = req.params;
+    const deletedCoursePool = await deleteCoursePool(course_pool_id);
+
+    res.status(200).json({
+      message: "Course pool deleted",
+      deletedCoursePool
+    });
   } catch (error) {
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
