@@ -3,9 +3,16 @@ import { validateCoursePoolID } from '../../domain/course-pool.js';
 
 export function syncCoursePoolEntriesUsecase({ coursePoolRepo, courseRepo }) {
   return async function({ course_pool_id, course_ids }) {
+    if (!Array.isArray(course_ids)) {
+      throw new DomainError('course_ids must be an array');
+    }
+
+    const unique_course_ids = [...new Set(course_ids)];
+
     validateCoursePoolID(course_pool_id);
+
     const courses = await Promise.all(
-      course_ids.map(course_id => courseRepo.findById(course_id))
+      unique_course_ids.map(course_id => courseRepo.findByID(course_id))
     );
 
     const invalid = courses.filter(course => course.type !== 'pool');
@@ -14,6 +21,6 @@ export function syncCoursePoolEntriesUsecase({ coursePoolRepo, courseRepo }) {
     }
 
 
-    return await coursePoolRepo.syncEntries({ course_pool_id, course_ids });
+    return await coursePoolRepo.syncEntries({ course_pool_id, course_ids: unique_course_ids });
   }
 }

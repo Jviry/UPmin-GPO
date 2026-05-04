@@ -78,8 +78,8 @@ router.get('/course-pool/:program_id', async (req, res) => {
 
 router.post('/course-pool/:id/entries', async (req, res) => {
   try {
-    const { id: course_pool_id } = req.params.id;
-    const course_ids = req.body;
+    const { id: course_pool_id } = req.params;
+    const { course_ids } = req.body;
     const entries = await syncPoolEntries({ course_pool_id, course_ids });
 
     res.status(200).json({
