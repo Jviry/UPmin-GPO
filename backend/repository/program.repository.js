@@ -85,9 +85,9 @@ export function createProgramRepository(prisma) {
               department_id: true,
               name: true
             }
-          },
-          application_details: true
-        }
+          }
+        },
+        application_details: true
       });
     },
 
