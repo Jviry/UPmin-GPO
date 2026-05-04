@@ -127,8 +127,9 @@ model Program {
 }
 
 model StudyPlan {
-  study_plan_id Int @id @default(autoincrement())
+  study_plan_id Int     @id @default(autoincrement())
   years         Int
+  name          String?
 
   program_courses ProgramCourse[]
   program_id      Int
