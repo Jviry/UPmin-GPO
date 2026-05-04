@@ -1,3 +1,4 @@
+import authRoute from './auth.controller.js';
 import adminRoute from './admin.controller.js';
 import announcementRoute from './announcement.controller.js';
 import programRoute from './program.controller.js'
@@ -9,6 +10,7 @@ import coursePoolRoute from './course-pool.controller.js';
 import studyPlanRoute from './study-plan.controller.js';
 
 export const apiController = (app) => {
+  app.use('/', authRoute);
   app.use('/', adminRoute); //routers
   app.use('/', programRoute);
   app.use('/', officeRoute);

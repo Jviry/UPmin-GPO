@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv';
 import { createAdminRepository } from '../repository/admin.repository.js';
-import { createLoginUsecase } from '../usecase/admin/login.usecase.js';
 import { createAdminUsecase } from '../usecase/admin/createAdmin.usecase.js';
 import { createUpdatePasswordUsecase } from '../usecase/admin/updatePassword.usecase.js'
 import { createDeleteAdminUsecase } from '../usecase/admin/deleteAdmin.usecase.js';
@@ -22,11 +21,6 @@ if (!JWT_SECRET) {
 
 const adminRepo = createAdminRepository(prisma);
 
-const login = createLoginUsecase({
-  adminRepo,
-  comparePassword: bcrypt.compare,
-  signToken: (payload) => jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" })
-});
 
 const createAdmin = createAdminUsecase({
   adminRepo,
@@ -42,21 +36,6 @@ const updatePassword = createUpdatePasswordUsecase({
 const deleteAdmin = createDeleteAdminUsecase(
   adminRepo
 );
-
-router.post('/auth/login', async (req, res) => {
-  try {
-    const result = await login(req.body);
-    res.status(200).json({
-      message: "Logged in successfully",
-      ...result
-    });
-  } catch (error) {
-    if (error.isDomainError) {
-      return res.status(400).json({ message: error.message });
-    }
-    res.status(500).json({ mesasage: error.message });
-  }
-});
 
 router.post('/admins', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
