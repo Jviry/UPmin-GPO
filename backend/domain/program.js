@@ -15,8 +15,14 @@ export function validateUpdateProgram(data) {
 
 // Validate application details but allow partial updates as some fields are optional
 export function validateUpdateProgramApplication(data) {
-  if (data.qualifications !== undefined && typeof data.qualifications !== 'string' || data.application_instructions !== undefined && typeof data.application_instructions !== 'string' || data.application_url !== undefined && typeof data.application_url !== 'string') {
-    throw new DomainError('Application details must be strings');
+  if (data.qualifications !== undefined && typeof data.qualifications !== 'string') {
+    throw new DomainError('Qualifications must be a string');
+  }
+  if (data.application_instructions !== undefined && typeof data.application_instructions !== 'string') {
+    throw new DomainError('Application instructions must be a string');
+  }
+  if (data.application_url !== undefined && typeof data.application_url !== 'string') {
+    throw new DomainError('Application URL must be a string');
   }
   if (data.recommendation_url !== undefined && data.recommendation_url !== null && typeof data.recommendation_url !== 'string') {
     throw new DomainError('Recommendation URL must be a string or null');

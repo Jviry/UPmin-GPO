@@ -18,7 +18,8 @@ export function createProgramRepository(prisma) {
               department_id: true,
               name: true
             }
-          }
+          },
+          application_details: true
         }
       });
     },
@@ -44,7 +45,8 @@ export function createProgramRepository(prisma) {
           department: {
             select: { department_id: true, name: true }
           }
-        }
+        },
+        application_details: true
       });
     },
 
@@ -83,7 +85,8 @@ export function createProgramRepository(prisma) {
               department_id: true,
               name: true
             }
-          }
+          },
+          application_details: true
         }
       });
     },
