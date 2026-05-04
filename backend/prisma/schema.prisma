@@ -112,20 +112,31 @@ model Faculty {
 
 model Program {
   program_id               Int    @id @default(autoincrement())
-  type                     String // e.g., "Diploma Program", "Graduate Program"
+  type                     String // e.g., "Diploma Program", "Graduate Program", "Doctoral Program"
   name                     String
   description              String
   history                  String
-  qualifications           String
-  application_instructions String
-  application_url          String
 
   department_id Int
   department    Department @relation(fields: [department_id], references: [department_id])
-
+  
   program_courses ProgramCourse[]
   study_plans     StudyPlan[]
+
+  program_application      ProgramApplication?   @relation(fields: [program_application_id], references: [program_application_id])
+  program_application_id   Int?                  @unique
 }
+
+model ProgramApplication {
+  program_application_id   Int    @id @default(autoincrement())
+  qualifications           String @default ("")
+  application_instructions String @default ("")
+  application_url          String @default ("")
+  recommendation_url       String @default ("")
+
+  program                  Program? 
+}
+
 
 model StudyPlan {
   study_plan_id Int @id @default(autoincrement())
