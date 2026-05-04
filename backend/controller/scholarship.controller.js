@@ -2,6 +2,7 @@ import express from 'express';
 import { prisma } from '../db/db.js';
 import { createScholarshipRepository } from '../repository/scholarship.repository.js';
 import { getAllScholarshipsUsecase } from '../usecase/scholarship/getAllScholarships.usecase.js';
+import { getScholarshipByIdUsecase } from '../usecase/scholarship/getScholarshipById.usecase.js';
 import { createScholarshipUsecase } from '../usecase/scholarship/createScholarship.usecase.js';
 import { updateScholarshipUsecase } from '../usecase/scholarship/updateScholarship.usecase.js';
 import { deleteScholarshipUsecase } from '../usecase/scholarship/deleteScholarship.usecase.js';
@@ -12,6 +13,7 @@ const router = express.Router();
 const scholarshipRepo = createScholarshipRepository(prisma);
 
 const getAllScholarships = getAllScholarshipsUsecase({ scholarshipRepo });
+const getScholarshipById = getScholarshipByIdUsecase({ scholarshipRepo });
 const createScholarship = createScholarshipUsecase({ scholarshipRepo });
 const updateScholarship = updateScholarshipUsecase({ scholarshipRepo });
 const deleteScholarship = deleteScholarshipUsecase({ scholarshipRepo });
@@ -31,6 +33,24 @@ router.get('/scholarships', async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     console.error('Get all scholarships error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get('/scholarships/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await getScholarshipById(id);
+
+    res.status(200).json({
+      message: `Scholarship ${id} retrieved successfully`,
+      scholarship: result.scholarship,
+    });
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    console.error('Get scholarship by ID error:', error);
     res.status(500).json({ message: error.message });
   }
 });
