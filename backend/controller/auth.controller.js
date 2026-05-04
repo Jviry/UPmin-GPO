@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv';
 import { createAdminRepository } from '../repository/admin.repository.js';
-import { createLoginUsecase } from '../usecase/admin/login.usecase.js';
+import { createLoginUsecase } from '../usecase/auth/login.usecase.js';
 
 const router = express.Router();
 
@@ -37,3 +37,5 @@ router.post('/auth/login', async (req, res) => {
     res.status(500).json({ mesasage: error.message });
   }
 });
+
+export default router;
