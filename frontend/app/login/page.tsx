@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
@@ -100,18 +100,18 @@ export default function LoginPage() {
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="block mb-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-secondary)]"
               >
-                Username
+                Email
               </label>
               <input
                 type="text"
-                name="username"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
+                name="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
                 required                  suppressHydrationWarning                className="w-full rounded-lg border border-[var(--line-strong)] bg-white px-4 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] outline-none transition focus:border-[var(--up-maroon)] focus:ring-2 focus:ring-[rgba(118,9,12,0.15)]"
               />
             </div>
