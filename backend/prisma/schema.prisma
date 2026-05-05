@@ -76,37 +76,28 @@ model Testimony {
   alumnus_graduate_program String
 }
 
-model College {
-  college_id   Int    @id @default(autoincrement())
-  name         String
-  current_dean String
-
-  departments Department[]
-}
-
 model Department {
   department_id Int    @id @default(autoincrement())
   name          String
-  head          String
   contact_info  String @unique
 
-  college_id Int
-  college    College @relation(fields: [college_id], references: [college_id])
-
   programs Program[]
-  faculty  Faculty[]
 }
 
 model Faculty {
-  faculty_id           Int    @id @default(autoincrement())
-  name                 String
-  email                String @unique
-  photo                String
-  position             String
-  university_graduated String
+  faculty_id  Int                 @id @default(autoincrement())
+  name        String
+  email       String              @unique
+  photo       String
+  position    String
+  credentials FacultyCredential[]
+}
 
-  department_id Int
-  department    Department @relation(fields: [department_id], references: [department_id])
+model FacultyCredential {
+  credential_id Int     @id @default(autoincrement())
+  degree        String // e.g. "MS Computer Science", "BS Mathematics"
+  faculty_id    Int
+  faculty       Faculty @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
 }
 
 model Program {
