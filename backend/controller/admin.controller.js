@@ -86,7 +86,26 @@ router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async
   }
 });
 
-// Test
+router.get('/admins', authenticate, authenticateRole('superadmin'), async (req, res) => {
+  try {
+    const admins = await prisma.admin.findMany({
+      select: {
+        admin_id: true,
+        name: true,
+        email: true,
+        role: true
+      }
+    });
+
+    res.status(200).json({
+      message: "Fetched admins successfully",
+      admins: admins
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get('/colleges', async (req, res) => {
   try {
     const colleges = await prisma.college.findMany();

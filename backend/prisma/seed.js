@@ -88,6 +88,44 @@ async function main() {
   const getCourse = (code) => courses.find(c => c.code === code);
 
   // =======================
+  // SCHOLARSHIPS
+  // =======================
+  await prisma.scholarship.createMany({
+    data: [
+      {
+        name: "CHED Scholarship",
+        description: "A scholarship program for qualified students pursuing higher education degrees in priority courses.",
+        covered_programs: "MS Computer Science, MS Information Technology, MS Engineering, PhD Data Science",
+        application_instructions: "1. Submit online application form\n2. Provide certified true copy of grades\n3. Submit recommendation letters from 2 professors\n4. Pass the qualifying examination\n5. Attend interview",
+        application_url: "https://ched.gov.ph/scholarships/csp/apply",
+        recommendation_url: "https://ched.gov.ph/scholarships/csp/recommendation-form",
+        contact_info: "ched.scholarships@ched.gov.ph | (02) 123-4567",
+        admin_id: admin.admin_id
+      },
+      {
+        name: "DOST-SEI Scholarship Program",
+        description: "A scholarship for talented Filipino students who want to pursue degrees in Science, Technology, Engineering, and Mathematics (STEM).",
+        covered_programs: "MS Computer Science, MS Mathematics, MS Physics, MS Engineering, PhD Data Science",
+        application_instructions: "1. Register online at DOST-SEI portal\n2. Submit academic records and birth certificate\n3. Take the DOST-SEI examination\n4. Pass the interview for qualifying applicants\n5. Submit medical certificate",
+        application_url: "https://www.scholarships.dost.gov.ph/apply",
+        recommendation_url: "https://www.scholarships.dost.gov.ph/recommendation",
+        contact_info: "dost.sei@dost.gov.ph | (02) 888-1234",
+        admin_id: admin.admin_id
+      },
+      {
+        name: "Aboitiz Foundation Scholarship Program",
+        description: "A scholarship program for deserving students who demonstrate academic excellence, leadership potential, and commitment to community development.",
+        covered_programs: "MS Computer Science, MS Business Administration, MS Engineering, MS Data Science, MS Environmental Management",
+        application_instructions: "1. Complete online application form\n2. Submit latest transcript of records (minimum GPA of 2.0)\n3. Provide recommendation letters from 2 professors or employers\n4. Submit a personal essay (500 words) on leadership and community service\n5. Pass the panel interview",
+        application_url: "https://aboitizfoundation.com/scholarships/apply",
+        recommendation_url: "https://aboitizfoundation.com/scholarships/recommendation-form",
+        contact_info: "scholarships@aboitizfoundation.com | (032) 123-7890",
+        admin_id: admin.admin_id
+      }      
+    ]
+  });
+
+  // =======================
   // PROGRAM
   // =======================
   const program = await prisma.program.create({
