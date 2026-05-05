@@ -1,6 +1,5 @@
 export function createProgramRepository(prisma) {
   return {
-    // Untouched from previous version
     async getAllPrograms() {
       return await prisma.program.findMany({
         select: { name: true, program_id: true }
@@ -19,13 +18,14 @@ export function createProgramRepository(prisma) {
               name: true
             }
           },
-          program_application: true
+          program_application: true,
+          course_pools: { include: { entries: { include: { course: true } } } },
+          study_plans: { include: { program_courses: { include: { course: true } } } }
         }
       });
     },
 
     async createProgram(type, name, description, history, department_id) {
-      // Made separate
       const programApplication = await prisma.programApplication.create({
         data: {
           qualifications: "",
@@ -58,7 +58,7 @@ export function createProgramRepository(prisma) {
         where: { program_id: parseInt(id) },
         select: { program_application_id: true }
       });
-      
+
       if (program?.program_application_id) {
         await prisma.programApplication.delete({
           where: { program_application_id: program.program_application_id }
@@ -89,7 +89,7 @@ export function createProgramRepository(prisma) {
               name: true
             }
           },
-          program_application: true 
+          program_application: true
         }
       });
     },
