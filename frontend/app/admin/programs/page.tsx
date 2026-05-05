@@ -44,10 +44,41 @@ export default function AdminPrograms() {
             </div>
           </div>
 
-          <div className="mb-4 flex min-h-[200px] items-center justify-center border border-[var(--line)] bg-[var(--page-bg)] text-xs font-semibold tracking-widest text-[var(--text-muted)] uppercase">
-            Course Management Builder
+          {/* Study Plan Creator (Replaces Course Management Builder) */}
+          <div className="mb-6 flex flex-col border border-[var(--line)] bg-[var(--surface-muted)] p-6 shadow-sm">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--up-maroon)]">
+              Create New Study Plan
+            </h3>
+            <div className="flex items-end gap-4">
+              <div className="flex-1">
+                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  Curriculum Year / Version
+                </label>
+                <input 
+                  type="text" 
+                  className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
+                  placeholder="e.g., 2026-2027 Curriculum" 
+                />
+              </div>
+              <div className="w-32">
+                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  Total Years
+                </label>
+                <input 
+                  type="number" 
+                  min="1" 
+                  max="5" 
+                  className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
+                  placeholder="e.g., 2" 
+                />
+              </div>
+              <button className="h-10 border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+                Create
+              </button>
+            </div>
           </div>
 
+          {/* Study Plan Management Builder (The Drag-and-Drop Component) */}
           <div className="mb-8">
             <StudyPlanBuilder />
           </div>

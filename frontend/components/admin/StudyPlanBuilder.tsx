@@ -3,28 +3,29 @@
 import React, { useState } from 'react';
 import { DndContext, closestCenter, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core';
 
-// --- Types & Initial Data ---
+// --- Types & Catalog Data ---
 type Course = {
-  id: string;
   code: string;
   name: string;
   units: number;
-  location: string; // 'pool' or a specific slot ID like 'slot-1'
 };
 
-const INITIAL_COURSES: Course[] = [
-  { id: 'c-203', code: 'CMSC 203', name: 'Advanced Algorithms', units: 3, location: 'pool' },
-  { id: 'c-204', code: 'CMSC 204', name: 'Machine Learning', units: 3, location: 'pool' },
-  { id: 'c-205', code: 'CMSC 205', name: 'Data Science', units: 3, location: 'pool' },
+// This is our permanent "Pool". Items never leave this list.
+const COURSE_CATALOG: Course[] = [
+  { code: 'CMSC 203', name: 'Advanced Algorithms', units: 3 },
+  { code: 'CMSC 204', name: 'Machine Learning', units: 3 },
+  { code: 'CMSC 205', name: 'Data Science', units: 3 },
+  { code: 'CMSC 399', name: 'Graduate Seminar', units: 1 },
+  { code: 'CMSC 400', name: 'Doctorate Dissertation', units: 3 },
 ];
 
-const ELECTIVE_SLOTS = ['slot-1', 'slot-2']; // IDs for our drop zones
+const ELECTIVE_SLOTS = ['slot-1', 'slot-2', 'slot-3'];
 
 // --- Helper Components ---
 
-function DraggableCourse({ course }: { course: Course }) {
+function DraggableCourse({ id, course }: { id: string; course: Course }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: course.id,
+    id: id, // We pass a specific ID depending on if it's in the pool or in a slot
     data: course,
   });
 
@@ -34,7 +35,7 @@ function DraggableCourse({ course }: { course: Course }) {
       {...listeners}
       {...attributes}
       className={`cursor-grab rounded border border-[var(--line)] bg-white p-3 shadow-sm transition hover:border-[var(--up-gold)] active:cursor-grabbing ${
-        isDragging ? 'opacity-50' : 'opacity-100'
+        isDragging ? 'opacity-40' : 'opacity-100'
       }`}
     >
       <div className="flex items-start justify-between">
@@ -46,8 +47,9 @@ function DraggableCourse({ course }: { course: Course }) {
   );
 }
 
-function DroppableSlot({ id, course }: { id: string; course?: Course }) {
-  const { isOver, setNodeRef } = useDroppable({ id });
+function DroppableSlot({ slotId, course }: { slotId: string; course: Course | null }) {
+  // The droppable zone has the ID 'slot-X'
+  const { isOver, setNodeRef } = useDroppable({ id: slotId });
 
   return (
     <div
@@ -58,8 +60,8 @@ function DroppableSlot({ id, course }: { id: string; course?: Course }) {
     >
       {course ? (
         <div className="w-full">
-           {/* If a course is in the slot, render it as draggable so it can be moved out */}
-          <DraggableCourse course={course} />
+           {/* The draggable item inside the slot has the ID 'item_slot-X' */}
+          <DraggableCourse id={`item_${slotId}`} course={course} />
         </div>
       ) : (
         <span className="text-sm font-semibold tracking-widest text-[var(--up-gold)]">
@@ -71,16 +73,19 @@ function DroppableSlot({ id, course }: { id: string; course?: Course }) {
 }
 
 function DroppablePool({ children }: { children: React.ReactNode }) {
+  // Making the pool droppable allows us to use it as a "Trash Can" to remove items from slots
   const { isOver, setNodeRef } = useDroppable({ id: 'pool' });
   
   return (
     <div 
       ref={setNodeRef} 
       className={`modern-scrollbar flex-1 overflow-y-auto p-4 space-y-3 transition-colors ${
-        isOver ? 'bg-gray-100' : ''
+        isOver ? 'bg-red-50/30 border-inner border-red-200' : ''
       }`}
     >
-      <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">Electives</div>
+      <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">
+        {isOver ? "Drop to Remove" : "Electives & Seminars"}
+      </div>
       {children}
     </div>
   );
@@ -89,36 +94,61 @@ function DroppablePool({ children }: { children: React.ReactNode }) {
 // --- Main Component ---
 
 export function StudyPlanBuilder() {
-  const [courses, setCourses] = useState<Course[]>(INITIAL_COURSES);
+  // State maps slot IDs to cloned Course objects
+  const [slots, setSlots] = useState<Record<string, Course | null>>({
+    'slot-1': null,
+    'slot-2': null,
+    'slot-3': null,
+  });
   const [activeCourse, setActiveCourse] = useState<Course | null>(null);
 
-  // Handle the drag end event
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
-    setActiveCourse(null); // Clear overlay
+    setActiveCourse(null);
 
-    if (!over) return; // Dropped outside a valid zone
+    // Parse what we are dragging
+    const activeId = String(active.id);
+    const isFromPool = activeId.startsWith('pool_');
+    const isFromSlot = activeId.startsWith('item_');
 
-    const courseId = active.id;
-    const newLocation = over.id; // 'pool', 'slot-1', or 'slot-2'
+    // If dropped entirely outside a valid zone, just remove it if it came from a slot
+    if (!over) {
+      if (isFromSlot) {
+        const sourceSlotId = activeId.replace('item_', '');
+        setSlots((prev) => ({ ...prev, [sourceSlotId]: null }));
+      }
+      return;
+    }
 
-    setCourses((prev) => {
-      // If dropping into a slot that already has a course, bump the existing course back to the pool
-      const existingCourseInSlot = prev.find((c) => c.location === newLocation && newLocation !== 'pool');
-      
-      return prev.map((course) => {
-        if (course.id === courseId) {
-          return { ...course, location: newLocation }; // Move dragged course
+    const overId = String(over.id);
+
+    // Scenario 1: Dropped into a Study Plan Slot
+    if (overId.startsWith('slot-')) {
+      if (isFromPool) {
+        // Clone from pool into slot
+        const courseCode = activeId.replace('pool_', '');
+        const course = COURSE_CATALOG.find((c) => c.code === courseCode);
+        if (course) {
+          setSlots((prev) => ({ ...prev, [overId]: course }));
         }
-        if (existingCourseInSlot && course.id === existingCourseInSlot.id) {
-          return { ...course, location: 'pool' }; // Bump existing course back to pool
-        }
-        return course;
-      });
-    });
+      } else if (isFromSlot) {
+        // Swap or move from one slot to another
+        const sourceSlotId = activeId.replace('item_', '');
+        setSlots((prev) => ({
+          ...prev,
+          [sourceSlotId]: prev[overId], // Put whatever was in the target back into the source
+          [overId]: prev[sourceSlotId], // Put the dragged item into the target
+        }));
+      }
+    } 
+    // Scenario 2: Dropped back into the Pool (Acts as a delete)
+    else if (overId === 'pool') {
+      if (isFromSlot) {
+        const sourceSlotId = activeId.replace('item_', '');
+        setSlots((prev) => ({ ...prev, [sourceSlotId]: null }));
+      }
+    }
   };
-
-  const poolCourses = courses.filter((c) => c.location === 'pool');
 
   return (
     <div className="flex flex-col gap-4 border border-[var(--line)] bg-[var(--page-bg)] p-6">
@@ -127,15 +157,12 @@ export function StudyPlanBuilder() {
         <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
           Study Plan Management
         </h3>
-        <span className="rounded bg-[var(--up-maroon)] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white">
-          Total Units: 15
-        </span>
       </div>
 
       <DndContext 
         collisionDetection={closestCenter}
         onDragStart={(e) => {
-          const course = courses.find(c => c.id === e.active.id);
+          const course = e.active.data.current as Course;
           if (course) setActiveCourse(course);
         }}
         onDragEnd={handleDragEnd}
@@ -143,19 +170,19 @@ export function StudyPlanBuilder() {
         <div className="flex h-[500px] gap-6">
           
           {/* LEFT: Course Pool */}
-          <div className="flex w-1/3 flex-col border border-[var(--line)] bg-[var(--surface-muted)]">
+          <div className="flex w-1/3 flex-col border border-[var(--line)] bg-[var(--surface-muted)] relative">
             <div className="border-b border-[var(--line)] bg-white p-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-[var(--up-maroon)]">
               Course Pool
             </div>
             
-            {/* The Pool is a Droppable zone so you can drag items back into it */}
             <DroppablePool>
-              {poolCourses.map((course) => (
-                <DraggableCourse key={course.id} course={course} />
+              {COURSE_CATALOG.map((course) => (
+                <DraggableCourse 
+                  key={`pool_${course.code}`} 
+                  id={`pool_${course.code}`} 
+                  course={course} 
+                />
               ))}
-              {poolCourses.length === 0 && (
-                <div className="text-center text-xs text-gray-400 mt-4">Pool is empty</div>
-              )}
             </DroppablePool>
           </div>
 
@@ -177,20 +204,10 @@ export function StudyPlanBuilder() {
                 <div className="text-xs font-bold text-gray-400">3 Units</div>
               </div>
 
-              <div className="flex items-center rounded border border-gray-200 bg-gray-100 p-4 opacity-80 shadow-sm">
-                <div className="mr-4 flex shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-[0.6rem] font-bold uppercase tracking-widest text-gray-600">CORE</div>
-                <div className="flex-1">
-                  <p className="font-bold text-gray-700">CMSC 202</p>
-                  <p className="text-xs text-gray-500">Advanced Computer Systems</p>
-                </div>
-                <div className="text-xs font-bold text-gray-400">3 Units</div>
-              </div>
-
-              {/* Dynamic Drop Zones for Electives */}
-              {ELECTIVE_SLOTS.map((slotId) => {
-                const courseInSlot = courses.find((c) => c.location === slotId);
-                return <DroppableSlot key={slotId} id={slotId} course={courseInSlot} />;
-              })}
+              {/* Dynamic Drop Zones */}
+              {ELECTIVE_SLOTS.map((slotId) => (
+                <DroppableSlot key={slotId} slotId={slotId} course={slots[slotId]} />
+              ))}
 
             </div>
           </div>
