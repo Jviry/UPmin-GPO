@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DndContext, pointerWithin, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core';
 
 // --- Types ---
@@ -137,7 +137,7 @@ function DroppableBucket({ id, label, placedCourses, onRemove, bucketType, onDel
 
 // --- Main Component ---
 
-export function StudyPlanBuilder() {
+export function StudyPlanBuilder({ programId }: { programId: number | null }) {
   const [catalog, setCatalog] = useState<Course[]>([
     { code: 'MATH 26', name: 'Advanced Mathematics', units: 3, type: 'core' },
     { code: 'CMSC 126', name: 'Theory of Computation', units: 3, type: 'core' },
