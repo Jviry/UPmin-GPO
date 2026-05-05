@@ -1,5 +1,17 @@
 import { StudyPlanBuilder } from '@/components/admin/StudyPlanBuilder';
 
+const MOCK_FACULTY = [
+  { id: 1, name: "Dr. Maria Stella Salazar", position: "Professor", email: "mssalazar@up.edu.ph" },
+  { id: 2, name: "Prof. Juma Novie A. Alviola", position: "Associate Professor", email: "jnalviola@up.edu.ph" },
+  { id: 3, name: "Dr. Jose Rizal", position: "Guest Lecturer", email: "jrizal@up.edu.ph" },
+];
+
+const MOCK_FILES = [
+  { id: 1, name: "MS_CS_Application_Form_2026.pdf", type: "PDF", date: "May 1, 2026", size: "1.2 MB" },
+  { id: 2, name: "Tuition_Fee_Assessment_Grid.xlsx", type: "Spreadsheet", date: "Apr 28, 2026", size: "450 KB" },
+  { id: 3, name: "Recommendation_Letter_Template.docx", type: "Document", date: "Feb 15, 2026", size: "120 KB" },
+];
+
 export default function AdminPrograms() {
   return (
     <div className="flex min-h-[calc(100vh-64px)]">
@@ -44,41 +56,6 @@ export default function AdminPrograms() {
             </div>
           </div>
 
-          {/* Study Plan Creator (Replaces Course Management Builder) */}
-          <div className="mb-6 flex flex-col border border-[var(--line)] bg-[var(--surface-muted)] p-6 shadow-sm">
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--up-maroon)]">
-              Create New Study Plan
-            </h3>
-            <div className="flex items-end gap-4">
-              <div className="flex-1">
-                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-                  Curriculum Year / Version
-                </label>
-                <input 
-                  type="text" 
-                  className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-                  placeholder="e.g., 2026-2027 Curriculum" 
-                />
-              </div>
-              <div className="w-32">
-                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-                  Total Years
-                </label>
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="5" 
-                  className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-                  placeholder="e.g., 2" 
-                />
-              </div>
-              <button className="h-10 border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
-                Create
-              </button>
-            </div>
-          </div>
-
-          {/* Study Plan Management Builder (The Drag-and-Drop Component) */}
           <div className="mb-8">
             <StudyPlanBuilder />
           </div>
@@ -89,7 +66,7 @@ export default function AdminPrograms() {
           </div>
         </section>
 
-        {/* Block 2: Faculty Management */}
+                {/* Block 2: Faculty Management */}
         <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
             <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
@@ -98,10 +75,28 @@ export default function AdminPrograms() {
             </h2>
           </div>
 
-          <div className="mb-8 flex h-[350px] flex-col overflow-hidden border border-[var(--line)] bg-[var(--page-bg)]">
-            <div className="h-10 w-full border-b border-[var(--line)] bg-[var(--surface-muted)]"></div>
-            <div className="flex flex-1 items-center justify-center text-sm font-medium tracking-widest text-[var(--text-muted)] uppercase">
-              Faculty Table
+          <div className="mb-8 flex h-[350px] flex-col overflow-hidden border border-[var(--line)] bg-white">
+            {/* Table Header */}
+            <div className="grid grid-cols-12 gap-4 border-b border-[var(--line)] bg-[var(--surface-muted)] px-6 py-3 text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">
+              <div className="col-span-4">Name</div>
+              <div className="col-span-4">Position</div>
+              <div className="col-span-4">Email</div>
+            </div>
+            
+            {/* Table Body (Scrollable) */}
+            <div className="modern-scrollbar flex-1 overflow-y-auto">
+              {MOCK_FACULTY.map((faculty, index) => (
+                <div 
+                  key={faculty.id} 
+                  className={`grid grid-cols-12 gap-4 border-b border-[var(--line)] px-6 py-4 text-sm transition hover:bg-gray-50 cursor-pointer ${
+                    index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'
+                  }`}
+                >
+                  <div className="col-span-4 font-semibold text-[var(--text-primary)]">{faculty.name}</div>
+                  <div className="col-span-4 text-[var(--text-secondary)]">{faculty.position}</div>
+                  <div className="col-span-4 text-[var(--text-secondary)]">{faculty.email}</div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -111,7 +106,6 @@ export default function AdminPrograms() {
             <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Add</button>
           </div>
         </section>
-
         {/* Block 3: Forms & Fees File Management */}
         <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
@@ -121,14 +115,37 @@ export default function AdminPrograms() {
             </h2>
           </div>
 
-          <div className="mb-8 flex h-[200px] items-center justify-center border border-[var(--line)] bg-[var(--page-bg)] text-xs font-semibold tracking-widest text-[var(--text-muted)] uppercase">
-            List of Files (For Forms & Fees Tab)
+          <div className="mb-8 flex h-[250px] flex-col overflow-hidden border border-[var(--line)] bg-white">
+            <div className="modern-scrollbar flex-1 overflow-y-auto p-4 space-y-3 bg-[var(--page-bg)]">
+              {MOCK_FILES.map((file) => (
+                <div 
+                  key={file.id} 
+                  className="flex items-center justify-between rounded border border-[var(--line)] bg-white p-4 shadow-sm transition hover:border-[var(--up-gold)] cursor-pointer"
+                >
+                  <div className="flex items-center gap-4">
+                    {/* Fake Document Icon Box */}
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-[var(--surface-muted)] font-bold text-[var(--up-maroon)] text-xs">
+                      {file.type === "PDF" ? "PDF" : "DOC"}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm text-[var(--text-primary)]">{file.name}</p>
+                      <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+                        Uploaded {file.date} • {file.size}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Select Checkbox (Visual Only) */}
+                  <div className="h-4 w-4 rounded-sm border border-[var(--text-muted)]"></div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
             <button className="border border-[var(--up-maroon)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--up-maroon)] transition hover:bg-red-50">Delete</button>
             <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Edit</button>
-            <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Add</button>
+            <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Upload File</button>
           </div>
         </section>
         

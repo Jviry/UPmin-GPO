@@ -1,3 +1,10 @@
+// Mock Data for UI Visualization
+const MOCK_ADMINS = [
+  { id: 1, name: "System Administrator", email: "admin@up.edu.ph", role: "Superadmin" },
+  { id: 2, name: "Dr. Maria Stella Salazar", email: "mssalazar@up.edu.ph", role: "Admin" },
+  { id: 3, name: "Prof. Juma Novie A. Alviola", email: "jnalviola@up.edu.ph", role: "Admin" },
+];
+
 export default function AdminDashboard() {
   return (
     <main className="mx-auto max-w-[1200px] p-8 py-10">
@@ -61,17 +68,43 @@ export default function AdminDashboard() {
           </h2>
         </div>
 
-        <div className="mb-8 flex h-[350px] flex-col overflow-hidden border border-[var(--line)] bg-[var(--page-bg)]">
-          <div className="h-10 w-full border-b border-[var(--line)] bg-[var(--surface-muted)]"></div>
-          <div className="flex flex-1 items-center justify-center text-sm font-medium tracking-widest text-[var(--text-muted)] uppercase">
-            Program Coordinator Table
+        <div className="mb-8 flex h-[350px] flex-col overflow-hidden border border-[var(--line)] bg-white">
+          {/* Table Header */}
+          <div className="grid grid-cols-12 gap-4 border-b border-[var(--line)] bg-[var(--surface-muted)] px-6 py-3 text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">
+            <div className="col-span-4">Name</div>
+            <div className="col-span-4">Email</div>
+            <div className="col-span-4">Role</div>
+          </div>
+          
+          {/* Table Body (Scrollable) */}
+          <div className="modern-scrollbar flex-1 overflow-y-auto">
+            {MOCK_ADMINS.map((admin, index) => (
+              <div 
+                key={admin.id} 
+                className={`grid grid-cols-12 items-center gap-4 border-b border-[var(--line)] px-6 py-4 text-sm transition hover:bg-gray-50 cursor-pointer ${
+                  index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'
+                }`}
+              >
+                <div className="col-span-4 font-semibold text-[var(--text-primary)]">{admin.name}</div>
+                <div className="col-span-4 text-[var(--text-secondary)]">{admin.email}</div>
+                <div className="col-span-4">
+                  <span className={`inline-block rounded px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-widest ${
+                    admin.role === 'Superadmin' 
+                      ? 'bg-[var(--up-maroon)] text-white shadow-sm' 
+                      : 'bg-gray-200 text-gray-700'
+                  }`}>
+                    {admin.role}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
           <button className="border border-[var(--up-maroon)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--up-maroon)] transition hover:bg-red-50">Delete</button>
           <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Edit</button>
-          <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Add</button>
+          <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Add Admin</button>
         </div>
       </section>
     </main>
