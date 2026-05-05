@@ -58,7 +58,7 @@ router.get('/programs/:id', async (req, res) => {
 });
 
 // Protected routes (authentication required)
-router.post('/admin/programs', authenticate, async (req, res) => {
+router.post('/programs', authenticate, async (req, res) => {
   try {
     const result = await createProgram(req.body);
 
@@ -75,7 +75,7 @@ router.post('/admin/programs', authenticate, async (req, res) => {
   }
 });
 
-router.delete('/admin/programs/:id', authenticate, async (req, res) => {
+router.delete('/programs/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await deleteProgram(id);
@@ -93,7 +93,7 @@ router.delete('/admin/programs/:id', authenticate, async (req, res) => {
   }
 });
 
-router.put('/admin/programs/:id', authenticate, async (req, res) => {
+router.put('/programs/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await updateProgram(id, req.body);

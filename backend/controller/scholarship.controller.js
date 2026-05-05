@@ -56,7 +56,7 @@ router.get('/scholarships/:id', async (req, res) => {
 });
 
 // Protected routes
-router.post('/admin/scholarships', authenticate, async (req, res) => {
+router.post('/scholarships', authenticate, async (req, res) => {
   try {
     const admin_id = req.user.admin_id;
     const scholarshipData = {
@@ -79,7 +79,7 @@ router.post('/admin/scholarships', authenticate, async (req, res) => {
   }
 });
 
-router.put('/admin/scholarships/:id', authenticate, async (req, res) => {
+router.put('/scholarships/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await updateScholarship(id, req.body);
@@ -97,7 +97,7 @@ router.put('/admin/scholarships/:id', authenticate, async (req, res) => {
   }
 });
 
-router.delete('/admin/scholarships/:id', authenticate, async (req, res) => {
+router.delete('/scholarships/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await deleteScholarship(id);

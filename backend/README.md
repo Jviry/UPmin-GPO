@@ -104,9 +104,10 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | Method | Endpoint                 | Access           | Description                     |
 | ------ | ------------------------ | ---------------- | ------------------------------- |
 | GET    | `/scholarships`          | Public           | Get all available scholarships  |
-| POST   | `admin/scholarships`     | Admin/Superadmin | Create new scholarship          |
-| DELETE | `admin/scholarships/:id` | Admin/Superadmin | Delete existing scholarship     |
-| PUT    | `admin/scholarships/:id` | Admin/Superadmin | Edit scholarship info           |
+| GET    | `/scholarships/:id`      | Public           | Get scholarship by its id       |
+| POST   | `/scholarships`          | Admin/Superadmin | Create new scholarship          |
+| DELETE | `/scholarships/:id`      | Admin/Superadmin | Delete existing scholarship     |
+| PUT    | `/scholarships/:id`      | Admin/Superadmin | Edit scholarship info           |
 
 ### Program
 
@@ -114,9 +115,9 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | ------ | -------------------- | ---------- | ----------------------- |
 | GET    | `/programs`          | Public     | Get all program names   |
 | GET    | `/programs/:id`      | Public     | Get program by its ID   |
-| POST   | `admin/programs`     | Superadmin | Create new program      |
-| DELETE | `admin/programs/:id` | Superadmin | Delete existing program |
-| PUT    | `admin/programs/:id` | Superadmin | Edit program info       |
+| POST   | `/programs`          | Superadmin | Create new program      |
+| DELETE | `/programs/:id`      | Superadmin | Delete existing program |
+| PUT    | `/programs/:id`      | Superadmin | Edit program info       |
 
 ## Authentication
 
