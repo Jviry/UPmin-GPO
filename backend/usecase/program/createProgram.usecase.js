@@ -9,9 +9,6 @@ export function createProgramUsecase({ programRepo }) {
       data.name,
       data.description,
       data.history,
-      data.qualifications,
-      data.application_instructions,
-      data.application_url,
       data.department_id
     );
 
