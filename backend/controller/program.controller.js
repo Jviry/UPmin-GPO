@@ -111,7 +111,7 @@ router.put('/programs/:id', authenticate, async (req, res) => {
   }
 });
 
-router.put('/admin/programs/application/:id', authenticate, async (req, res) => {
+router.put('/programs/application/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await updateProgramApplication(id, req.body);

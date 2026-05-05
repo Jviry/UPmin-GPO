@@ -19,12 +19,22 @@ export function createProgramRepository(prisma) {
               name: true
             }
           },
-          application_details: true
+          program_application: true
         }
       });
     },
 
     async createProgram(type, name, description, history, department_id) {
+      // Made separate
+      const programApplication = await prisma.programApplication.create({
+        data: {
+          qualifications: "",
+          application_instructions: "",
+          application_url: "",
+          recommendation_url: ""
+        }
+      });
+
       return prisma.program.create({
         data: {
           type: type,
@@ -32,34 +42,26 @@ export function createProgramRepository(prisma) {
           description: description,
           history: history,
           department_id: parseInt(department_id),
-          application_details: {
-            create: {
-              qualifications: "",
-              application_instructions: "",
-              application_url: "",
-              recommendation_url: ""
-            }
-          }
+          program_application_id: programApplication.program_application_id
         },
         include: {
           department: {
             select: { department_id: true, name: true }
-          }
-        },
-        application_details: true
+          },
+          program_application: true
+        }
       });
     },
 
-    // Delete associated ProgramApplication before deleting Program 
     async deleteProgram(id) {
       const program = await prisma.program.findUnique({
         where: { program_id: parseInt(id) },
-        select: { application_details_id: true }
+        select: { program_application_id: true }
       });
       
-      if (program?.application_details_id) {
+      if (program?.program_application_id) {
         await prisma.programApplication.delete({
-          where: { application_details_id: program.application_details_id }
+          where: { program_application_id: program.program_application_id }
         });
       }
 
@@ -77,7 +79,8 @@ export function createProgramRepository(prisma) {
           type: data.type,
           name: data.name,
           description: data.description,
-          history: data.history
+          history: data.history,
+          department_id: data.department_id ? parseInt(data.department_id) : undefined
         },
         include: {
           department: {
@@ -85,9 +88,9 @@ export function createProgramRepository(prisma) {
               department_id: true,
               name: true
             }
-          }
-        },
-        application_details: true
+          },
+          program_application: true 
+        }
       });
     },
 
@@ -95,15 +98,15 @@ export function createProgramRepository(prisma) {
     async updateProgramApplication(id, data) {
       const program = await prisma.program.findUnique({
         where: { program_id: parseInt(id) },
-        select: { application_details_id: true }
+        select: { program_application_id: true }
       });
 
-      if (!program?.application_details_id) {
+      if (!program?.program_application_id) {
         throw new Error('Program application details not found');
       }
 
       return prisma.programApplication.update({
-        where: { application_details_id: program.application_details_id },
+        where: { program_application_id: program.program_application_id },
         data: {
           qualifications: data.qualifications,
           application_instructions: data.application_instructions,
