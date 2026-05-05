@@ -9,7 +9,7 @@ async function main() {
     data: {
       email: "superadmin@gmail.com",
       name: "Super Admin",
-      password: "hashedpassword",
+      password: "$2a$10$u4/XG0PzzTNPWcCtYuzywuHAIrg23ia4tmPB6WSAnuna/a5UdZoAu",
       role: "superadmin",
     }
   });

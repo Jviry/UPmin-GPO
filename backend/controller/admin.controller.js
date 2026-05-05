@@ -99,20 +99,10 @@ router.get('/admins', authenticate, authenticateRole('superadmin'), async (req, 
 
     res.status(200).json({
       message: "Fetched admins successfully",
-      admins: admins
+      admins
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
-});
-
-router.get('/colleges', async (req, res) => {
-  try {
-    const colleges = await prisma.college.findMany();
-    res.json(colleges);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch colleges" });
   }
 });
 
