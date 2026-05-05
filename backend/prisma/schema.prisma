@@ -93,7 +93,6 @@ model Department {
   college_id Int
   college    College @relation(fields: [college_id], references: [college_id])
 
-  courses  Course[]
   programs Program[]
   faculty  Faculty[]
 }
@@ -123,53 +122,62 @@ model Program {
   department_id Int
   department    Department @relation(fields: [department_id], references: [department_id])
 
-  program_courses ProgramCourse[]
-  study_plans     StudyPlan[]
+  course_pools CoursePool[]
+  study_plans  StudyPlan[]
 }
 
 model StudyPlan {
-  study_plan_id Int @id @default(autoincrement())
+  study_plan_id Int     @id @default(autoincrement())
   years         Int
+  name          String?
 
   program_courses ProgramCourse[]
-  elective_pool   ElectivePool[]
   program_id      Int
   program         Program         @relation(fields: [program_id], references: [program_id])
 }
 
-model ElectivePool {
-  elective_pool_id Int @id @default(autoincrement())
+model CoursePool {
+  course_pool_id Int    @id @default(autoincrement())
+  name           String
 
-  study_plan_id Int
-  study_plan    StudyPlan @relation(fields: [study_plan_id], references: [study_plan_id])
-  course_id     Int
-  course        Course    @relation(fields: [course_id], references: [course_id])
+  program_id Int
+  program    Program @relation(fields: [program_id], references: [program_id])
+
+  entries CoursePoolEntry[]
+}
+
+model CoursePoolEntry {
+  entry_id Int @id @default(autoincrement())
+
+  course_pool_id Int
+  course_id      Int
+
+  course_pool CoursePool @relation(fields: [course_pool_id], references: [course_pool_id], onDelete: Cascade)
+  course      Course     @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
+
+  @@unique([course_pool_id, course_id])
 }
 
 model ProgramCourse {
-  program_course_id Int        @id @default(autoincrement())
-  year              Int?
-  semester          Int?
-  is_elective_slot  Boolean    @default(false)
-  is_placed         Boolean    @default(false) // false = still in pool, true = placed in study plan
-  study_plan_id     Int?
-  course_id         Int?
-  program_id        Int
-  program           Program    @relation(fields: [program_id], references: [program_id])
-  study_plan        StudyPlan? @relation(fields: [study_plan_id], references: [study_plan_id])
-  course            Course?    @relation(fields: [course_id], references: [course_id])
+  program_course_id Int     @id @default(autoincrement())
+  year              Int
+  semester          Int
+  is_elective_slot  Boolean @default(false)
+
+  study_plan_id Int
+  course_id     Int?
+
+  study_plan StudyPlan @relation(fields: [study_plan_id], references: [study_plan_id], onDelete: Cascade)
+  course     Course?   @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
 }
 
 model Course {
   course_id Int    @id @default(autoincrement())
   name      String
-  code      String
+  code      String @unique
   type      String
   units     Int
 
-  department_id Int?
-  department    Department? @relation(fields: [department_id], references: [department_id])
-
-  elective_pool   ElectivePool[]
+  pool_entries    CoursePoolEntry[]
   program_courses ProgramCourse[]
 }

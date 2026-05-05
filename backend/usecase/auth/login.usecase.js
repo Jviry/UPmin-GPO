@@ -1,4 +1,4 @@
-import { validateLoginInput } from "../../domain/admin.js";
+import { validateLoginInput } from "../../domain/auth.js";
 import { DomainError } from "../../domain/errors.js";
 
 export function createLoginUsecase({ adminRepo, comparePassword, signToken }) {
