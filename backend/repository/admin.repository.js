@@ -3,6 +3,12 @@ export function createAdminRepository(prisma) {
     async findByEmail(email) {
       return prisma.admin.findUnique({
         where: { email },
+        select: {
+          admin_id: true,
+          email: true,
+          name: true,
+          role: true,
+        }
       });
     },
 
@@ -19,6 +25,12 @@ export function createAdminRepository(prisma) {
           name,
           password,
           role: 'admin',
+        },
+        select: {
+          admin_id: true,
+          email: true,
+          name: true,
+          role: true,
         }
       });
     },
@@ -27,6 +39,12 @@ export function createAdminRepository(prisma) {
       return prisma.admin.update({
         where: { admin_id: Number(id) },
         data: { password: hashedPassword },
+        select: {
+          admin_id: true,
+          email: true,
+          name: true,
+          role: true,
+        }
       });
     },
 
@@ -35,7 +53,23 @@ export function createAdminRepository(prisma) {
         where: {
           admin_id: Number(id),
         },
+        select: {
+          admin_id: true,
+          email: true,
+          name: true,
+          role: true,
+        }
       })
     },
+    async findAll() {
+      return prisma.admin.findMany({
+        select: {
+          admin_id: true,
+          name: true,
+          email: true,
+          role: true
+        }
+      });
+    }
   }
 }
