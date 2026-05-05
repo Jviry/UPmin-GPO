@@ -6,6 +6,7 @@ import { getAllProgramsUsecase } from '../usecase/program/getAllPrograms.usecase
 import { getProgramByIdUsecase } from '../usecase/program/getProgramById.usecase.js';
 import { deleteProgramUsecase } from '../usecase/program/deleteProgram.usecase.js';
 import { updateProgramUsecase } from '../usecase/program/updateProgram.usecase.js';
+import { updateProgramApplicationUsecase } from '../usecase/program/updateProgramApplication.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 
 const router = express.Router();
@@ -17,6 +18,7 @@ const getAllPrograms = getAllProgramsUsecase({ programRepo });
 const getProgramById = getProgramByIdUsecase({ programRepo });
 const deleteProgram = deleteProgramUsecase({ programRepo });
 const updateProgram = updateProgramUsecase({ programRepo });
+const updateProgramApplication = updateProgramApplicationUsecase({ programRepo });
 
 // Public routes (no authentication required)
 router.get('/programs', async (req, res) => {
@@ -56,7 +58,7 @@ router.get('/programs/:id', async (req, res) => {
 });
 
 // Protected routes (authentication required)
-router.post('/admin/programs', authenticate, async (req, res) => {
+router.post('/programs', authenticate, async (req, res) => {
   try {
     const result = await createProgram(req.body);
 
@@ -73,7 +75,7 @@ router.post('/admin/programs', authenticate, async (req, res) => {
   }
 });
 
-router.delete('/admin/programs/:id', authenticate, async (req, res) => {
+router.delete('/programs/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await deleteProgram(id);
@@ -91,7 +93,7 @@ router.delete('/admin/programs/:id', authenticate, async (req, res) => {
   }
 });
 
-router.put('/admin/programs/:id', authenticate, async (req, res) => {
+router.put('/programs/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await updateProgram(id, req.body);
@@ -105,6 +107,24 @@ router.put('/admin/programs/:id', authenticate, async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     console.error('Update program error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put('/programs/application/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await updateProgramApplication(id, req.body);
+
+    res.status(200).json({
+      message: `Program application details for program ${id} updated successfully`,
+      applicationDetails: result.applicationDetails,
+    });
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    console.error('Update program application error:', error);
     res.status(500).json({ message: error.message });
   }
 });
