@@ -133,7 +133,7 @@ export default function LoginPage() {
           </div>
 
           {/* form */}
-          <form className="space-y-5" onSubmit={handleSubmit}>
+          <form className="space-y-3" onSubmit={handleSubmit}>
             {error && (
               <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
                 {error}
@@ -236,13 +236,15 @@ export default function LoginPage() {
               </div>
             </div>
 
+            <div className="pt-4">
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full rounded-lg bg-[var(--up-maroon)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709] focus:outline-none focus:ring-2 focus:ring-[rgba(118,9,12,0.4)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--up-maroon)]"
+              className="w-full rounded-lg bg-[var(--up-maroon)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709] focus:outline-none focus:ring-2 focus:ring-[rgba(118,9,12,0.4)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--up-maroon)]"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
+            </div>
           </form>
 
           <p className="mt-8 text-center text-xs text-[var(--text-muted)]">
