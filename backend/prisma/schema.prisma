@@ -123,7 +123,7 @@ model ProgramApplication {
   application_url          String @default("")
   recommendation_url       String @default("")
 
-  program    Program @relation(fields: [program_id], references: [program_id])
+  program    Program @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
   program_id Int     @unique
 }
 
@@ -134,7 +134,7 @@ model StudyPlan {
 
   program_courses ProgramCourse[]
   program_id      Int
-  program         Program         @relation(fields: [program_id], references: [program_id])
+  program         Program         @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
 }
 
 model CoursePool {
@@ -142,7 +142,7 @@ model CoursePool {
   name           String
 
   program_id Int
-  program    Program @relation(fields: [program_id], references: [program_id])
+  program    Program @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
 
   entries CoursePoolEntry[]
 }

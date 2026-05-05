@@ -7,13 +7,20 @@ export function updateProgramApplicationUsecase({ programRepo }) {
     validateProgramId(id);
     validateUpdateProgramApplication(data);
 
-    const existing = await programRepo.findProgramByID(id);
+    const existing = await programRepo.findByID(id);
     if (!existing) {
       throw new DomainError(`Program with ID ${id} not found`);
     }
 
-    const updatedApplication = await programRepo.updateProgramApplication(id, data);
+    const updateData = Object.fromEntries(
+      Object.entries({
+        qualifications: data.qualifications,
+        application_instructions: data.application_instructions,
+        application_url: data.application_url,
+        recommendation_url: data.recommendation_url,
+      }).filter(([_, value]) => value !== undefined)
+    );
 
-    return { applicationDetails: updatedApplication };
+    return await programRepo.updateProgramApplication(id, updateData);
   };
 }

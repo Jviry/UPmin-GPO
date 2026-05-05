@@ -9,10 +9,6 @@ export function validateProgramId(id) {
   if (isNaN(parseInt(id))) throw new DomainError('Invalid program ID');
 }
 
-export function validateUpdateProgram(data) {
-  if (!data.type || !data.name || !data.description || !data.history || !data.department_id) throw new DomainError('All fields are required');
-}
-
 // Validate application details but allow partial updates as some fields are optional
 export function validateUpdateProgramApplication(data) {
   if (data.qualifications !== undefined && typeof data.qualifications !== 'string') {

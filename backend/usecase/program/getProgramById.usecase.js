@@ -5,8 +5,8 @@ export function getProgramByIdUsecase({ programRepo }) {
   return async function(id) {
     validateProgramId(id);
 
-    const program = await programRepo.findProgramByID(id);
-    
+    const program = await programRepo.findByID(id);
+
     if (!program) {
       throw new DomainError(`Program with ID ${id} not found`);
     }

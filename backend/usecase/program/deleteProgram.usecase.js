@@ -5,13 +5,11 @@ export function deleteProgramUsecase({ programRepo }) {
   return async function(id) {
     validateProgramId(id);
 
-    const existing = await programRepo.findProgramByID(id); 
+    const existing = await programRepo.findByID(id);
     if (!existing) {
       throw new DomainError(`Program with ID ${id} not found`);
     }
 
-    const deletedProgram = await programRepo.deleteProgram(id);
-
-    return { deletedProgram };
+    return await programRepo.delete(id);
   };
 }

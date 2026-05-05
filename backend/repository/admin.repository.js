@@ -3,12 +3,6 @@ export function createAdminRepository(prisma) {
     async findByEmail(email) {
       return prisma.admin.findUnique({
         where: { email },
-        select: {
-          admin_id: true,
-          email: true,
-          name: true,
-          role: true,
-        }
       });
     },
 
