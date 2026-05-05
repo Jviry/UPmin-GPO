@@ -76,66 +76,56 @@ model Testimony {
   alumnus_graduate_program String
 }
 
-model College {
-  college_id   Int    @id @default(autoincrement())
-  name         String
-  current_dean String
-
-  departments Department[]
-}
-
 model Department {
   department_id Int    @id @default(autoincrement())
   name          String
-  head          String
   contact_info  String @unique
 
-  college_id Int
-  college    College @relation(fields: [college_id], references: [college_id])
-
   programs Program[]
-  faculty  Faculty[]
 }
 
 model Faculty {
-  faculty_id           Int    @id @default(autoincrement())
-  name                 String
-  email                String @unique
-  photo                String
-  position             String
-  university_graduated String
+  faculty_id  Int                 @id @default(autoincrement())
+  name        String
+  email       String              @unique
+  photo       String
+  position    String
+  credentials FacultyCredential[]
+}
 
-  department_id Int
-  department    Department @relation(fields: [department_id], references: [department_id])
+model FacultyCredential {
+  credential_id Int     @id @default(autoincrement())
+  degree        String // e.g. "MS Computer Science", "BS Mathematics"
+  faculty_id    Int
+  faculty       Faculty @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
 }
 
 model Program {
-  program_id               Int    @id @default(autoincrement())
-  type                     String // e.g., "Diploma Program", "Graduate Program", "Doctoral Program"
-  name                     String
-  description              String
-  history                  String
+  program_id  Int    @id @default(autoincrement())
+  type        String // e.g., "Diploma Program", "Graduate Program", "Doctoral Program"
+  name        String
+  description String
+  history     String
 
   department_id Int
   department    Department @relation(fields: [department_id], references: [department_id])
-  
+
   course_pools CoursePool[]
   study_plans  StudyPlan[]
 
-  program_application      ProgramApplication?   @relation(fields: [program_application_id], references: [program_application_id])
-  program_application_id   Int?                  @unique
+  program_application ProgramApplication?
 }
 
 model ProgramApplication {
   program_application_id   Int    @id @default(autoincrement())
-  qualifications           String @default ("")
-  application_instructions String @default ("")
-  application_url          String @default ("")
-  recommendation_url       String @default ("")
+  qualifications           String @default("")
+  application_instructions String @default("")
+  application_url          String @default("")
+  recommendation_url       String @default("")
 
-  program                  Program? 
+  program    Program @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
+  program_id Int     @unique
 }
-
 
 model StudyPlan {
   study_plan_id Int     @id @default(autoincrement())
@@ -144,7 +134,7 @@ model StudyPlan {
 
   program_courses ProgramCourse[]
   program_id      Int
-  program         Program         @relation(fields: [program_id], references: [program_id])
+  program         Program         @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
 }
 
 model CoursePool {
@@ -152,7 +142,7 @@ model CoursePool {
   name           String
 
   program_id Int
-  program    Program @relation(fields: [program_id], references: [program_id])
+  program    Program @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
 
   entries CoursePoolEntry[]
 }
