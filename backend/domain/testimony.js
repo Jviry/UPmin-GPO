@@ -1,6 +1,6 @@
 import { DomainError } from './errors.js';
 
-export function validateTestimony(id) {
+export function validateTestimonyId(id) {
     if (!id) {
         throw new DomainError('Testimony ID is required');
     }

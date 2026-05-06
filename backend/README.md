@@ -96,15 +96,28 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | ------ | --------- | ------ | ------------------------ |
 | GET    | `/announcements` | Public | Get all announcements (seeded) |
 | GET    | `/announcements/:id` | Public | Get announcement by id (seeded) |
-| POST | `/announcements` | Admin/Superadmin | Create a new announcement |
+| POST   | `/announcements` | Admin/Superadmin | Create a new announcement |
 | PUT    | `/announcements/:id` | Admin/Superadmin | Update announcement attributes |
 | DELETE | `/announcement/:id` | Admin/Superadmin | Delete an announcement |
 
+### Scholarship
+| Method | Endpoint                 | Access           | Description                     |
+| ------ | ------------------------ | ---------------- | ------------------------------- |
+| GET    | `/scholarships`          | Public           | Get all available scholarships  |
+| GET    | `/scholarships/:id`      | Public           | Get scholarship by its id       |
+| POST   | `/scholarships`          | Admin/Superadmin | Create new scholarship          |
+| DELETE | `/scholarships/:id`      | Admin/Superadmin | Delete existing scholarship     |
+| PUT    | `/scholarships/:id`      | Admin/Superadmin | Edit scholarship info           |
+
 ### Program
 
-| Method | Endpoint  | Access | Description              |
-| ------ | --------- | ------ | ------------------------ |
-| GET    | `/programs` | Public | Get program names (seeded) |
+| Method | Endpoint             | Access     | Description             |
+| ------ | -------------------- | ---------- | ----------------------- |
+| GET    | `/programs`          | Public     | Get all program names   |
+| GET    | `/programs/:id`      | Public     | Get program by its ID   |
+| POST   | `/programs`          | Superadmin | Create new program      |
+| DELETE | `/programs/:id`      | Superadmin | Delete existing program |
+| PUT    | `/programs/:id`      | Superadmin | Edit program info       |
 
 ## Authentication
 

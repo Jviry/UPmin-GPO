@@ -4,8 +4,6 @@ export function createDeleteAdminUsecase(adminRepo) {
   return async function(id) {
     validateAdminID(id);
 
-    const deletedAdmin = await adminRepo.delete(id);
-
-    return { deletedAdmin };
+    return await adminRepo.delete(id);
   }
 }

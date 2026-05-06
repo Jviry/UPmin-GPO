@@ -5,6 +5,6 @@ export function createFacultyRepository(prisma) {
         where: { position },
         include: { department: true }
       });
-    }
+    },
   }
 }

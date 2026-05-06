@@ -1,6 +1,19 @@
 import { prisma } from '../db/db.js';
 
 async function main() {
+
+  // =======================
+  // ADMIN
+  // =======================
+  const admin = await prisma.admin.create({
+    data: {
+      email: "superadmin@gmail.com",
+      name: "Super Admin",
+      password: "$2a$10$u4/XG0PzzTNPWcCtYuzywuHAIrg23ia4tmPB6WSAnuna/a5UdZoAu",
+      role: "superadmin",
+    }
+  });
+
   // =======================
   // OFFICE
   // =======================
@@ -8,13 +21,17 @@ async function main() {
     data: {
       logo: '/public/seed-assets/office/default-logo.png',
       mission: 'Provide high-quality graduate education.',
-      vision: 'To be a center of excellence in research.',
+      vision: 'Center of excellence in research.',
       core_values: 'Integrity, Excellence, Innovation',
-      history: 'Established to oversee all graduate programs.',
+      history: 'Graduate office history...',
       phone: '123-4567',
       email: 'grad@university.edu',
+<<<<<<< HEAD
       org_chart_url: '/public/seed-assets/office/GPO-Organizational-Chart.png',
 
+=======
+      org_chart_url: '/public/seed-assets/office/chart.png',
+>>>>>>> origin
       featuredPhotos: {
         create: [
           { url: '/public/seed-assets/office/photo1.jpg' },
@@ -25,82 +42,100 @@ async function main() {
   });
 
   // =======================
-  // COLLEGE + DEPARTMENTS
+  // DEPARTMENT
   // =======================
-  const college = await prisma.college.create({
+  const department = await prisma.department.create({
     data: {
-      name: "College of Science and Mathematics",
-      current_dean: "Dr. Maria Santos",
-
-      departments: {
-        create: [
-          {
-            name: "Computer Science",
-            head: "Dr. Juan Dela Cruz",
-            contact_info: "cs@university.edu",
-
-            faculty: {
-              create: [
-                {
-                  name: "Dr. Maria Santos",
-                  email: "maria.santos@univ.edu",
-                  photo: "https://example.com/maria.jpg",
-                  position: "Program Coordinator",
-                  university_graduated: "UP Diliman"
-                },
-                {
-                  name: "Prof. Juan Dela Cruz",
-                  email: "juan.delacruz@univ.edu",
-                  photo: "https://example.com/juan.jpg",
-                  position: "Program Coordinator",
-                  university_graduated: "Ateneo"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    include: {
-      departments: true
+      name: "Computer Science",
+      contact_info: "cs@university.edu"
     }
   });
 
-  const departmentId = college.departments[0].department_id;
+  // =======================
+  // FACULTY + CREDENTIALS
+  // =======================
+  const faculty = await prisma.faculty.create({
+    data: {
+      name: "Dr. Maria Santos",
+      email: "maria@univ.edu",
+      photo: "photo.jpg",
+      position: "Professor",
+      credentials: {
+        create: [
+          { degree: "BS Computer Science" },
+          { degree: "MS Computer Science" },
+          { degree: "PhD Computer Science" }
+        ]
+      }
+    }
+  });
 
   // =======================
   // COURSES
   // =======================
   await prisma.course.createMany({
     data: [
-      { name: "Data Structures", code: "CMSC 127", type: "Core", units: 3, department_id: departmentId },
-      { name: "Algorithms", code: "CMSC 128", type: "Core", units: 3, department_id: departmentId },
-      { name: "Database Systems", code: "CMSC 131", type: "Core", units: 3, department_id: departmentId },
-      { name: "Operating Systems", code: "CMSC 132", type: "Core", units: 3, department_id: departmentId },
-      { name: "Software Engineering", code: "CMSC 198", type: "Core", units: 3, department_id: departmentId },
-      { name: "Machine Learning", code: "CMSC 180", type: "Elective", units: 3, department_id: departmentId },
-      { name: "Computer Networks", code: "CMSC 135", type: "Core", units: 3, department_id: departmentId },
-      { name: "Thesis", code: "CMSC 200", type: "Capstone", units: 6, department_id: departmentId },
-    ]
+      { name: "Data Structures", code: "CMSC127", type: "core", units: 3 },
+      { name: "Algorithms", code: "CMSC128", type: "core", units: 3 },
+      { name: "Database Systems", code: "CMSC131", type: "core", units: 3 },
+      { name: "Operating Systems", code: "CMSC132", type: "core", units: 3 },
+      { name: "Software Engineering", code: "CMSC198", type: "core", units: 3 },
+      { name: "Networks", code: "CMSC135", type: "core", units: 3 },
+      { name: "Thesis", code: "CMSC200", type: "core", units: 6 },
+      { name: "Machine Learning", code: "CMSC180", type: "pool", units: 3 },
+      { name: "Computer Vision", code: "CMSC181", type: "pool", units: 3 },
+      { name: "NLP", code: "CMSC182", type: "pool", units: 3 },
+    ],
+    skipDuplicates: true
   });
 
   const courses = await prisma.course.findMany();
-  const getCourse = (code) => courses.find(c => c.code === code);
+
+  const getCourse = (code) => {
+    const c = courses.find(x => x.code === code);
+    if (!c) throw new Error(`Course ${code} not found`);
+    return c;
+  };
 
   // =======================
-  // PROGRAM
+  // PROGRAM + APPLICATION
   // =======================
   const program = await prisma.program.create({
     data: {
       type: "Graduate Program",
       name: "MS Computer Science",
-      description: "Advanced study in computer science.",
-      history: "Established for advanced computing research.",
-      qualifications: "BS Computer Science or related field.",
-      application_instructions: "Submit documents and pass evaluation.",
-      application_url: "https://example.com/apply",
+      description: "Advanced CS program",
+      history: "Program history...",
+      department_id: department.department_id,
 
-      department_id: departmentId,
+      program_application: {
+        create: {
+          qualifications: "BS CS or related",
+          application_instructions: "Submit docs",
+          application_url: "https://apply.com",
+          recommendation_url: "https://reco.com"
+        }
+      }
+    },
+    include: {
+      program_application: true
+    }
+  });
+
+  // =======================
+  // COURSE POOL
+  // =======================
+  await prisma.coursePool.create({
+    data: {
+      name: "Electives",
+      program_id: program.program_id,
+      entries: {
+        create: [
+          { course_id: getCourse("CMSC180").course_id },
+          { course_id: getCourse("CMSC181").course_id },
+          { course_id: getCourse("CMSC182").course_id },
+        ]
+      }
     }
   });
 
@@ -110,7 +145,8 @@ async function main() {
   const studyPlan = await prisma.studyPlan.create({
     data: {
       years: 2,
-      program_id: program.program_id
+      name: "Standard Plan",
+      program_id: program.program_id,
     }
   });
 
@@ -119,50 +155,79 @@ async function main() {
   // =======================
   await prisma.programCourse.createMany({
     data: [
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 127").course_id, year: 1, semester: 1, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 128").course_id, year: 1, semester: 1, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 131").course_id, year: 1, semester: 1, is_placed: true },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC127").course_id, year: 1, semester: 1 },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC128").course_id, year: 1, semester: 1 },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC131").course_id, year: 1, semester: 1 },
 
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 132").course_id, year: 1, semester: 2, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 135").course_id, year: 1, semester: 2, is_placed: true },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC132").course_id, year: 1, semester: 2 },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC135").course_id, year: 1, semester: 2 },
 
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 198").course_id, year: 2, semester: 1, is_placed: true },
-      { program_id: program.program_id, study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC 200").course_id, year: 2, semester: 2, is_placed: true },
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC198").course_id, year: 2, semester: 1 },
+      { study_plan_id: studyPlan.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+
+      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC200").course_id, year: 2, semester: 2 },
+      { study_plan_id: studyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
     ]
   });
 
   // =======================
-  // ADMIN + ANNOUNCEMENTS
+  // SCHOLARSHIPS
   // =======================
-  await prisma.admin.create({
+  await prisma.scholarship.create({
     data: {
-      email: "superadmin@gmail.com",
-      name: "Super Admin",
-      password: "$2a$10$n/eU5FSZBdSC/K5HHv/HTuiGStK6CPSVmP1JXhmDOGuVZvlt7Rivq",
-      role: "superadmin",
-
-      announcements: {
-        create: [
-          {
-            title: "Welcome to Graduate Studies",
-            content_description: "We are excited to welcome students."
-          },
-          {
-            title: "Application Deadline Extended",
-            content_description: "Deadline extended by two weeks."
-          }
-        ]
-      }
+      name: "CHED Scholarship",
+      description: "Government scholarship",
+      covered_programs: "MSCS",
+      application_instructions: "Apply online",
+      application_url: "https://ched.gov.ph",
+      contact_info: "ched@test.com",
+      admin_id: admin.admin_id
     }
   });
 
-  console.log("✅ Seed data inserted!");
+  // =======================
+  // ANNOUNCEMENTS
+  // =======================
+  await prisma.announcement.createMany({
+    data: [
+      {
+        title: "Welcome!",
+        content_description: "Welcome students",
+        admin_id: admin.admin_id
+      },
+      {
+        title: "Deadline Extended",
+        content_description: "More time to apply",
+        admin_id: admin.admin_id
+      }
+    ]
+  });
+
+  // =======================
+  // TESTIMONIES
+  // =======================
+  await prisma.testimony.createMany({
+    data: [
+      {
+        alumnus_name: "Juan Dela Cruz",
+        testimony_description: "Great program!",
+        alumnus_graduate_program: "MSCS"
+      },
+      {
+        alumnus_name: "Maria Santos",
+        testimony_description: "Very helpful",
+        alumnus_graduate_program: "MSCS"
+      }
+    ]
+  });
+
+  console.log("✅ FULL SEED COMPLETE");
 }
 
 main()
   .then(() => prisma.$disconnect())
-  .catch((e) => {
+  .catch(async (e) => {
     console.error(e);
-    prisma.$disconnect();
+    await prisma.$disconnect();
     process.exit(1);
   });
