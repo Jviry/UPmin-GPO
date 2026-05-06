@@ -60,11 +60,11 @@ router.get('/programs/:id', async (req, res) => {
 // Protected routes (authentication required)
 router.post('/programs', authenticate, async (req, res) => {
   try {
-    const result = await createProgram(req.body);
+    const program = await createProgram(req.body);
 
     res.status(200).json({
       message: 'Program created successfully',
-      program: result.program,
+      program
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -78,11 +78,11 @@ router.post('/programs', authenticate, async (req, res) => {
 router.delete('/programs/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await deleteProgram(id);
+    const deletedProgram = await deleteProgram(id);
 
     res.status(200).json({
       message: `Program ${id} deleted successfully`,
-      deletedProgram: result.deletedProgram,
+      deletedProgram,
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -96,11 +96,11 @@ router.delete('/programs/:id', authenticate, async (req, res) => {
 router.put('/programs/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await updateProgram(id, req.body);
+    const program = await updateProgram(id, req.body);
 
     res.status(200).json({
       message: `Program ${id} updated successfully`,
-      program: result.program,
+      program,
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -111,14 +111,14 @@ router.put('/programs/:id', authenticate, async (req, res) => {
   }
 });
 
-router.put('/programs/application/:id', authenticate, async (req, res) => {
+router.put('/programs/:id/application', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await updateProgramApplication(id, req.body);
+    const applicationDetails = await updateProgramApplication(id, req.body);
 
     res.status(200).json({
       message: `Program application details for program ${id} updated successfully`,
-      applicationDetails: result.applicationDetails,
+      applicationDetails,
     });
   } catch (error) {
     if (error.isDomainError) {

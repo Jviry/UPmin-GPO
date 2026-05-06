@@ -10,8 +10,6 @@ export function createAdminUsecase({ adminRepo, hashPassword }) {
 
     const hashedPassword = await hashPassword(password);
 
-    const newAdmin = await adminRepo.create({ email, name, password: hashedPassword });
-
-    return { newAdmin };
+    return await adminRepo.create({ email, name, password: hashedPassword });
   }
 }
