@@ -15,7 +15,6 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
 
-  // Email validation regex
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -35,7 +34,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push("/admin/dashboard");
+      router.push("/admin");
     } catch (err: any) {
       const errorMessage = err.message || "Login failed. Please try again.";
 
@@ -196,7 +195,6 @@ export default function LoginPage() {
                   title={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
-                    // Eye open icon
                     <svg
                       className="w-5 h-5"
                       fill="none"
@@ -217,7 +215,6 @@ export default function LoginPage() {
                       />
                     </svg>
                   ) : (
-                    // Eye closed icon - clean design
                     <svg
                       className="w-5 h-5"
                       fill="none"

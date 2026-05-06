@@ -1,15 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-// Assuming you have an apiClient or use standard fetch
-import { apiClient } from '@/lib/apiClient'; 
+import { apiClient } from '@/lib/apiClient';
+import { useAuth } from '@/context/AuthContext';
+import LoadingScreen from '@/components/admin/LoadingScreen';
 
-// Types based on your Prisma schema
 type OfficeInfo = {
   office_id: number;
   email: string;
   phone: string;
-  mission: string; // Using mission for the About description
+  mission: string;
   org_chart_url: string;
 };
 
@@ -21,6 +21,9 @@ type Admin = {
 };
 
 export default function AdminDashboard() {
+  const { user } = useAuth();
+  const isSuperadmin = user?.role === 'superadmin';
+
   const [office, setOffice] = useState<OfficeInfo | null>(null);
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,15 +31,12 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Replace these routes with your actual backend endpoint paths
-        const [officeRes, adminsRes] = await Promise.all([
-          apiClient.get('/office'),
-          apiClient.get('/admins')
-        ]);
-        
-        // Assuming the backend returns the first office record
-        setOffice(officeRes.data.office || officeRes.data[0]); 
-        setAdmins(adminsRes.data.admins || adminsRes.data);
+        const requests: Promise<any>[] = [apiClient.get('/office')];
+        if (isSuperadmin) requests.push(apiClient.get('/admins'));
+
+        const [officeRes, adminsRes] = await Promise.all(requests);
+        setOffice(officeRes.data.office || officeRes.data[0]);
+        if (adminsRes) setAdmins(adminsRes.data.admins || adminsRes.data);
       } catch (error) {
         console.error("Failed to load dashboard data:", error);
       } finally {
@@ -45,10 +45,10 @@ export default function AdminDashboard() {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [isSuperadmin]);
 
   if (isLoading) {
-    return <div className="p-8 text-[var(--up-maroon)]">Loading Dashboard...</div>;
+    return <LoadingScreen />;
   }
 
   return (
@@ -119,8 +119,8 @@ export default function AdminDashboard() {
         </div>
       </section>
 
-      {/* Block 2: Admin Management */}
-      <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
+      {/* Block 2: Admin Management — superadmin only */}
+      {isSuperadmin && <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
         <div className="mb-6 flex items-center gap-3">
           <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
           <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
           <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Edit</button>
           <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Add Admin</button>
         </div>
-      </section>
+      </section>}
     </main>
   );
 }
