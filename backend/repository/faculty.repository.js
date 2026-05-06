@@ -4,6 +4,6 @@ export function createFacultyRepository(prisma) {
       return prisma.faculty.findMany({
         where: { position }
       });
-    }
+    },
   }
 }

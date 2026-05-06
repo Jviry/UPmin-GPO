@@ -1,13 +1,12 @@
 export function createProgramRepository(prisma) {
   return {
-    // Untouched from previous version
     async getAllPrograms() {
       return await prisma.program.findMany({
         select: { name: true, program_id: true }
       });
     },
 
-    async findProgramByID(id) {
+    async findByID(id) {
       return prisma.program.findUnique({
         where: {
           program_id: parseInt(id),
@@ -18,38 +17,48 @@ export function createProgramRepository(prisma) {
               department_id: true,
               name: true
             }
-          }
+          },
+          program_application: true,
+          course_pools: { include: { entries: { include: { course: true } } } },
+          study_plans: { include: { program_courses: { include: { course: true } } } }
         }
       });
     },
 
-    async createProgram(type, name, description, history, qualifications, application_instructions, application_url, department_id) {
+    async create({ type, name, description, history, department_id }) {
       return prisma.program.create({
         data: {
-          type: type,
-          name: name,
-          description: description,
-          history: history,
-          qualifications: qualifications,
-          application_instructions: application_instructions,
-          application_url: application_url,
-          department_id: parseInt(department_id)
+          type,
+          name,
+          description,
+          history,
+          department_id: parseInt(department_id),
+
+          program_application: {
+            create: {
+              qualifications: "",
+              application_instructions: "",
+              application_url: "",
+              recommendation_url: "",
+            }
+          }
         },
         include: {
           department: {
             select: { department_id: true, name: true }
-          }
+          },
+          program_application: true
         }
       });
     },
 
-    async deleteProgram(id) {
+    async delete(id) {
       return prisma.program.delete({
         where: { program_id: parseInt(id) },
       });
     },
 
-    async updateProgram(id, data) {
+    async update(id, data) {
       return prisma.program.update({
         where: {
           program_id: parseInt(id),
@@ -59,9 +68,7 @@ export function createProgramRepository(prisma) {
           name: data.name,
           description: data.description,
           history: data.history,
-          qualifications: data.qualifications,
-          application_instructions: data.application_instructions,
-          application_url: data.application_url
+          department_id: data.department_id ? parseInt(data.department_id) : undefined
         },
         include: {
           department: {
@@ -69,7 +76,23 @@ export function createProgramRepository(prisma) {
               department_id: true,
               name: true
             }
-          }
+          },
+          program_application: true
+        }
+      });
+    },
+
+    // Update ProgramApplication details, kept here since its still closely tied to Program entity
+    async updateProgramApplication(id, data) {
+      return prisma.programApplication.update({
+        where: {
+          program_id: parseInt(id)
+        },
+        data: {
+          qualifications: data.qualifications,
+          application_instructions: data.application_instructions,
+          application_url: data.application_url,
+          recommendation_url: data.recommendation_url
         }
       });
     }

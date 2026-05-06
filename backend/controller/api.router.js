@@ -6,6 +6,7 @@ import officeRoute from './office.controller.js';
 import facultyRoute from './faculty.controller.js';
 import courseRoute from './course.controller.js';
 import testimonyRoute from './testimony.controller.js';
+import scholarshipRoute from './scholarship.controller.js';
 import coursePoolRoute from './course-pool.controller.js';
 import studyPlanRoute from './study-plan.controller.js';
 
@@ -18,6 +19,7 @@ export const apiController = (app) => {
   app.use('/', facultyRoute);
   app.use('/', courseRoute);
   app.use('/', testimonyRoute);
+  app.use('/', scholarshipRoute);
   app.use('/programs/:program_id', coursePoolRoute);
   app.use('/programs/:program_id', studyPlanRoute);
 };
