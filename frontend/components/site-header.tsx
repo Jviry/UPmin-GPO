@@ -2,46 +2,67 @@
 
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
+import { apiClient } from '@/lib/apiClient';
 
-const departments = [
-  {
-    name: 'Department Alpha',
-    programs: [
-      { label: 'Program Alpha', slug: 'program-alpha' },
-      { label: 'Program Beta', slug: 'program-beta' },
-      { label: 'Program Gamma', slug: 'program-gamma' },
-    ],
-  },
-  {
-    name: 'Department Beta',
-    programs: [
-      { label: 'Program Delta', slug: 'program-delta' },
-      { label: 'Program Epsilon', slug: 'program-epsilon' },
-      { label: 'Program Zeta', slug: 'program-zeta' },
-    ],
-  },
-  {
-    name: 'Department Gamma',
-    programs: [
-      { label: 'Program Eta', slug: 'program-eta' },
-      { label: 'Program Theta', slug: 'program-theta' },
-      { label: 'Program Iota', slug: 'program-iota' },
-    ],
-  },
-];
+type ProgramData = {
+  program_id: number;
+  name: string;
+  department?: {
+    name: string;
+  };
+};
 
+type DepartmentGroup = {
+  name: string;
+  programs: { label: string; slug: string }[];
+};
 
 export function SiteHeader() {
   const [programsOpen, setProgramsOpen] = useState(false);
+  const [departments, setDepartments] = useState<DepartmentGroup[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Click outside listener for dropdown
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setProgramsOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
+    
+    // Fetch programs and group them by department
+    const fetchPrograms = async () => {
+      try {
+        const res = await apiClient.get('/programs');
+        const data: ProgramData[] = res.data.programs || res.data;
+
+        // Dynamically group the fetched programs by their Department Name
+        const grouped = data.reduce((acc, curr) => {
+          const deptName = curr.department?.name || 'Other Departments';
+          let dept = acc.find(d => d.name === deptName);
+          
+          if (!dept) {
+            dept = { name: deptName, programs: [] };
+            acc.push(dept);
+          }
+          
+          dept.programs.push({
+            label: curr.name,
+            slug: String(curr.program_id) // We use program_id as the slug
+          });
+          
+          return acc;
+        }, [] as DepartmentGroup[]);
+
+        setDepartments(grouped);
+      } catch (error) {
+        console.error("Failed to load programs for header:", error);
+      }
+    };
+
+    fetchPrograms();
+
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
@@ -78,8 +99,9 @@ export function SiteHeader() {
 
             {programsOpen && (
               <div className="absolute left-1/2 top-full mt-3 w-[540px] -translate-x-1/2 overflow-hidden rounded-sm border border-[var(--line)] bg-white shadow-[0_12px_32px_rgba(0,0,0,0.14)]">
-                <div className="grid grid-cols-3 divide-x divide-[var(--line)]">
-                  {departments.map((dept) => (
+                {/* Dynamically scales columns based on how many departments exist (max 3 per row) */}
+                <div className={`grid grid-cols-${Math.min(departments.length || 1, 3)} divide-x divide-[var(--line)]`}>
+                  {departments.length > 0 ? departments.map((dept) => (
                     <div key={dept.name} className="flex flex-col p-4">
                       <p className="mb-2 text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--up-maroon)] opacity-70">
                         {dept.name}
@@ -97,7 +119,9 @@ export function SiteHeader() {
                         ))}
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="p-4 text-xs text-[var(--text-muted)]">Loading programs...</div>
+                  )}
                 </div>
               </div>
             )}
