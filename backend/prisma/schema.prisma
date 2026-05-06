@@ -133,6 +133,7 @@ model ProgramApplication {
   program_application_id   Int    @id @default(autoincrement())
   qualifications           String @default("")
   application_instructions String @default("")
+  application_requirements String @default("")
   application_url          String @default("")
   recommendation_url       String @default("")
 
@@ -194,16 +195,4 @@ model Course {
 
   pool_entries    CoursePoolEntry[]
   program_courses ProgramCourse[]
-}
-
-model ProgramForm {
-  form_id      Int      @id @default(autoincrement())
-  name         String
-  type         String   // e.g., "PDF", "DOC"
-  size         String   // e.g., "1.2 MB"
-  upload_date  DateTime @default(now())
-  file_url     String
-
-  program_id   Int
-  program      Program  @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
 }
