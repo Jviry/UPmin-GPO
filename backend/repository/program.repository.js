@@ -20,7 +20,8 @@ export function createProgramRepository(prisma) {
           },
           program_application: true,
           course_pools: { include: { entries: { include: { course: true } } } },
-          study_plans: { include: { program_courses: { include: { course: true } } } }
+          study_plans: { include: { program_courses: { include: { course: true } } } },
+          faculties: { include: { faculty: { include: { credentials: true } } } }
         }
       });
     },
