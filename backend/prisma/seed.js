@@ -47,25 +47,6 @@ async function main() {
   });
 
   // =======================
-  // FACULTY + CREDENTIALS
-  // =======================
-  const faculty = await prisma.faculty.create({
-    data: {
-      name: "Dr. Maria Santos",
-      email: "maria@univ.edu",
-      photo: "photo.jpg",
-      position: "Program Coordinator",
-      credentials: {
-        create: [
-          { degree: "BS Computer Science" },
-          { degree: "MS Computer Science" },
-          { degree: "PhD Computer Science" }
-        ]
-      }
-    }
-  });
-
-  // =======================
   // COURSES
   // =======================
   await prisma.course.createMany({
@@ -117,6 +98,52 @@ async function main() {
     }
   });
 
+  // =======================
+  // FACULTY + CREDENTIALS
+  // =======================
+  await prisma.faculty.createMany({
+    data: [
+      { name: "Dr. Maria Santos", email: "maria@univ.edu", photo: "photo1.jpg", position: "Program Coordinator" },
+      { name: "Prof. Juan Dela Cruz", email: "juan@univ.edu", photo: "photo2.jpg", position: "Lecturer" },
+      { name: "Dr. Ana Reyes", email: "ana@univ.edu", photo: "photo3.jpg", position: "Lecturer" },
+      { name: "Prof. Carlos Tan", email: "carlos@univ.edu", photo: null, position: "Lecturer" },
+      { name: "Dr. Jose Rizal", email: "jose@univ.edu", photo: "photo5.jpg", position: "Program Coordinator" },
+    ]
+  });
+
+  const faculties = await prisma.faculty.findMany();
+  const getFactulty = (email) => faculties.find(f => f.email === email);
+
+  await prisma.facultyCredential.createMany({
+    data: [
+      { degree: "BS Computer Science", faculty_id: getFactulty("maria@univ.edu").faculty_id },
+      { degree: "MS Computer Science", faculty_id: getFactulty("maria@univ.edu").faculty_id },
+      { degree: "PhD Computer Science", faculty_id: getFactulty("maria@univ.edu").faculty_id },
+      { degree: "BS Information Technology", faculty_id: getFactulty("juan@univ.edu").faculty_id },
+      { degree: "MS Information Technology", faculty_id: getFactulty("juan@univ.edu").faculty_id },
+      { degree: "BS Mathematics", faculty_id: getFactulty("ana@univ.edu").faculty_id },
+      { degree: "MS Mathematics", faculty_id: getFactulty("ana@univ.edu").faculty_id },
+      { degree: "PhD Mathematics", faculty_id: getFactulty("ana@univ.edu").faculty_id },
+      { degree: "BS Computer Engineering", faculty_id: getFactulty("carlos@univ.edu").faculty_id },
+      { degree: "MS Computer Engineering", faculty_id: getFactulty("carlos@univ.edu").faculty_id },
+      { degree: "BS Agriculture", faculty_id: getFactulty("jose@univ.edu").faculty_id },
+      { degree: "MS Agriculture", faculty_id: getFactulty("jose@univ.edu").faculty_id },
+      { degree: "PhD Agriculture", faculty_id: getFactulty("jose@univ.edu").faculty_id },
+    ]
+  });
+
+  // =======================
+  // PROGRAM FACULTY
+  // =======================
+  await prisma.programFaculty.createMany({
+    data: [
+      { program_id: program.program_id, faculty_id: getFactulty("maria@univ.edu").faculty_id },
+      { program_id: program.program_id, faculty_id: getFactulty("juan@univ.edu").faculty_id },
+      { program_id: program.program_id, faculty_id: getFactulty("ana@univ.edu").faculty_id },
+      { program_id: program.program_id, faculty_id: getFactulty("carlos@univ.edu").faculty_id },
+      { program_id: program.program_id, faculty_id: getFactulty("jose@univ.edu").faculty_id },
+    ]
+  });
   // =======================
   // COURSE POOL
   // =======================

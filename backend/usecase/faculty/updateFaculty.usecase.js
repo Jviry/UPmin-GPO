@@ -6,6 +6,13 @@ export function updateFacultyUsecase(facultyRepo) {
     if (!existing) {
       throw new DomainError(`Faculty ${id} doesn't exist`);
     }
-    return facultyRepo.update({ id, name, photo, position, email, credentials });
+    return facultyRepo.update({
+      id,
+      name,
+      photo: photo && photo.trim() !== '' ? photo : null,
+      position,
+      email,
+      credentials
+    });
   }
 }
