@@ -54,7 +54,7 @@ async function main() {
       name: "Dr. Maria Santos",
       email: "maria@univ.edu",
       photo: "photo.jpg",
-      position: "Professor",
+      position: "Program Coordinator",
       credentials: {
         create: [
           { degree: "BS Computer Science" },

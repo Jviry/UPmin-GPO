@@ -1,9 +1,58 @@
 export function createFacultyRepository(prisma) {
   return {
-    async findByPosition(position) {
+    async findAll(position) {
       return prisma.faculty.findMany({
-        where: { position }
+        where: position ? { position } : {},
+        include: { credentials: true }
       });
     },
+    async findByID(id) {
+      return prisma.faculty.findUnique({
+        where: { faculty_id: id }
+      });
+    },
+    async create({ name, email, photo = null, position, credentials }) {
+      return prisma.faculty.create({
+        data: {
+          name,
+          email,
+          photo,
+          position,
+          credentials: {
+            create: credentials.map((degree) => ({ degree }))
+          }
+        }
+      });
+    },
+    async delete(id) {
+      return prisma.faculty.delete({
+        where: { faculty_id: Number(id) }
+      });
+    },
+    async update({ id, name, email, photo, position, credentials }) {
+      return prisma.$transaction(async (tx) => {
+        const faculty = await tx.faculty.update({
+          where: { faculty_id: Number(id) },
+          data: { name, email, photo, position }
+        });
+
+        if (credentials) {
+          await tx.facultyCredential.deleteMany({
+            where: { faculty_id: Number(id) }
+          });
+          await tx.facultyCredential.createMany({
+            data: credentials.map((degree) => ({
+              degree,
+              faculty_id: Number(id)
+            }))
+          });
+        }
+
+        return tx.faculty.findUnique({
+          where: { faculty_id: Number(id) },
+          include: { credentials: true }
+        });
+      });
+    }
   }
 }

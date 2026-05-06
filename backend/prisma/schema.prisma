@@ -88,7 +88,7 @@ model Faculty {
   faculty_id  Int                 @id @default(autoincrement())
   name        String
   email       String              @unique
-  photo       String
+  photo       String?
   position    String
   credentials FacultyCredential[]
 }
