@@ -2,7 +2,7 @@ export function createProgramRepository(prisma) {
   return {
     async getAllPrograms() {
       return await prisma.program.findMany({
-        select: { name: true, program_id: true }
+        select: { name: true, program_id: true, program_application: true },
       });
     },
 
