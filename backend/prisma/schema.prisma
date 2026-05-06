@@ -135,6 +135,7 @@ model ProgramApplication {
   application_instructions String @default("")
   application_requirements String @default("")
   application_url          String @default("")
+  application_requirements String @default("")
   recommendation_url       String @default("")
 
   program    Program @relation(fields: [program_id], references: [program_id], onDelete: Cascade)

@@ -40,6 +40,7 @@ export function createProgramRepository(prisma) {
               qualifications: "",
               application_instructions: "",
               application_url: "",
+              application_requirements: "",
               recommendation_url: "",
             }
           }
@@ -93,6 +94,7 @@ export function createProgramRepository(prisma) {
           qualifications: data.qualifications,
           application_instructions: data.application_instructions,
           application_url: data.application_url,
+          application_requirements: data.application_requirements,
           recommendation_url: data.recommendation_url
         }
       });
