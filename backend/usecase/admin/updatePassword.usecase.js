@@ -17,8 +17,6 @@ export function createUpdatePasswordUsecase({ adminRepo, hashPassword, comparePa
 
     const hashedNewPassword = await hashPassword(newPassword);
 
-    const updatedAdmin = await adminRepo.updatePassword(id, hashedNewPassword);
-
-    return { updatedAdmin };
+    return await adminRepo.updatePassword(id, hashedNewPassword);
   }
 }

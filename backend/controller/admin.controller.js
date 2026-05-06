@@ -1,13 +1,13 @@
 import express from 'express';
 import { prisma } from '../db/db.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createAdminRepository } from '../repository/admin.repository.js';
-import { createLoginUsecase } from '../usecase/admin/login.usecase.js';
 import { createAdminUsecase } from '../usecase/admin/createAdmin.usecase.js';
 import { createUpdatePasswordUsecase } from '../usecase/admin/updatePassword.usecase.js'
 import { createDeleteAdminUsecase } from '../usecase/admin/deleteAdmin.usecase.js';
+import { createGetAdminsUsecase } from '../usecase/admin/getAdmins.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 
@@ -22,11 +22,6 @@ if (!JWT_SECRET) {
 
 const adminRepo = createAdminRepository(prisma);
 
-const login = createLoginUsecase({
-  adminRepo,
-  comparePassword: bcrypt.compare,
-  signToken: (payload) => jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" })
-});
 
 const createAdmin = createAdminUsecase({
   adminRepo,
@@ -43,27 +38,16 @@ const deleteAdmin = createDeleteAdminUsecase(
   adminRepo
 );
 
-router.post('/auth/login', async (req, res) => {
-  try {
-    const result = await login(req.body);
-    res.status(200).json({
-      message: "Logged in successfully",
-      ...result
-    });
-  } catch (error) {
-    if (error.isDomainError) {
-      return res.status(400).json({ message: error.message });
-    }
-    res.status(500).json({ mesasage: error.message });
-  }
-});
+const getAdmins = createGetAdminsUsecase(
+  adminRepo
+);
 
 router.post('/admins', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
-    const result = await createAdmin(req.body);
+    const admin = await createAdmin(req.body);
     res.status(200).json({
       message: "Admin created",
-      ...result
+      admin
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -78,11 +62,11 @@ router.put('/admins/:id', authenticate, authenticateRole('superadmin'), async (r
     const { id } = req.params;
     const { newPassword } = req.body;
 
-    const result = await updatePassword(id, newPassword);
+    const admin = await updatePassword(id, newPassword);
 
     res.status(200).json({
       message: `Admin ${id} password updated`,
-      ...result,
+      admin,
     });
   } catch (error) {
     if (error.isDomainError) {
@@ -96,25 +80,27 @@ router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async
   try {
     const { id } = req.params;
 
-    const result = await deleteAdmin(id);
+    const deletedAdmin = await deleteAdmin(id);
 
     res.status(200).json({
       message: `User ${id} deleted successfully!`,
-      ...result,
+      deletedAdmin,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Test
-router.get('/colleges', async (req, res) => {
+router.get('/admins', authenticate, authenticateRole('superadmin'), async (req, res) => {
   try {
-    const colleges = await prisma.college.findMany();
-    res.json(colleges);
+    const admins = await getAdmins();
+
+    res.status(200).json({
+      message: "Fetched admins successfully",
+      admins
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch colleges" });
+    res.status(500).json({ message: error.message });
   }
 });
 
