@@ -42,16 +42,40 @@ async function main() {
   // =======================
   await prisma.course.createMany({
     data: [
-      { name: "Data Structures", code: "CMSC127", type: "core", units: 3 },
-      { name: "Algorithms", code: "CMSC128", type: "core", units: 3 },
-      { name: "Database Systems", code: "CMSC131", type: "core", units: 3 },
-      { name: "Operating Systems", code: "CMSC132", type: "core", units: 3 },
-      { name: "Software Engineering", code: "CMSC198", type: "core", units: 3 },
-      { name: "Networks", code: "CMSC135", type: "core", units: 3 },
-      { name: "Thesis", code: "CMSC200", type: "core", units: 6 },
-      { name: "Machine Learning", code: "CMSC180", type: "pool", units: 3 },
-      { name: "Computer Vision", code: "CMSC181", type: "pool", units: 3 },
-      { name: "NLP", code: "CMSC182", type: "pool", units: 3 },
+      // Elective Courses
+      { name: "Agribusiness Systems", code: "ABM 230", type: "elective", units: 3 },
+      { name: "Special Topics in Agribusiness Management", code: "ABM 234", type: "elective", units: 3 },
+      { name: "Development Perspectives", code: "DM 231", type: "elective", units: 3 },
+      { name: "Community Management", code: "DM 232", type: "elective", units: 3 },
+      { name: "Local Governance", code: "DM 233", type: "elective", units: 3 },
+      { name: "Labor and Economy", code: "IR 204", type: "elective", units: 3 },
+      { name: "Collective Bargaining and Industrial Democracy", code: "IR 211", type: "elective", units: 3 },
+      { name: "Deterministic and Probabilistic Models of Choice", code: "M201", type: "elective", units: 3 },
+      { name: "Management Communication and Information", code: "M205", type: "elective", units: 3 },
+      { name: "Special Topics in Management", code: "M234", type: "elective", units: 3 },
+      { name: "Managing an Environmentally & Economically Sustainable Enterprise", code: "M235", type: "elective", units: 3 },
+
+      // Master in Management Core Courses
+      { name: "Organizational Analysis", code: "M206", type: "core", units: 3 },
+      { name: "Systems Approach to Strategic Planning", code: "M209", type: "core", units: 3 },
+      { name: "Mixed Methods Approach for Business and Management Research", code: "M210", type: "core", units: 3 },
+      { name: "Marketing Management", code: "M211", type: "core", units: 3 },
+      { name: "Financial Management", code: "M212", type: "core", units: 3 },
+      { name: "Human Resource Management and Industrial Relations System", code: "M216", type: "core", units: 3 },
+
+      { name: "Operations and Production Management", code: "M217", type: "core", units: 3 },
+      { name: "Management Accounting and Control", code: "MGT213", type: "core", units: 3 },
+      { name: "Managerial Economics", code: "M224", type: "core", units: 3 },
+      { name: "Policy and Strategic Planning", code: "M241", type: "core", units: 4 },
+
+      // PhD by Research Core Courses
+      { name: "Agribusiness Management and Entreprenuership", code: "ABME 399", type: "core", units: 1 },
+      { name: "Agricultural and Applied Economics", code: "AECO 399", type: "core", units: 2 },
+      { name: "Economics", code: "ECON 399", type: "core", units: 2 },
+
+      { name: "Agribusiness Management and Entreprenuership", code: "ABME 400", type: "core", units: 1 },
+      { name: "Agricultural and Applied Economics", code: "AECO 400", type: "core", units: 2 },
+      { name: "Economics", code: "ECON 400", type: "core", units: 2 },
     ],
     skipDuplicates: true
   });
