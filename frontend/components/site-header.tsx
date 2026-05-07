@@ -17,6 +17,7 @@ type DepartmentGroup = {
   programs: { label: string; slug: string }[];
 };
 
+
 export function SiteHeader() {
   const [programsOpen, setProgramsOpen] = useState(false);
   const [departments, setDepartments] = useState<DepartmentGroup[]>([]);
