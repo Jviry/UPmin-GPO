@@ -53,7 +53,7 @@ router.post('/faculty', async (req, res) => {
   }
 });
 
-router.delete('faculty/:id', async (req, res) => {
+router.delete('/faculty/:id', async (req, res) => {
   try {
     const { id } = req.params;
 

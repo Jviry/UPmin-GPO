@@ -20,14 +20,13 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async create({ type, name, description, history, department_id }) {
+    async create({ type, name, description, history }) {
       return prisma.program.create({
         data: {
           type,
           name,
           description,
           history,
-          department_id: parseInt(department_id),
 
           program_application: {
             create: {
@@ -40,9 +39,6 @@ export function createProgramRepository(prisma) {
           }
         },
         include: {
-          department: {
-            select: { department_id: true, name: true }
-          },
           program_application: true
         }
       });
