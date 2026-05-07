@@ -6,7 +6,7 @@ import apiClient from '@/lib/apiClient';
 
 type ActiveTab = 'structure' | 'application' | 'faculty';
 
-// Reusable UI Blocks (Now accepting dynamic data)
+// Reusable UI Blocks
 function CourseRows({ courses }: { courses: any[] }) {
   return (
     <div className="w-full overflow-hidden rounded-sm border border-[rgba(118,9,12,0.15)]">
@@ -87,7 +87,6 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
 
   // --- DATA MAPPING ---
 
-  // Intro Paragraphs
   const descriptionParagraphs = program.description ? program.description.split('\n').filter(Boolean) : [];
 
   // Structure: Summary Calculations
@@ -101,13 +100,22 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
     structureSummary.push({ category: 'Total', units: totalUnits });
   }
 
-  // Structure: Study Plan Grouping (By Year & Semester)
+  // Structure: Study Plan Grouping (By Year & Semester, including courses)
   const studyPlans = program.study_plans?.map((plan: any) => {
-    const termsMap = new Map<string, { year: number; sem: number; units: number }>();
+    const termsMap = new Map<string, { year: number; sem: number; units: number; courses: any[] }>();
     plan.program_courses?.forEach((pc: any) => {
       const key = `${pc.year}-${pc.semester}`;
-      const existing = termsMap.get(key) || { year: pc.year, sem: pc.semester, units: 0 };
-      existing.units += (pc.course?.units || (pc.is_elective_slot ? 3 : 0));
+      const existing = termsMap.get(key) || { year: pc.year, sem: pc.semester, units: 0, courses: [] as any[] };
+      
+      const courseUnits = pc.course?.units || (pc.is_elective_slot ? 3 : 0);
+      existing.units += courseUnits;
+      
+      if (pc.course) {
+        existing.courses.push(pc.course);
+      } else if (pc.is_elective_slot) {
+        existing.courses.push({ code: 'Elective', name: 'Elective Slot', units: 3 });
+      }
+      
       termsMap.set(key, existing);
     });
     const terms = Array.from(termsMap.values()).sort((a, b) => a.year === b.year ? a.sem - b.sem : a.year - b.year);
@@ -126,8 +134,8 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
     ? program.programForms.map((f: any) => f.name)
     : ["No specific file requirements listed."];
 
-  // Faculty Data (Handles whether backend attached it to department or directly to program)
-  const facultyList = program.department?.faculty || program.faculty || [];
+  // Faculty Data (Mapped directly from the program)
+  const facultyList = program.faculty || [];
 
   return (
     <>
@@ -170,17 +178,12 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
           <section id="program-structure" className="border-b-4 border-[var(--up-gold)] px-4 pb-16 pt-20 sm:px-6 lg:px-10">
             <div className="mx-auto w-full max-w-[1200px]">
               <div className="space-y-6">
-                {/* Row 1: header */}
                 <h2 className="[font-family:var(--font-display)] text-4xl font-bold text-[var(--text-primary)] md:text-5xl lg:text-[4rem]">
                   Program Structure
                 </h2>
-
-                {/* Row 2: instructions */}
                 <p className="text-[0.95rem] leading-7 text-[var(--text-secondary)] sm:text-[1rem]">
                   To obtain the degree, the student must complete {totalUnits} units, a refereed publication and where relevant to the thesis, proof of language proficiency.
                 </p>
-
-                {/* Row 3: summary table */}
                 <StructureSummaryRows summary={structureSummary} />
               </div>
 
@@ -222,12 +225,22 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                       return (
                         <div
                           key={i}
-                          className={`flex items-center justify-between gap-4 px-5 py-3 ${
+                          className={`flex flex-col gap-2 px-5 py-3 ${
                             i % 2 === 0 ? 'bg-[rgba(118,9,12,0.07)]' : 'bg-[rgba(118,9,12,0.13)]'
                           }`}
                         >
-                          <span className="text-xs uppercase tracking-widest text-[var(--text-primary)]">Year {term.year} - {sem}</span>
-                          <span className="shrink-0 text-xs font-medium text-[var(--text-muted)]">{term.units} units</span>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs uppercase tracking-widest text-[var(--text-primary)] font-bold">Year {term.year} - {sem}</span>
+                            <span className="shrink-0 text-xs font-medium text-[var(--text-muted)]">{term.units} units</span>
+                          </div>
+                          {/* Course List inside the Semester */}
+                          {term.courses.length > 0 && (
+                            <ul className="text-xs text-[var(--text-secondary)] list-disc pl-4 mt-1 space-y-1">
+                              {term.courses.map((c: any, idx: number) => (
+                                <li key={idx}>{c.code ? `${c.code} - ${c.name}` : c.name}</li>
+                              ))}
+                            </ul>
+                          )}
                         </div>
                       );
                     }) : (
@@ -254,7 +267,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
               <h2 className="[font-family:var(--font-display)] text-3xl font-bold leading-tight text-white sm:text-4xl">
                 Qualifications
               </h2>
-              <p className="text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem]">
+              <p className="text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem] whitespace-pre-wrap">
                 {appQualifications}
               </p>
             </div>
@@ -332,7 +345,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                   </div>
                   <div className="pt-4">
                     <span className="inline-block rounded-full bg-[var(--up-maroon)] px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white">
-                      {program.department?.name || 'Faculty'}
+                      {program.name || 'Program Faculty'}
                     </span>
                   </div>
                   <div className="pt-3">

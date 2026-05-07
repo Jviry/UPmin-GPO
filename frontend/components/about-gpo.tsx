@@ -2,41 +2,31 @@
 
 import { useState, useEffect } from "react";
 import PlaceholderProfileImg from "@/components/PlaceholderProfileImg";
-import { getOfficeInfo, getTestimonies, getCoordinators } from "../services/apiServices";
+import apiClient from '@/lib/apiClient';
 
 export default function AboutGPO() {
   const [office, setOffice] = useState<any>(null);
   const [coordinators, setCoordinators] = useState<any[]>([]);
   const [testimonies, setTestimonies] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPageData = async () => {
+    const fetchData = async () => {
       try {
-        setIsLoading(true);
-        // Fetch all data concurrently for better performance
-        const [officeData, facultyData, testimoniesData] = await Promise.all([
-          getOfficeInfo().catch(() => null),
-          getCoordinators().catch(() => []),
-          getTestimonies().catch(() => [])
+        const [officeRes, facultyRes, testimonyRes] = await Promise.all([
+          apiClient.get('/office'),
+          apiClient.get('/faculty?position=Program Coordinator'), 
+          apiClient.get('/testimonies')
         ]);
-
-        setOffice(officeData);
-        setCoordinators(facultyData);
-        setTestimonies(testimoniesData);
+        
+        setOffice(officeRes.data.office || officeRes.data[0]);
+        setCoordinators(facultyRes.data.faculty || []);
+        setTestimonies(testimonyRes.data.testimonies || []);
       } catch (error) {
-        console.error("Error loading About GPO data:", error);
-      } finally {
-        setIsLoading(false);
+        console.error("Failed to fetch About GPO data:", error);
       }
     };
-
-    fetchPageData();
+    fetchData();
   }, []);
-
-  if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center text-[var(--up-maroon)]">Loading...</div>;
-  }
 
   return (
     <div className="w-full">
@@ -47,7 +37,7 @@ export default function AboutGPO() {
             About the Graduate Program Office
           </h1>
           <p className="text-[var(--text-secondary)] text-base leading-relaxed whitespace-pre-wrap">
-            {office?.history || "Placeholder office history text."}
+            {office?.history || "Information currently unavailable."}
           </p>
         </div>
         <div className="bg-[var(--up-maroon)] border-t-4 border-[var(--up-gold)] py-12 w-full">
@@ -59,7 +49,7 @@ export default function AboutGPO() {
                 className="w-full h-full object-cover" 
               />
             ) : (
-              <PlaceholderProfileImg className="border-0 rounded-none" />
+               <PlaceholderProfileImg className="h-full" />
             )}
           </div>
         </div>
@@ -72,20 +62,16 @@ export default function AboutGPO() {
             Program Coordinators
           </h2>
           <div className="flex flex-row flex-wrap">
-            {coordinators.map((faculty) => (
+            {coordinators.length > 0 ? coordinators.map((c, i) => (
               <div
-                key={faculty.faculty_id}
+                key={i}
                 className="flex flex-col w-1/2 sm:w-1/3 lg:w-1/4 border-r border-[var(--line)] last:border-r-0 px-6 pb-8 pt-2"
               >
                 {/* Image area with gold bottom bar only */}
-                <div className="relative w-full aspect-[3/4] bg-[var(--surface-muted)]">
-                  <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-                    {faculty.photo ? (
-                       <img 
-                         src={`http://localhost:3001${faculty.photo}`} 
-                         alt={faculty.name} 
-                         className="w-full h-full object-cover" 
-                       />
+                <div className="relative w-full aspect-[3/4] bg-[var(--surface-muted)] overflow-hidden">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {c.photo ? (
+                      <img src={c.photo} alt={c.name} className="h-full w-full object-cover" />
                     ) : (
                       <PlaceholderProfileImg className="border-0 rounded-none" />
                     )}
@@ -95,24 +81,17 @@ export default function AboutGPO() {
                 {/* Program pill */}
                 <div className="pt-4">
                   <span className="inline-block bg-[var(--up-maroon)] text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    {/* Assuming backend includes the Department relation */}
-                    {faculty.department?.name || "Program Coordinator"}
+                    {c.program?.name || "Coordinator"}
                   </span>
                 </div>
                 {/* Name and role */}
                 <div className="pt-3">
-                  <div className="font-bold text-base uppercase tracking-wider text-[var(--text-primary)]">
-                    {faculty.name}
-                  </div>
-                  <div className="text-xs uppercase tracking-widest text-[var(--text-secondary)] mt-1">
-                    {faculty.position}
-                  </div>
+                  <div className="font-bold text-base uppercase tracking-wider text-[var(--text-primary)]">{c.name}</div>
+                  <div className="text-xs uppercase tracking-widest text-[var(--text-secondary)] mt-1">{c.position}</div>
                 </div>
               </div>
-            ))}
-            
-            {coordinators.length === 0 && (
-              <div className="text-[var(--text-secondary)]">No coordinators assigned yet.</div>
+            )) : (
+               <div className="p-4 text-[var(--text-muted)] italic">No coordinators listed.</div>
             )}
           </div>
         </div>
@@ -135,21 +114,15 @@ export default function AboutGPO() {
           <div className="hidden md:block w-px bg-white/20 mx-2" />
           {/* Right: testimonies */}
           <div className="md:w-3/5 flex flex-col pl-0 md:pl-10 gap-0 divide-y divide-white/10">
-            {testimonies.map((testimony) => (
-              <div key={testimony.testimony_id} className="py-8 first:pt-0 last:pb-0">
+            {testimonies.length > 0 ? testimonies.map((t, i) => (
+              <div key={i} className="py-8 first:pt-0 last:pb-0">
                 <div className="text-white/30 text-6xl leading-none mb-2 select-none" style={{ fontFamily: 'var(--font-display)', lineHeight: 1 }}>&ldquo;</div>
-                <p className="text-white text-lg leading-relaxed mb-5">"{testimony.testimony_description}"</p>
-                <div className="text-[var(--up-gold)] font-bold text-xs uppercase tracking-widest">
-                  {testimony.alumnus_name}
-                </div>
-                <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">
-                  {testimony.alumnus_graduate_program}
-                </div>
+                <p className="text-white text-lg leading-relaxed mb-5">"{t.testimony_description}"</p>
+                <div className="text-[var(--up-gold)] font-bold text-xs uppercase tracking-widest">{t.alumnus_name}</div>
+                <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">{t.alumnus_graduate_program}</div>
               </div>
-            ))}
-            
-            {testimonies.length === 0 && (
-              <div className="text-white/50 py-4">No testimonies available.</div>
+            )) : (
+              <div className="py-8 text-white/70 italic">No testimonials available.</div>
             )}
           </div>
         </div>

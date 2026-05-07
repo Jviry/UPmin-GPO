@@ -7,12 +7,10 @@ import { apiClient } from '@/lib/apiClient';
 type ProgramData = {
   program_id: number;
   name: string;
-  department?: {
-    name: string;
-  };
+  type: string; // Replaced department with type
 };
 
-type DepartmentGroup = {
+type ProgramGroup = {
   name: string;
   programs: { label: string; slug: string }[];
 };
@@ -20,7 +18,7 @@ type DepartmentGroup = {
 
 export function SiteHeader() {
   const [programsOpen, setProgramsOpen] = useState(false);
-  const [departments, setDepartments] = useState<DepartmentGroup[]>([]);
+  const [programGroups, setProgramGroups] = useState<ProgramGroup[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,31 +30,43 @@ export function SiteHeader() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     
-    // Fetch programs and group them by department
+    // Fetch programs and group them by type
     const fetchPrograms = async () => {
       try {
         const res = await apiClient.get('/programs');
         const data: ProgramData[] = res.data.programs || res.data;
 
-        // Dynamically group the fetched programs by their Department Name
+        // Dynamically group the fetched programs by their Type
         const grouped = data.reduce((acc, curr) => {
-          const deptName = curr.department?.name || 'Other Departments';
-          let dept = acc.find(d => d.name === deptName);
+          const typeName = curr.type || 'Other Programs';
+          let group = acc.find(g => g.name === typeName);
           
-          if (!dept) {
-            dept = { name: deptName, programs: [] };
-            acc.push(dept);
+          if (!group) {
+            group = { name: typeName, programs: [] };
+            acc.push(group);
           }
           
-          dept.programs.push({
+          group.programs.push({
             label: curr.name,
             slug: String(curr.program_id) // We use program_id as the slug
           });
           
           return acc;
-        }, [] as DepartmentGroup[]);
+        }, [] as ProgramGroup[]);
 
-        setDepartments(grouped);
+        // Sort the columns: Diploma -> Graduate -> PhD/Doctoral
+        grouped.sort((a, b) => {
+          const getWeight = (name: string) => {
+            const lowerName = name.toLowerCase();
+            if (lowerName.includes('diploma')) return 1;
+            if (lowerName.includes('graduate') || lowerName.includes('master')) return 2;
+            if (lowerName.includes('phd') || lowerName.includes('doctor')) return 3;
+            return 4; // Fallback for any other types
+          };
+          return getWeight(a.name) - getWeight(b.name);
+        });
+
+        setProgramGroups(grouped);
       } catch (error) {
         console.error("Failed to load programs for header:", error);
       }
@@ -100,15 +110,15 @@ export function SiteHeader() {
 
             {programsOpen && (
               <div className="absolute left-1/2 top-full mt-3 w-[540px] -translate-x-1/2 overflow-hidden rounded-sm border border-[var(--line)] bg-white shadow-[0_12px_32px_rgba(0,0,0,0.14)]">
-                {/* Dynamically scales columns based on how many departments exist (max 3 per row) */}
-                <div className={`grid grid-cols-${Math.min(departments.length || 1, 3)} divide-x divide-[var(--line)]`}>
-                  {departments.length > 0 ? departments.map((dept) => (
-                    <div key={dept.name} className="flex flex-col p-4">
+                {/* Dynamically scales columns based on how many program types exist (max 3 per row) */}
+                <div className={`grid grid-cols-${Math.min(programGroups.length || 1, 3)} divide-x divide-[var(--line)]`}>
+                  {programGroups.length > 0 ? programGroups.map((group) => (
+                    <div key={group.name} className="flex flex-col p-4">
                       <p className="mb-2 text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--up-maroon)] opacity-70">
-                        {dept.name}
+                        {group.name}
                       </p>
                       <div className="flex flex-col gap-1">
-                        {dept.programs.map((prog) => (
+                        {group.programs.map((prog) => (
                           <a
                             key={prog.slug}
                             href={`/programs/${prog.slug}`}
