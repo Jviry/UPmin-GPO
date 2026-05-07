@@ -16,8 +16,8 @@ export function updateProgramApplicationUsecase({ programRepo }) {
       Object.entries({
         qualifications: data.qualifications,
         application_instructions: data.application_instructions,
-        application_url: data.application_url,
         application_requirements: data.application_requirements,
+        application_url: data.application_url,
         recommendation_url: data.recommendation_url,
       }).filter(([_, value]) => value !== undefined)
     );
