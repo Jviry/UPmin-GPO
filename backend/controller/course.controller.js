@@ -12,18 +12,18 @@ const addCourse = createCourseUsecase(courseRepo);
 const getCourseByType = getCourseByTypeUsecase(courseRepo);
 const deleteCourse = deleteCourseUsecase(courseRepo);
 
-router.get('/course/:type', async (req, res) => {
+router.get('/course', async (req, res) => {
   try {
-    const { type } = req.params;
+    const { type } = req.query;
     const courses = await getCourseByType(type);
 
     res.status(200).json({
       message: `${type} courses retrieved`,
       courses
     });
+    return res.status(400).json({ message: error.message });
   } catch (error) {
     if (error.isDomainError) {
-      return res.status(400).json({ message: error.message });
     }
     res.status(500).json({ message: error.message });
   }
