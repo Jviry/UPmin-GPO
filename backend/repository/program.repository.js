@@ -2,7 +2,7 @@ export function createProgramRepository(prisma) {
   return {
     async getAllPrograms() {
       return await prisma.program.findMany({
-        select: { name: true, program_id: true, progra },
+        select: { name: true, program_id: true, program_application: true },
       });
     },
 
@@ -12,12 +12,6 @@ export function createProgramRepository(prisma) {
           program_id: parseInt(id),
         },
         include: {
-          department: {
-            select: {
-              department_id: true,
-              name: true
-            }
-          },
           program_application: true,
           course_pools: { include: { entries: { include: { course: true } } } },
           study_plans: { include: { program_courses: { include: { course: true } } } },
