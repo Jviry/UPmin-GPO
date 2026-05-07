@@ -8,7 +8,7 @@ export function createStudyPlanUsecase({ studyPlanRepo, programRepo }) {
     if (isNaN(parseInt(years))) {
       throw new DomainError('Years must be a number');
     }
-    const program = await programRepo.findProgramByID(program_id);
+    const program = await programRepo.findByID(program_id);
     if (!program) {
       throw new DomainError('Program not found');
     }
