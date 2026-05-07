@@ -55,6 +55,20 @@ async function main() {
       { name: "Special Topics in Management", code: "M234", type: "elective", units: 3 },
       { name: "Managing an Environmentally & Economically Sustainable Enterprise", code: "M235", type: "elective", units: 3 },
 
+      // Diploma in Urban and Regional Planning Core Courses
+      { name: "Theory and Practice of Planning", code: "P201", type: "core", units: 3 },
+      { name: "Land Use Planning", code: "P203", type: "core", units: 3 },
+      { name: "Project Planning and Development", code: "P205", type: "core", units: 3 },
+      { name: "Planning Process", code: "P210", type: "core", units: 3 },
+      { name: "Planning Workshop", code: "P210.1", type: "core", units: 5 },
+      { name: "Planning Analysis and Techniques", code: "P214", type: "core", units: 3 },
+      { name: "Site Planning", code: "P231", type: "core", units: 3 },
+      { name: "Research Methods in Planning", code: "P299", type: "core", units: 3 },
+
+      // Additional Courses for Master of Arts in Urban and Regional Planning
+      { name: "Special Problems in Regional Planning", code: "P229", type: "core", units: 3 },
+      { name: "MASTER'S THESIS", code: "P300", type: "core", units: 6 },
+
       // Master in Management Core Courses
       { name: "Organizational Analysis", code: "M206", type: "core", units: 3 },
       { name: "Systems Approach to Strategic Planning", code: "M209", type: "core", units: 3 },
@@ -117,14 +131,15 @@ async function main() {
     data: {
       type: "Post Baccalaureate Program",
       name: "Diploma in Urban and Regional Planning",
-      description: "The Diploma in Urban and Regional Planning (DURP) at UP Mindanao is a 26-unit postgraduate program designed to equip practitioners with the knowledge, skills, and attitude required for comprehensive development planning. It caters to planners, particularly in local government, to address growing urban development challenges.",
+      description: "The Diploma in Urban and Regional Planning (DURP) is offered by UP in Mindanao to enable professional planners to respond more effectively to the steadyily increasing demands of development. This program will equip urban an regional planners with knowledge and skills to carry out the national policy of the comprehensive planning and devlopment.",
       history: "The Diploma in Urban and Regional Planning (DURP) along with the Master in Urban and Regional Planning (MAURP) program at the University of the Philippines Mindanao was reoffered in the Second Semester of Academic Year 2016-2017. The program was revived under the Department of Architecture following approval by the UP Mindanao University Council in November 2016.",
 
       program_application: {
         create: {
           qualifications: "BS CS or related",
-          application_instructions: "Submit docs",
-          application_url: "https://apply.com",
+          application_instructions: "Interested applicants may fill out the form and submit the requirements via the application URL below. The reference forms are to be duly accomplished by at least 2 references and sent directly to architecture.upmin@up.edu.ph.",
+          application_requirements: "A bachelor's degree from a recognized institution of higher learning; A minimum weighted average grade of 2.5 or its equivalent; Relevant work experience of at least two years; A favorable letter of recommendation from a former superior and at least one other person who is well acquainted with, but not related to the applicant; Passing the Graduate Admission Test; Favorable assessment of interview results.",
+          application_url: "http://bit.ly/UPMindanaoDURP2023",
           recommendation_url: "https://reco.com"
         }
       }
@@ -137,13 +152,13 @@ async function main() {
   const maurpProgram = await prisma.program.create({
     data: {
       type: "Graduate Program",
-      name: "Master in Urban and Regional Planning",
+      name: "Master of Arts in Urban and Regional Planning",
       description: "The Master of Arts in Urban and Regional Planning at UP Mindanao is a ladderized graduate program designed to develop leadership, management, and research skills for planning professionals, specifically addressing the growing demands of urbanization and development in the Mindanao region.",
       history: "The Master in Urban and Regional Planning (MAURP) program at the University of the Philippines Mindanao was originally offered by the School of Management (SOM) before being revived under the Department of Architecture on November 2016.",
 
       program_application: {
         create: {
-          qualifications: "BS CS or related",
+          qualifications: "To qualify for the Master's Program (MAURP), a student must have a weighted average of 1.75 or better in his/her Diploma Program and upon he recommendation of the Program Adviser and approval of the Dean.",
           application_instructions: "Submit docs",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
@@ -166,6 +181,7 @@ async function main() {
         create: {
           qualifications: "BS CS or related",
           application_instructions: "Submit docs",
+          application_requirements: "Duly accomplished application form (Form 1); Cover letter signifying intent and degree sought, addressed to the Department Chair: Assoc. Prof. Dann Marie N. Del Mundo, Ph.D.; Updated Curriculum Vitae; Original or certified true copy of official Transcript of Records (TOR); True Copy of Grades showing your final General Weighted Average (GWA); Two letters of recommendation (Form 2) – one from your former professor and one from your employer or direct supervisor; Payment receipt/proof of payment for the non-refundable fee amounting to PHP 200.00. Must be deposited to the following account: Account name: UP Mindanao Revolving Fund; Account number: 00-0-00494-915-2; Name of Bank: Development Bank of the Philippines; Branch: Davao City; All files should be in PDF format. Email the documents to the MSHMS Coordinator, Assoc. Prof. Micah Amor P. Yares, Ph.D., at mayares@up.edu.ph on or before June 30, 2024.",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -243,11 +259,12 @@ async function main() {
   // =======================
   await prisma.faculty.createMany({
     data: [
-      { name: "Dr. Maria Santos", email: "maria@univ.edu", photo: "photo1.jpg", position: "Program Coordinator" },
-      { name: "Prof. Juan Dela Cruz", email: "juan@univ.edu", photo: "photo2.jpg", position: "Lecturer" },
-      { name: "Dr. Ana Reyes", email: "ana@univ.edu", photo: "photo3.jpg", position: "Lecturer" },
-      { name: "Prof. Carlos Tan", email: "carlos@univ.edu", photo: null, position: "Lecturer" },
-      { name: "Dr. Jose Rizal", email: "jose@univ.edu", photo: "photo5.jpg", position: "Program Coordinator" },
+      { name: "Prof. Jackie Lou J. Tagubase", email: "jlTagubase@up.edu.ph", photo: "photo1.jpg", position: "Program Coordinator" },
+      { name: "Prof. Micah Amor P. Yares", email: "maYares@up.edu.ph", photo: "photo2.jpg", position: "Program Coordinator" },
+      { name: "Prof. Mae A. Responte", email: "mResponte@up.edu.ph", photo: "photo3.jpg", position: "Program Coordinator" },
+      { name: "Prof. Imee Marie A. Acopiado ", email: "imAcopiado@up.edu.ph", photo: null, position: "Program Coordinator" },
+      { name: "Prof. Pedro A. Alviola IV", email: "pAlviola@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" },
+      { name: "Prof. Jonathan Y. Cagas", email: "jCagas@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" },
     ]
   });
 
@@ -284,6 +301,7 @@ async function main() {
       { program_id: program.program_id, faculty_id: getFactulty("jose@univ.edu").faculty_id },
     ]
   });
+
   // =======================
   // COURSE POOL
   // =======================
@@ -293,9 +311,17 @@ async function main() {
       program_id: program.program_id,
       entries: {
         create: [
-          { course_id: getCourse("CMSC180").course_id },
-          { course_id: getCourse("CMSC181").course_id },
-          { course_id: getCourse("CMSC182").course_id },
+          { course_id: getCourse("ABM 230").course_id },
+          { course_id: getCourse("ABM 234").course_id },
+          { course_id: getCourse("DM 231").course_id },
+          { course_id: getCourse("DM 232").course_id },
+          { course_id: getCourse("DM 233").course_id },
+          { course_id: getCourse("IR 204").course_id },
+          { course_id: getCourse("IR 211").course_id },
+          { course_id: getCourse("M201").course_id },
+          { course_id: getCourse("M205").course_id },
+          { course_id: getCourse("M234").course_id },
+          { course_id: getCourse("M235").course_id },
         ]
       }
     }
