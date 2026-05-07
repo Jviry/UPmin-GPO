@@ -12,7 +12,7 @@ const addCourse = createCourseUsecase(courseRepo);
 const getCourseByType = getCourseByTypeUsecase(courseRepo);
 const deleteCourse = deleteCourseUsecase(courseRepo);
 
-router.get('/course', async (req, res) => {
+router.get('/courses', async (req, res) => {
   try {
     const { type } = req.query;
     const courses = await getCourseByType(type);
@@ -31,7 +31,7 @@ router.get('/course', async (req, res) => {
 
 
 
-router.post('/course', async (req, res) => {
+router.post('/courses', async (req, res) => {
   try {
     const course = await addCourse(req.body);
     res.status(200).json({
@@ -46,7 +46,7 @@ router.post('/course', async (req, res) => {
   }
 });
 
-router.delete('/course/:id', async (req, res) => {
+router.delete('/courses/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
