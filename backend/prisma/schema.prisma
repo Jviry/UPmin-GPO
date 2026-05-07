@@ -76,14 +76,6 @@ model Testimony {
   alumnus_graduate_program String
 }
 
-model Department {
-  department_id Int    @id @default(autoincrement())
-  name          String
-  contact_info  String @unique
-
-  programs Program[]
-}
-
 model Faculty {
   faculty_id  Int                 @id @default(autoincrement())
   name        String
@@ -118,9 +110,6 @@ model Program {
   name        String
   description String
   history     String
-
-  department_id Int
-  department    Department @relation(fields: [department_id], references: [department_id])
 
   course_pools CoursePool[]
   study_plans  StudyPlan[]

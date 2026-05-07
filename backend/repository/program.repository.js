@@ -2,7 +2,7 @@ export function createProgramRepository(prisma) {
   return {
     async getAllPrograms() {
       return await prisma.program.findMany({
-        select: { name: true, program_id: true, program_application: true },
+        select: { name: true, program_id: true, progra },
       });
     },
 
@@ -60,27 +60,17 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async update(id, data) {
+    async update({ id, type, name, description, history }) {
       return prisma.program.update({
         where: {
           program_id: parseInt(id),
         },
         data: {
-          type: data.type,
-          name: data.name,
-          description: data.description,
-          history: data.history,
-          department_id: data.department_id ? parseInt(data.department_id) : undefined
+          type,
+          name,
+          description,
+          history
         },
-        include: {
-          department: {
-            select: {
-              department_id: true,
-              name: true
-            }
-          },
-          program_application: true
-        }
       });
     },
 
