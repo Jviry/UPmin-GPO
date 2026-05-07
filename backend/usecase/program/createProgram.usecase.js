@@ -5,6 +5,6 @@ export function createProgramUsecase({ programRepo }) {
     validateCreateProgram(data);
     const { type, name, description, history } = data;
 
-    return await programRepo.create({ type, name, description, history, department_id });
+    return await programRepo.create({ type, name, description, history });
   };
 }
