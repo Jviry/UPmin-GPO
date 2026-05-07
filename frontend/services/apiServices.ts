@@ -2,6 +2,18 @@ import apiClient from '../lib/apiClient';
 
 const GENERIC_ERROR_MSG = "Something went wrong on our end. Please try again later."; // Handle 500 with generic fallback[span_3](start_span)[span_3](end_span)
 
+// --- AUTH API ---
+export const loginAdmin = async (email: string, password: string) => {
+  try {
+    const response = await apiClient.post('/auth/login', { email, password });
+    // Map response shape: { message, token }
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
 // --- ANNOUNCEMENT API ---
 export const getAnnouncements = async () => {
   try {

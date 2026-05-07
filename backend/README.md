@@ -82,6 +82,7 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | POST | `/admins` | Superadmin | Create a new admin |
 | PUT | `/admins/:id` | Superadmin | Update an admin's password |
 | DELETE | `/admins/:id` | Superadmin | Delete an admin |
+| GET | `/admins` | Superadmin | Get all admin |
 
 ### Office
 
@@ -101,6 +102,7 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | DELETE | `/announcement/:id` | Admin/Superadmin | Delete an announcement |
 
 ### Scholarship
+
 | Method | Endpoint                 | Access           | Description                     |
 | ------ | ------------------------ | ---------------- | ------------------------------- |
 | GET    | `/scholarships`          | Public           | Get all available scholarships  |
@@ -111,16 +113,52 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 
 ### Program
 
-| Method | Endpoint             | Access     | Description             |
-| ------ | -------------------- | ---------- | ----------------------- |
-| GET    | `/programs`          | Public     | Get all program names   |
-| GET    | `/programs/:id`      | Public     | Get program by its ID   |
-| POST   | `/programs`          | Superadmin | Create new program      |
-| DELETE | `/programs/:id`      | Superadmin | Delete existing program |
-| PUT    | `/programs/:id`      | Superadmin | Edit program info       |
+| Method | Endpoint | Access | Description |
+| ------ | -------- | ------ | ----------- |
+| GET | `/programs` | Public | Get all programs |
+| GET | `/programs/:id` | Public | Get program by ID with course pools, study plans, program application, and faculty |
+| POST | `/programs` | Admin/Superadmin | Create new program |
+| PUT | `/programs/:id` | Admin/Superadmin | Edit program info |
+| DELETE | `/programs/:id` | Admin/Superadmin | Delete program |
+| PUT | `/programs/:id/faculty` | Admin/Superadmin | Sync faculty under a program |
 
-## Authentication
+### Study Plans
 
+| Method | Endpoint | Access | Description |
+| ------ | -------- | ------ | ----------- |
+| GET | `/programs/:program_id/study-plan` | Public | Get all study plans by program |
+| POST | `/programs/:program_id/study-plan` | Admin/Superadmin | Create study plan under a program |
+| DELETE | `/programs/:program_id/study-plan/:id` | Admin/Superadmin | Delete study plan by ID |
+| PUT | `/programs/:program_id/study-plan/:id/entries` | Admin/Superadmin | Sync courses in a study plan |
+
+### Course Pools
+
+| Method | Endpoint | Access | Description |
+| ------ | -------- | ------ | ----------- |
+| GET | `/programs/:program_id/course-pool` | Public | Get all course pools by program |
+| GET | `/programs/:program_id/course-pool/:id` | Public | Get course pool by ID with entries |
+| POST | `/programs/:program_id/course-pool` | Admin/Superadmin | Create course pool under a program |
+| DELETE | `/programs/:program_id/course-pool/:id` | Admin/Superadmin | Delete course pool by ID |
+| PUT | `/programs/:program_id/course-pool/:id/entries` | Admin/Superadmin | Sync courses in a pool |
+
+### Courses
+
+| Method | Endpoint | Access | Description |
+| ------ | -------- | ------ | ----------- |
+| GET | `/courses` | Public | Get all courses |
+| GET | `/courses?type=core` | Public | Get courses filtered by type |
+| POST | `/courses` | Admin/Superadmin | Create new course |
+| DELETE | `/courses/:id` | Admin/Superadmin | Delete course by ID |
+
+### Faculty
+
+| Method | Endpoint | Access | Description |
+| ------ | -------- | ------ | ----------- |
+| GET | `/faculty` | Public | Get all faculty with credentials |
+| GET | `/faculty?position=` | Public | Get faculty filtered by position |
+| POST | `/faculty` | Admin/Superadmin | Create faculty with credentials |
+| PUT | `/faculty/:id` | Admin/Superadmin | Update faculty and credentials |
+| DELETE | `/faculty/:id` | Admin/Superadmin | Delete faculty by ID |
 Protected routes require a Bearer token in the `Authorization` header:
 
 ```

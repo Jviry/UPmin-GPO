@@ -37,15 +37,6 @@ async function main() {
     }
   });
 
-  // =======================
-  // DEPARTMENT
-  // =======================
-  const department = await prisma.department.create({
-    data: {
-      name: "Computer Science",
-      contact_info: "cs@university.edu"
-    }
-  });
 
   // =======================
   // COURSES
@@ -83,7 +74,6 @@ async function main() {
       name: "MS Computer Science",
       description: "Advanced CS program",
       history: "Program history...",
-      department_id: department.department_id,
 
       program_application: {
         create: {

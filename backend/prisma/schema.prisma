@@ -76,14 +76,6 @@ model Testimony {
   alumnus_graduate_program String
 }
 
-model Department {
-  department_id Int    @id @default(autoincrement())
-  name          String
-  contact_info  String @unique
-
-  programs Program[]
-}
-
 model Faculty {
   faculty_id  Int                 @id @default(autoincrement())
   name        String
@@ -119,9 +111,6 @@ model Program {
   description String
   history     String
 
-  department_id Int
-  department    Department @relation(fields: [department_id], references: [department_id])
-
   course_pools CoursePool[]
   study_plans  StudyPlan[]
   faculties    ProgramFaculty[]
@@ -134,6 +123,7 @@ model ProgramApplication {
   program_application_id   Int    @id @default(autoincrement())
   qualifications           String @default("")
   application_instructions String @default("")
+  application_requirements String @default("")
   application_url          String @default("")
   recommendation_url       String @default("")
 
@@ -198,13 +188,13 @@ model Course {
 }
 
 model ProgramForm {
-  form_id     Int      @id @default(autoincrement())
-  name        String
-  type        String // e.g., "PDF", "DOC"
-  size        String // e.g., "1.2 MB"
-  upload_date DateTime @default(now())
-  file_url    String
+  form_id      Int      @id @default(autoincrement())
+  name         String
+  type         String   // e.g., "PDF", "DOC"
+  size         String   // e.g., "1.2 MB"
+  upload_date  DateTime @default(now())
+  file_url     String
 
-  program_id Int
-  program    Program @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
+  program_id   Int
+  program      Program  @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
 }

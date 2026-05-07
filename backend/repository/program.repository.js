@@ -2,7 +2,7 @@ export function createProgramRepository(prisma) {
   return {
     async getAllPrograms() {
       return await prisma.program.findMany({
-        select: { name: true, program_id: true }
+        select: { name: true, program_id: true, program_application: true },
       });
     },
 
@@ -12,12 +12,6 @@ export function createProgramRepository(prisma) {
           program_id: parseInt(id),
         },
         include: {
-          department: {
-            select: {
-              department_id: true,
-              name: true
-            }
-          },
           program_application: true,
           course_pools: { include: { entries: { include: { course: true } } } },
           study_plans: { include: { program_courses: { include: { course: true } } } },
@@ -40,6 +34,7 @@ export function createProgramRepository(prisma) {
               qualifications: "",
               application_instructions: "",
               application_url: "",
+              application_requirements: "",
               recommendation_url: "",
             }
           }
@@ -59,27 +54,17 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async update(id, data) {
+    async update({ id, type, name, description, history }) {
       return prisma.program.update({
         where: {
           program_id: parseInt(id),
         },
         data: {
-          type: data.type,
-          name: data.name,
-          description: data.description,
-          history: data.history,
-          department_id: data.department_id ? parseInt(data.department_id) : undefined
+          type,
+          name,
+          description,
+          history
         },
-        include: {
-          department: {
-            select: {
-              department_id: true,
-              name: true
-            }
-          },
-          program_application: true
-        }
       });
     },
 
@@ -93,6 +78,7 @@ export function createProgramRepository(prisma) {
           qualifications: data.qualifications,
           application_instructions: data.application_instructions,
           application_url: data.application_url,
+          application_requirements: data.application_requirements,
           recommendation_url: data.recommendation_url
         }
       });
