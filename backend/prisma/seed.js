@@ -66,9 +66,20 @@ async function main() {
       { name: "Research Methods in Planning", code: "P299", type: "core", units: 3 },
 
       // Additional Courses for Master of Arts in Urban and Regional Planning
-      { name: "Special Problems in Regional Planning", code: "P229", type: "core", units: 3 },
-      { name: "MASTER'S THESIS", code: "P300", type: "core", units: 6 },
+      { name: "Special Problems in Regional Planning", code: "P229", type: "required", units: 3 },
+      { name: "MASTER'S THESIS", code: "P300", type: "required", units: 6 },
 
+      // Master in Biology Core Courses
+      { name: "Chemical Physiology", code: "BIO 220", type: "core", units: 3 },
+      { name: "Advanced Genetics", code: "BIO 240", type: "core", units: 3 },
+      { name: "Differentiation in Embryonic Systems", code: "BIO 230", type: "core", units: 3 },
+      { name: "Advanced Cell and Molecular Biology", code: "BIO 250", type: "core", units: 3 },
+      { name: "Advanced Ecology", code: "BIO 260", type: "core", units: 3 },
+
+      { name: "Seminar", code: "BIO 296", type: "required", units: 1 },
+      { name: "Research in Biology", code: "BIO 299", type: "required", units: 2 },
+      { name: "Thesis", code: "BIO 300", type: "required", units: 6 },
+      
       // Master in Management Core Courses
       { name: "Organizational Analysis", code: "M206", type: "core", units: 3 },
       { name: "Systems Approach to Strategic Planning", code: "M209", type: "core", units: 3 },
@@ -117,6 +128,7 @@ async function main() {
         create: {
           qualifications: "BS CS or related",
           application_instructions: "Submit docs",
+          application_requirements: "",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -136,7 +148,7 @@ async function main() {
 
       program_application: {
         create: {
-          qualifications: "BS CS or related",
+          qualifications: "TBA",
           application_instructions: "Interested applicants may fill out the form and submit the requirements via the application URL below. The reference forms are to be duly accomplished by at least 2 references and sent directly to architecture.upmin@up.edu.ph.",
           application_requirements: "A bachelor's degree from a recognized institution of higher learning; A minimum weighted average grade of 2.5 or its equivalent; Relevant work experience of at least two years; A favorable letter of recommendation from a former superior and at least one other person who is well acquainted with, but not related to the applicant; Passing the Graduate Admission Test; Favorable assessment of interview results.",
           application_url: "http://bit.ly/UPMindanaoDURP2023",
@@ -159,7 +171,8 @@ async function main() {
       program_application: {
         create: {
           qualifications: "To qualify for the Master's Program (MAURP), a student must have a weighted average of 1.75 or better in his/her Diploma Program and upon he recommendation of the Program Adviser and approval of the Dean.",
-          application_instructions: "Submit docs",
+          application_instructions: "TBA",
+          application_requirements: "TBA",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -170,6 +183,28 @@ async function main() {
     }
   });
 
+  const msbProgram = await prisma.program.create({
+    data: {
+      type: "Graduate Program",
+      name: "Master of Science in Biology",
+      description: "The Master of Science in Biology is a two-year graduate program with 33 units. The program is an adoption of the MS Biology program from UP Diliman. Students may specialize in (i) Cell and Molecular Biology or (ii) Ecology and Taxonomy. Both specializations use a systematic and integrative approach to conceptual learning. They focus on developing critical inquiry among the students and cultivating the body of knowledge in the discipline, both in the context of nation-building.",
+      history: "The Master of Science in Human Movement Science (MSHMS) program was approved for adoption by the University of the Philippines Mindanao Board of Regents on April 3, 2023, with the program formally commencing in the 2023-2024 academic year.",
+
+      program_application: {
+        create: {
+          qualifications: "TBA",
+          application_instructions: "TBA",
+          application_requirements: "Applicants of the MS Biology program must be holders of a bachelor's degree in biology or related fields subject to evaluation of the Graduate Committee of the Department; A general weighted average (GWA) of at least 2.0; An applicant with a GWA between 2.01 and 2.75 may be admitted to the program on probation until and provided that the student will obtain an average grade of at least 2.0 in the first 9 units of graduate courses he/she enrolls in; The Graduate Committee may recommend additional requirement as needed; Must have taken Bio 133 (Developmental Biology) or equivalent/COI; Proof of English proficiency for students whose native language is not English or Filipino, except those who graduated from institutions where the medium of instruction is English or Filipino; Completed application form, official transcript of records, two (2) written recommendations from former professors or experts in the field, prescribed application fee, and other required documents submitted to the Graduate Committee; Taking of the graduate placement exam (GPE) and interview – Applicants must pass at least three of five areas (Cell and Molecular Biology, Developmental Biology, Ecology and Taxonomy, Genetics, and Physiology) of the GPE administered by the Graduate Committee.",
+          application_url: "https://forms.gle/13TK3peosTJCHNo27",
+          recommendation_url: "N/A"
+        }
+      }
+    },
+    include: {
+      program_application: true
+    }
+  }); 
+
   const mshmsProgram = await prisma.program.create({
     data: {
       type: "Graduate Program",
@@ -179,8 +214,8 @@ async function main() {
 
       program_application: {
         create: {
-          qualifications: "BS CS or related",
-          application_instructions: "Submit docs",
+          qualifications: "TBA",
+          application_instructions: "TBA",
           application_requirements: "Duly accomplished application form (Form 1); Cover letter signifying intent and degree sought, addressed to the Department Chair: Assoc. Prof. Dann Marie N. Del Mundo, Ph.D.; Updated Curriculum Vitae; Original or certified true copy of official Transcript of Records (TOR); True Copy of Grades showing your final General Weighted Average (GWA); Two letters of recommendation (Form 2) – one from your former professor and one from your employer or direct supervisor; Payment receipt/proof of payment for the non-refundable fee amounting to PHP 200.00. Must be deposited to the following account: Account name: UP Mindanao Revolving Fund; Account number: 00-0-00494-915-2; Name of Bank: Development Bank of the Philippines; Branch: Davao City; All files should be in PDF format. Email the documents to the MSHMS Coordinator, Assoc. Prof. Micah Amor P. Yares, Ph.D., at mayares@up.edu.ph on or before June 30, 2024.",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
@@ -201,8 +236,9 @@ async function main() {
 
       program_application: {
         create: {
-          qualifications: "BS CS or related",
-          application_instructions: "Submit docs",
+          qualifications: "TBA",
+          application_instructions: "TBA",
+          application_requirements: "TBA",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -218,12 +254,13 @@ async function main() {
       type: "Graduate Program",
       name: "Master in Management",
       description: "The Master in Management (MM) program is designed to hone professionals in managerial and supervisory positions by providing them with key management science tools, strategic management concepts, and organization-relevant approaches.\n The program initially provides our students with several analytical and quantitative courses taught through case studies, team projects, and lectures before giving them the opportunity to apply this knowledge to real-world cases in Mindanao. To graduate, students are required to draw on the sum of their theoretical knowledge and practical experience to develop a strategic plan for their chosen organization.",
-      history: "Program history...",
+      history: "TBA",
 
       program_application: {
         create: {
-          qualifications: "BS CS or related",
-          application_instructions: "Submit docs",
+          qualifications: "TBA",
+          application_instructions: "The school accepts application for the program from November to May of the following year. Submit the duly accomplished application forms together with (1) your official transcript of records, (2) reciept of application free (P200.00) payable at our Cash Office, and (3) reciept for the examination Fee (P250.00) payable at our office.",
+          application_requirements: "A bachelor's degree in any field of study; A minimum of 2.5 or equivalent average grade; At least two years of managerial or supervisory experience; A favorable recommendation from a superior and at least one other person who is well acquainted with, but not related to the applicant; Passing the Graduate Admission Test; Favorable assessment of interview results; Attendance to the Bridging Program.",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -242,8 +279,9 @@ async function main() {
       history: "The PhD by Research program in the University of the Philippines Mindanao School of Management was established to provide advanced research training, with the campus itself having been created on February 20, 1995. While the campus is a relatively young constituent university, its focus on graduate studies and research has matured over its 31-year history.",
       program_application: {
         create: {
-          qualifications: "BS CS or related",
-          application_instructions: "Submit docs",
+          qualifications: "TBA",
+          application_instructions: "TBA",
+          application_requirements: "TBA",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
