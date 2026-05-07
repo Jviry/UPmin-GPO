@@ -20,7 +20,7 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async create({ type, name, description, history, }) {
+    async create({ type, name, description, history }) {
       return prisma.program.create({
         data: {
           type,
