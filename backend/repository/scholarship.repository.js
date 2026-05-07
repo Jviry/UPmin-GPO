@@ -17,7 +17,7 @@ export function createScholarshipRepository(prisma) {
       });
     },
 
-    async findScholarshipByID(id) {
+    async findByID(id) {
       return prisma.scholarship.findUnique({
         where: {
           scholarship_id: parseInt(id),
