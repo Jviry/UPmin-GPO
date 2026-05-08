@@ -132,7 +132,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
     ? program.programForms.map((f: any) => f.name)
     : ["No specific file requirements listed."];
 
-  // Faculty Data (Mapped directly from the program)
+  // Faculty Data (Mapped directly from the program using the correct relation name)
   const facultyList = program.faculties?.map((pf: any) => pf.faculty) || [];
 
   return (
@@ -341,14 +341,23 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                   </div>
                   <div className="pt-4">
                     <span className="inline-block rounded-full bg-[var(--up-maroon)] px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white">
-                      {program.name || 'Program Faculty'}
+                      {member.position || 'Faculty'}
                     </span>
                   </div>
                   <div className="pt-3">
-                    <div className="text-base font-bold uppercase tracking-wider text-[var(--text-primary)]">{member.name}</div>
-                    <div className="mt-1 text-xs uppercase tracking-widest text-[var(--text-secondary)]">
-                      {member.position} | {member.email}
-                      {member.credentials?.length > 0 && ` • ${member.credentials.map((c: any) => c.degree).join(', ')}`}
+                    {/* OPTION 1: Credentials under Name */}
+                    <div className="text-base font-bold uppercase tracking-wider text-[var(--text-primary)]">
+                      {member.name}
+                    </div>
+                    
+                    {member.credentials?.length > 0 && (
+                      <div className="mt-0.5 text-[0.65rem] font-medium text-[var(--text-primary)] opacity-75">
+                        {member.credentials.map((c: any) => c.degree).join(', ')}
+                      </div>
+                    )}
+
+                    <div className="mt-1.5 text-xs tracking-widest text-[var(--text-secondary)]">
+                      {member.email}
                     </div>
                   </div>
                 </div>
