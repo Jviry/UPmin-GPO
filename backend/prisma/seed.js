@@ -216,7 +216,7 @@ async function main() {
         create: {
           qualifications: "TBA",
           application_instructions: "TBA",
-          application_requirements: "Duly accomplished application form (Form 1); Cover letter signifying intent and degree sought, addressed to the Department Chair: Assoc. Prof. Dann Marie N. Del Mundo, Ph.D.; Updated Curriculum Vitae; Original or certified true copy of official Transcript of Records (TOR); True Copy of Grades showing your final General Weighted Average (GWA); Two letters of recommendation (Form 2) – one from your former professor and one from your employer or direct supervisor; Payment receipt/proof of payment for the non-refundable fee amounting to PHP 200.00. Must be deposited to the following account: Account name: UP Mindanao Revolving Fund; Account number: 00-0-00494-915-2; Name of Bank: Development Bank of the Philippines; Branch: Davao City; All files should be in PDF format. Email the documents to the MSHMS Coordinator, Assoc. Prof. Micah Amor P. Yares, Ph.D., at mayares@up.edu.ph on or before June 30, 2024.",
+          application_requirements: "Duly accomplished application form (Form 1); Cover letter signifying intent and degree sought, addressed to the Department Chair: Assoc. Dann Marie N. Del Mundo, Ph.D.; Updated Curriculum Vitae; Original or certified true copy of official Transcript of Records (TOR); True Copy of Grades showing your final General Weighted Average (GWA); Two letters of recommendation (Form 2) – one from your former professor and one from your employer or direct supervisor; Payment receipt/proof of payment for the non-refundable fee amounting to PHP 200.00. Must be deposited to the following account: Account name: UP Mindanao Revolving Fund; Account number: 00-0-00494-915-2; Name of Bank: Development Bank of the Philippines; Branch: Davao City; All files should be in PDF format. Email the documents to the MSHMS Coordinator, Assoc. Micah Amor P. Yares, Ph.D., at mayares@up.edu.ph on or before June 30, 2024.",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -297,12 +297,78 @@ async function main() {
   // =======================
   await prisma.faculty.createMany({
     data: [
-      { name: "Prof. Jackie Lou J. Tagubase", email: "jlTagubase@up.edu.ph", photo: "photo1.jpg", position: "Program Coordinator" },
-      { name: "Prof. Micah Amor P. Yares", email: "maYares@up.edu.ph", photo: "photo2.jpg", position: "Program Coordinator" },
-      { name: "Prof. Mae A. Responte", email: "mResponte@up.edu.ph", photo: "photo3.jpg", position: "Program Coordinator" },
-      { name: "Prof. Imee Marie A. Acopiado ", email: "imAcopiado@up.edu.ph", photo: null, position: "Program Coordinator" },
-      { name: "Prof. Pedro A. Alviola IV", email: "pAlviola@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" },
-      { name: "Prof. Jonathan Y. Cagas", email: "jCagas@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" },
+      // Program Coordinators
+      { name: "Jackie Lou J. Tagubase", email: "jlTagubase@up.edu.ph", photo: "photo1.jpg", position: "Program Coordinator" }, // MS Food Science Coordinator
+      { name: "Micah Amor P. Yares", email: "maYares@up.edu.ph", photo: "photo2.jpg", position: "Program Coordinator" }, // MA Urban and Regional Planning Coordinator
+      { name: "Mae A. Responte", email: "mResponte@up.edu.ph", photo: "photo3.jpg", position: "Program Coordinator" }, // MS Biology Coordinator
+      { name: "Imee Marie A. Acopiado ", email: "imAcopiado@up.edu.ph", photo: null, position: "Program Coordinator" }, // MM Coordinator
+      { name: "Pedro A. Alviola IV", email: "pAlviola@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" }, // PhD by Research Coordinator
+      { name: "Jonathan Y. Cagas", email: "jCagas@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" }, // MS Human Movement Science Coordinator
+
+      // MS Food Science Faculty Members
+      { name: "Juma Novie A. Alviola", email: "jnAlviola@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Kriza Faye A. Calumba", email: "kfCalumba@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Dann Marie N. Del Mundo", email: "dmDelMundo@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Jennifer P. Fronteras", email: "jFronteras@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Erwin Oliver V. Fundador", email: "eoFundador@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Noreen Grace V. Fundador", email: "ngFundador@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Joel Hassan G. Tolentino", email: "jhTolentino@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Rovi Gem E. Villame-Gayagas", email: "rgVillame-Gayagas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Marbie A. Alpos-Entero", email: "mAlpos-Entero@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Julious B. Cerna", email: "jCerna@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+
+      // MS Biology Faculty Members
+      { name: "Marion John Michael A. Achondo", email: "mjAchondo@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Fritzie A. Camino", email: "fCamino@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Aleyla E. De Cadiz", email: "aDeCadiz@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Aileen Grace D. Delima", email: "agDelima@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Lief Erikson D. Gamalo", email: "leGamalo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Junaldo A. Mantiquilla", email: "jMantiquilla@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Cyrose Suzie S. Millado", email: "csMillado@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Lyre Anni E. Murao", email: "lMurao@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Cleto L. Nanola", email: "cNanola@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Mae A. Responté", email: "mResponté@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Rose L. Catiempo", email: "rCatiempo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Aaron Froilan M. Raganas", email: "afRaganas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      
+      // Master in Management Faculty Members (also PhD by Research Faculty Members)
+      { name: "Thaddeus R. Acuña", email: "tAcuña@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Roxanne T. Aguinaldo", email: "rAguinaldo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Miko Mariz C. Castro", email: "mmCastro@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Larry N. Digal", email: "lDigal@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Aurelia Luzviminda V. Gomez", email: "alGomez@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Glory Dee A. Romo", email: "gdRomo@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Jon Marx P. Sarmiento", email: "jmSarmiento@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Ligaya R. Leal", email: "lLeal@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Vlademir A. Shuck", email: "vShuck@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Rodgessa A. Lopez", email: "rLopez@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Shemaiah Gail P. Placencia", email: "sgPlacencia@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+
+      // Diploma of Exercise and Sports Science and Master of Science in Human Movement Science Faculty Members
+      { name: "Jessa C. Gubalani", email: "jGubalani@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Ester Mace V. Villela-Go", email: "emVillela-Go@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Annaliza R. Castro", email: "aCastro@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Juvanie C. Lapesigue", email: "jLapesigue@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Catherine Joy D. Lariosa", email: "cjLariosa@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Raisalam D. Angoy", email: "rAngoy@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Ryce B. Jubane", email: "rJubane@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Jezreel M. Abarca", email: "jAbarca@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Bhen Joshua F. Acosta", email: "bjAcosta@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Ma. Stella R. Salazar", email: "msSalazar@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Pio Gerardo R. Solon", email: "pgSolon@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
+      { name: "Ritchie Ian A. Solana", email: "riSolana@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
+      { name: "Mohammad Khalil A. Guinomla", email: "mkGuinomla@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
+
+      // Diploma of Urban and Regional Planning and Master of Arts in Urban and Regional Planning Faculty Members
+      { name: "Isidoro R. Malaque III", email: "iMalaqueIII@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Angelo Felix N. Regalado", email: "afRegalado@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Minerva C. Rosel", email: "mRosel@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Ryan C. Songcayauon", email: "rSongcayauon@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Micah Amor P. Yares", email: "maYares@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Marie Danielle V. Guillen", email: "mdGuillen@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Sophremiano B. Antipolo", email: "sAntipolo@up.edu.ph", photo: "photo5.jpg", position: "Professorial Lecturer" },
+      { name: "Joseph Raymund A. Sumabal", email: "jrSumabal@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" },
+      { name: "Marlon C. Suelto", email: "mSuelto@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" }
     ]
   });
 
@@ -311,7 +377,7 @@ async function main() {
 
   await prisma.facultyCredential.createMany({
     data: [
-      { degree: "BS Computer Science", faculty_id: getFactulty("maria@univ.edu").faculty_id },
+      { degree: "", faculty_id: getFactulty("maria@univ.edu").faculty_id },
       { degree: "MS Computer Science", faculty_id: getFactulty("maria@univ.edu").faculty_id },
       { degree: "PhD Computer Science", faculty_id: getFactulty("maria@univ.edu").faculty_id },
       { degree: "BS Information Technology", faculty_id: getFactulty("juan@univ.edu").faculty_id },
