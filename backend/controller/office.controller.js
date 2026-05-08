@@ -32,7 +32,7 @@ router.get('/office', async (req, res) => {
   }
 });
 
-router.patch('/office', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('photo'), async (req, res) => {
+router.patch('/office', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('orgChart'), async (req, res) => {
   try {
     const orgChartUrl = await patchOrgChart(req.file);
 

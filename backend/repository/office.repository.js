@@ -9,10 +9,10 @@ export function createOfficeRepository(prisma) {
       });
     },
 
-    async patchOrgChartURL(id, org_chart_url) {
+    async patchOrgChartUrl(id, org_chart_url) {
       return prisma.office.update({
         where: { office_id: id },
-        data: org_chart_url
+        data: { org_chart_url }
       });
     }
   }

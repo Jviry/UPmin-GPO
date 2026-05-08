@@ -1,6 +1,8 @@
+import { DomainError } from "../../domain/errors.js";
+
 export function patchOrgChartUsecase({ officeRepo, deleteFile }) {
   return async function(file) {
-    const existing = await facultyRepo.findByID(1)
+    const existing = await officeRepo.findByID(1)
     if (!existing) {
       throw new DomainError(`Office 1 doesn't exist`);
     }
@@ -9,6 +11,8 @@ export function patchOrgChartUsecase({ officeRepo, deleteFile }) {
       deleteFile(existing.org_chart_url);
     }
 
-    return await officeRepo.patchOrgChart(1, org_chart_url);
+    const org_chart_url = file ? `/uploads/${file.filename}` : existing.org_chart_url;
+
+    return await officeRepo.patchOrgChartUrl(1, org_chart_url);
   }
 }
