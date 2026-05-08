@@ -43,17 +43,17 @@ async function main() {
   await prisma.course.createMany({
     data: [
       // Elective Courses
-      { name: "Agribusiness Systems", code: "ABM 230", type: "elective", units: 3 },
-      { name: "Special Topics in Agribusiness Management", code: "ABM 234", type: "elective", units: 3 },
-      { name: "Development Perspectives", code: "DM 231", type: "elective", units: 3 },
-      { name: "Community Management", code: "DM 232", type: "elective", units: 3 },
-      { name: "Local Governance", code: "DM 233", type: "elective", units: 3 },
-      { name: "Labor and Economy", code: "IR 204", type: "elective", units: 3 },
-      { name: "Collective Bargaining and Industrial Democracy", code: "IR 211", type: "elective", units: 3 },
-      { name: "Deterministic and Probabilistic Models of Choice", code: "M201", type: "elective", units: 3 },
-      { name: "Management Communication and Information", code: "M205", type: "elective", units: 3 },
-      { name: "Special Topics in Management", code: "M234", type: "elective", units: 3 },
-      { name: "Managing an Environmentally & Economically Sustainable Enterprise", code: "M235", type: "elective", units: 3 },
+      { name: "Agribusiness Systems", code: "ABM 230", type: "pool", units: 3 },
+      { name: "Special Topics in Agribusiness Management", code: "ABM 234", type: "pool", units: 3 },
+      { name: "Development Perspectives", code: "DM 231", type: "pool", units: 3 },
+      { name: "Community Management", code: "DM 232", type: "pool", units: 3 },
+      { name: "Local Governance", code: "DM 233", type: "pool", units: 3 },
+      { name: "Labor and Economy", code: "IR 204", type: "pool", units: 3 },
+      { name: "Collective Bargaining and Industrial Democracy", code: "IR 211", type: "pool", units: 3 },
+      { name: "Deterministic and Probabilistic Models of Choice", code: "M201", type: "pool", units: 3 },
+      { name: "Management Communication and Information", code: "M205", type: "pool", units: 3 },
+      { name: "Special Topics in Management", code: "M234", type: "pool", units: 3 },
+      { name: "Managing an Environmentally & Economically Sustainable Enterprise", code: "M235", type: "pool", units: 3 },
 
       // Diploma in Urban and Regional Planning Core Courses 
       { name: "Theory and Practice of Planning", code: "P201", type: "core", units: 3 },
@@ -221,7 +221,7 @@ async function main() {
         create: {
           qualifications: "TBA",
           application_instructions: "TBA",
-          application_requirements: "Duly accomplished application form (Form 1); Cover letter signifying intent and degree sought, addressed to the Department Chair: Assoc. Dann Marie N. Del Mundo, Ph.D.; Updated Curriculum Vitae; Original or certified true copy of official Transcript of Records (TOR); True Copy of Grades showing your final General Weighted Average (GWA); Two letters of recommendation (Form 2) – one from your former professor and one from your employer or direct supervisor; Payment receipt/proof of payment for the non-refundable fee amounting to PHP 200.00. Must be deposited to the following account: Account name: UP Mindanao Revolving Fund; Account number: 00-0-00494-915-2; Name of Bank: Development Bank of the Philippines; Branch: Davao City; All files should be in PDF format. Email the documents to the MSHMS Coordinator, Assoc. Micah Amor P. Yares, Ph.D., at mayares@up.edu.ph on or before June 30, 2024.",
+          application_requirements: "Duly accomplished application form (Form 1); Cover letter signifying intent and degree sought, addressed to the Department Chair: Assoc. Dann Marie N. Del Mundo, Ph.D.; Updated Curriculum Vitae; Original or certified true copy of official Transcript of Records (TOR); True Copy of Grades showing your final General Weighted Average (GWA); Two letters of recommendation (Form 2) – one from your former professor and one from your employer or direct supervisor; Payment receipt/proof of payment for the non-refundable fee amounting to PHP 200.00. Must be deposited to the following account: Account name: UP Mindanao Revolving Fund; Account number: 00-0-00494-915-2; Name of Bank: Development Bank of the Philippines; Branch: Davao City; All files should be in PDF format. Email the documents to the MSHMS Coordinator, Assoc. Micah Amor P. Yares, Ph.D., at mpYares@up.edu.ph on or before June 30, 2024.",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -305,9 +305,9 @@ async function main() {
       // Program Coordinators
       { name: "Jackie Lou J. Tagubase", email: "jjTagubase@up.edu.ph", photo: "photo1.jpg", position: "Associate Professor" }, // MS Food Science Coordinator
       { name: "Micah Amor P. Yares", email: "mpYares@up.edu.ph", photo: "photo2.jpg", position: "Assistant Professor" }, // MA Urban and Regional Planning Coordinator
-      { name: "Mae A. Responte", email: "maResponte@up.edu.ph", photo: "photo3.jpg", position: "Assistant Professor" }, // MS Biology Coordinator
+      { name: "Mae A. Responte", email: "maResponté@up.edu.ph", photo: "photo3.jpg", position: "Assistant Professor" }, // MS Biology Coordinator
       { name: "Imee Marie A. Acopiado ", email: "iaAcopiado@up.edu.ph", photo: null, position: "Assistant Professor" }, // MM Coordinator
-      { name: "Pedro A. Alviola IV", email: "paAlviola@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // PhD by Research Coordinator
+      { name: "Pedro A. Alviola IV", email: "paAlviolaIV@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // PhD by Research Coordinator
       { name: "Jonathan Y. Cagas", email: "jyCagas@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MS Human Movement Science Coordinator
 
       // MS Food Science Faculty Members
@@ -332,7 +332,6 @@ async function main() {
       { name: "Cyrose Suzie S. Millado", email: "csMillado@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       { name: "Lyre Anni E. Murao", email: "leMurao@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
       { name: "Cleto L. Nanola", email: "clNanola@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Mae A. Responté", email: "maResponté@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       { name: "Rose L. Catiempo", email: "rlCatiempo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       { name: "Aaron Froilan M. Raganas", email: "amRaganas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       
@@ -383,108 +382,108 @@ async function main() {
   await prisma.facultyCredential.createMany({
     data: [
       // MS Food Science Faculty Credentials
-      { degree: "MS Food Science", faculty_id: getFaculty("jlTagubase@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("jnAlviola@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("kfCalumba@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("dmDelMundo@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("jFronteras@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("eoFundador@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("ngFundador@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("jhTolentino@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("rgVillame-Gayagas@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("mAlpos-Entero@up.edu.ph").faculty_id },
-      { degree: "MS Food Science", faculty_id: getFaculty("jCerna@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("jjTagubase@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("jaAlviola@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("kaCalumba@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("dnDelMundo@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("jpFronteras@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("evFundador@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("nvFundador@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("jgTolentino@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("reVillame-Gayagas@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("maAlpos-Entero@up.edu.ph").faculty_id },
+      { degree: "MS Food Science", faculty_id: getFaculty("jbCerna@up.edu.ph").faculty_id },
 
       // MS Biology Faculty Credentials
-      { degree: "MS Biology", faculty_id: getFaculty("mjAchondo@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("fCamino@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("aDeCadiz@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("agDelima@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("leGamalo@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("jMantiquilla@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("maAchondo@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("faCamino@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("aeDeCadiz@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("adDelima@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("ldGamalo@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("jaMantiquilla@up.edu.ph").faculty_id },
       { degree: "MS Biology", faculty_id: getFaculty("csMillado@up.edu.ph").faculty_id },
       { degree: "MS Biology", faculty_id: getFaculty("lMurao@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("cNanola@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("mResponté@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("rCatiempo@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("afRaganas@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("clNanola@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("maResponté@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("rlCatiempo@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("amRaganas@up.edu.ph").faculty_id },
 
       // Master in Management Faculty Credentials
-      { degree: "Master in Management", faculty_id: getFaculty("imAcopiado@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("tAcuña@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("rAguinaldo@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("pAlviolaIV@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("mmCastro@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("lDigal@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("alGomez@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("gdRomo@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("jmSarmiento@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("lLeal@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("vShuck@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("rLopez@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("sgPlacencia@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("iaAcopiado@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("trAcuña@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("rtAguinaldo@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("paAlviolaIV@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("mcCastro@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("lnDigal@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("avGomez@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("gaRomo@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("jpSarmiento@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("lrLeal@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("vaShuck@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("raLopez@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("spPlacencia@up.edu.ph").faculty_id },
 
       // Diploma of Exercise and Sports Science Faculty Credentials
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jGubalani@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jCagas@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("emVillela-Go@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("aCastro@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jLapesigue@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("cjLariosa@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("rAngoy@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("rJubane@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jAbarca@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("bjAcosta@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("msSalazar@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("pgSolon@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("riSolana@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("mkGuinomla@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jcGubalani@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jyCagas@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("evVillela-Go@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("arCastro@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jcLapesigue@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("cdLariosa@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("rdAngoy@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("rbJubane@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jmAbarca@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("bfAcosta@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("mrSalazar@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("prSolon@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("raSolana@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("maGuinomla@up.edu.ph").faculty_id },
 
       // Master of Science in Human Movement Science Faculty Credentials (same as DESS Faculty Credentials)
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jGubalani@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jCagas@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("emVillela-Go@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("aCastro@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jLapesigue@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("cjLariosa@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("rAngoy@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("rJubane@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jAbarca@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("bjAcosta@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("msSalazar@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("pgSolon@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("riSolana@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("mkGuinomla@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jcGubalani@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jyCagas@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("evVillela-Go@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("arCastro@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jcLapesigue@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("cdLariosa@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("rdAngoy@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("rbJubane@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jmAbarca@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("bfAcosta@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("mrSalazar@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("prSolon@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("raSolana@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("maGuinomla@up.edu.ph").faculty_id },
 
       // Diploma in Urban and Regional Planning
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("iMalaqueIII@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("afRegalado@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mRosel@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("rSongcayauon@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("maYares@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mdGuillen@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("sAntipolo@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("jrSumabal@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mSuelto@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("irMalaqueIII@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("anRegalado@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mcRosel@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("rcSongcayauon@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mpYares@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mvGuillen@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("sbAntipolo@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("jaSumabal@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mcSuelto@up.edu.ph").faculty_id },
 
       // Master of Arts in Urban and Regional Planning Faculty Credentials (same as DURP Faculty Credentials)
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("iMalaqueIII@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("afRegalado@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mRosel@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("rSongcayauon@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("maYares@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mdGuillen@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("sAntipolo@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("jrSumabal@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mSuelto@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("irMalaqueIII@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("anRegalado@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mcRosel@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("rcSongcayauon@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mpYares@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mvGuillen@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("sbAntipolo@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("jaSumabal@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mcSuelto@up.edu.ph").faculty_id },
 
       // PhD by Research Faculty Credentials (some are the same as MM Faculty Credentials)
-      { degree: "PhD by Research", faculty_id: getFaculty("pAlviolaIV@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFaculty("lDigal@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFaculty("alGomez@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFaculty("gdRomo@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFaculty("jmSarmiento@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFaculty("lLeal@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("paAlviolaIV@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("lnDigal@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("avGomez@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("gaRomo@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("jpSarmiento@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("lrLeal@up.edu.ph").faculty_id },
     ]
   });
 
@@ -494,108 +493,108 @@ async function main() {
   await prisma.programFaculty.createMany({
     data: [
       // DESS Faculty Members
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("jGubalani@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("jCagas@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("emVillela-Go@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("aCastro@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("jLapesigue@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("cjLariosa@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("rAngoy@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("rJubane@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("jAbarca@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("bjAcosta@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("msSalazar@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("pgSolon@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("riSolana@up.edu.ph").faculty_id },
-      { program_id: dessProgram.program_id, faculty_id: getFactulty("mkGuinomla@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jcGubalani@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jyCagas@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("evVillela-Go@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("arCastro@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jcLapesigue@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("cdLariosa@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("rdAngoy@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("rbJubane@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jmAbarca@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("bfAcosta@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("mrSalazar@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("prSolon@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("raSolana@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("maGuinomla@up.edu.ph").faculty_id },
 
       // DURP Faculty Members
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("iMalaqueIII@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("afRegalado@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("mRosel@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("rSongcayauon@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("maYares@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("mdGuillen@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("sAntipolo@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("jrSumabal@up.edu.ph").faculty_id },
-      { program_id: durpProgram.program_id, faculty_id: getFactulty("mSuelto@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("irMalaqueIII@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("anRegalado@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("mcRosel@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("rcSongcayauon@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("mpYares@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("mvGuillen@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("sbAntipolo@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("jaSumabal@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("mcSuelto@up.edu.ph").faculty_id },
 
       // MAURP Faculty Members (same as DURP)
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("iMalaqueIII@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("afRegalado@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mRosel@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("rSongcayauon@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("maYares@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mdGuillen@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("sAntipolo@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("jrSumabal@up.edu.ph").faculty_id },
-      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mSuelto@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("irMalaqueIII@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("anRegalado@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mcRosel@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("rcSongcayauon@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mpYares@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mvGuillen@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("sbAntipolo@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("jaSumabal@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mcSuelto@up.edu.ph").faculty_id },
 
       // MS Biology Faculty Members
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("mjAchondo@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("fCamino@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("aDeCadiz@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("agDelima@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("leGamalo@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("jMantiquilla@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("maAchondo@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("faCamino@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("aeDeCadiz@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("adDelima@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("ldGamalo@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("jaMantiquilla@up.edu.ph").faculty_id },
       { program_id: msbProgram.program_id, faculty_id: getFactulty("csMillado@up.edu.ph").faculty_id },
       { program_id: msbProgram.program_id, faculty_id: getFactulty("lMurao@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("cNanola@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("mResponté@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("rCatiempo@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFactulty("afRaganas@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("clNanola@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("maResponté@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("rlCatiempo@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("amRaganas@up.edu.ph").faculty_id },
 
       // MS Human Movement Science Faculty Members (same as DESS)
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jGubalani@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jCagas@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("emVillela-Go@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("aCastro@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jLapesigue@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("cjLariosa@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("rAngoy@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("rJubane@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jAbarca@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("bjAcosta@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("msSalazar@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("pgSolon@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("riSolana@up.edu.ph").faculty_id },
-      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("mkGuinomla@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jcGubalani@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jyCagas@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("evVillela-Go@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("arCastro@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jcLapesigue@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("cdLariosa@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("rdAngoy@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("rbJubane@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jmAbarca@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("bfAcosta@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("mrSalazar@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("prSolon@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("raSolana@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("maGuinomla@up.edu.ph").faculty_id },
 
       // MS Food Science Faculty Members
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jlTagubase@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jnAlviola@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("kfCalumba@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("dmDelMundo@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jFronteras@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("eoFundador@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("ngFundador@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jhTolentino@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("rgVillame-Gayagas@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("mAlpos-Entero@up.edu.ph").faculty_id },
-      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jCerna@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jjTagubase@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jaAlviola@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("kaCalumba@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("dnDelMundo@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jpFronteras@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("evFundador@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("nvFundador@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jgTolentino@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("reVillame-Gayagas@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("maAlpos-Entero@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jbCerna@up.edu.ph").faculty_id },
 
       // Master in Management Faculty Members
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("imAcopiado@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("tAcuña@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("rAguinaldo@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("pAlviolaIV@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("mmCastro@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("lDigal@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("alGomez@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("gdRomo@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("jmSarmiento@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("lLeal@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("vShuck@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("rLopez@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFactulty("sgPlacencia@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("iaAcopiado@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("trAcuña@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("rtAguinaldo@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("paAlviolaIV@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("mcCastro@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("lnDigal@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("avGomez@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("gaRomo@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("jpSarmiento@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("lrLeal@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("vaShuck@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("raLopez@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("spPlacencia@up.edu.ph").faculty_id },
 
       // PhD by Research Faculty Members (same as some MM Faculty Members)
-      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("pAlviolaIV@up.edu.ph").faculty_id },
-      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("lDigal@up.edu.ph").faculty_id },
-      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("alGomez@up.edu.ph").faculty_id },
-      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("gdRomo@up.edu.ph").faculty_id },
-      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("jmSarmiento@up.edu.ph").faculty_id },
-      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("lLeal@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("paAlviolaIV@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("lnDigal@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("avGomez@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("gaRomo@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("jpSarmiento@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("lrLeal@up.edu.ph").faculty_id },
     ]
   });
 
@@ -627,11 +626,27 @@ async function main() {
   // =======================
   // STUDY PLAN
   // =======================
-  const studyPlan = await prisma.studyPlan.create({
+  const mmStudyPlan = await prisma.studyPlan.create({
     data: {
       years: 2,
       name: "Standard Plan",
-      program_id: program.program_id,
+      program_id: mmProgram.program_id,
+    }
+  });
+
+  const phdByResearchStudyPlan1 = await prisma.studyPlan.create({
+    data: {
+      years: 4,
+      name: "Standard 4 Year Plan",
+      program_id: phdByResearchProgram.program_id,
+    }
+  });
+
+  const phdByResearchStudyPlan2 = await prisma.studyPlan.create({
+    data: {
+      years: 3,
+      name: "Standard 3 Year Plan",
+      program_id: phdByResearchProgram.program_id,
     }
   });
 
@@ -640,19 +655,32 @@ async function main() {
   // =======================
   await prisma.programCourse.createMany({
     data: [
-      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC127").course_id, year: 1, semester: 1 },
-      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC128").course_id, year: 1, semester: 1 },
-      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC131").course_id, year: 1, semester: 1 },
+      // Master in Management Study Plan
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M206").course_id, year: 1, semester: 1 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M209").course_id, year: 1, semester: 1 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M210").course_id, year: 1, semester: 1 },
 
-      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC132").course_id, year: 1, semester: 2 },
-      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC135").course_id, year: 1, semester: 2 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M211").course_id, year: 1, semester: 2 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M212").course_id, year: 1, semester: 2 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M216").course_id, year: 1, semester: 2 },
 
-      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC198").course_id, year: 2, semester: 1 },
-      { study_plan_id: studyPlan.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M217").course_id, year: 2, semester: 1 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("MGT213").course_id, year: 2, semester: 1 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M224").course_id, year: 2, semester: 1 },
 
-      { study_plan_id: studyPlan.study_plan_id, course_id: getCourse("CMSC200").course_id, year: 2, semester: 2 },
-      { study_plan_id: studyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
-    ]
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: getCourse("M241").course_id, year: 2, semester: 2 },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
+      { study_plan_id: mmStudyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
+
+      // PhD by Research Study Plan 1 (Unfinished)
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M206").course_id, year: 1, semester: 1 },
+
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M211").course_id, year: 1, semester: 2 },
+
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M217").course_id, year: 2, semester: 1 },
+
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M241").course_id, year: 2, semester: 2 },
+    ],
   });
 
   // =======================
@@ -665,6 +693,7 @@ async function main() {
       covered_programs: "MSCS",
       application_instructions: "Apply online",
       application_url: "https://ched.gov.ph",
+      recommendation_url: "",
       contact_info: "ched@test.com",
       admin_id: admin.admin_id
     }
