@@ -118,3 +118,14 @@ export const deleteFaculty = async (id: number) => {
     throw new Error(message);
   }
 };
+
+export const syncProgramFaculty = async (programId: number, facultyIds: number[]) => {
+  try {
+    const response = await apiClient.put(`/programs/${programId}/faculty`, { faculty_ids: facultyIds });
+    // Map response shape: { message, faculties }
+    return response.data.faculties;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
