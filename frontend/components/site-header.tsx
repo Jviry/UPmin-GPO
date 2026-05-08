@@ -7,14 +7,13 @@ import { apiClient } from '@/lib/apiClient';
 type ProgramData = {
   program_id: number;
   name: string;
-  type: string; // Replaced department with type
+  type: string;
 };
 
 type ProgramGroup = {
   name: string;
   programs: { label: string; slug: string }[];
 };
-
 
 export function SiteHeader() {
   const [programsOpen, setProgramsOpen] = useState(false);
@@ -30,7 +29,7 @@ export function SiteHeader() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     
-    // Fetch programs and group them by type
+    // Fetch programs and group them by their type (e.g., "Graduate Program", "Diploma Program")
     const fetchPrograms = async () => {
       try {
         const res = await apiClient.get('/programs');
@@ -38,11 +37,11 @@ export function SiteHeader() {
 
         // Dynamically group the fetched programs by their Type
         const grouped = data.reduce((acc, curr) => {
-          const typeName = curr.type || 'Other Programs';
-          let group = acc.find(g => g.name === typeName);
+          const groupName = curr.type || 'Other Programs';
+          let group = acc.find(g => g.name === groupName);
           
           if (!group) {
-            group = { name: typeName, programs: [] };
+            group = { name: groupName, programs: [] };
             acc.push(group);
           }
           
@@ -53,18 +52,6 @@ export function SiteHeader() {
           
           return acc;
         }, [] as ProgramGroup[]);
-
-        // Sort the columns: Diploma -> Graduate -> PhD/Doctoral
-        grouped.sort((a, b) => {
-          const getWeight = (name: string) => {
-            const lowerName = name.toLowerCase();
-            if (lowerName.includes('diploma')) return 1;
-            if (lowerName.includes('graduate') || lowerName.includes('master')) return 2;
-            if (lowerName.includes('phd') || lowerName.includes('doctor')) return 3;
-            return 4; // Fallback for any other types
-          };
-          return getWeight(a.name) - getWeight(b.name);
-        });
 
         setProgramGroups(grouped);
       } catch (error) {
