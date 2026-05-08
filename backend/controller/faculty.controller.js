@@ -13,6 +13,8 @@ import { syncProgramFacultyUsecase } from '../usecase/faculty/syncProgramFaculty
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 import { AdminRole } from '../domain/admin.js';
+import { upload } from '../middleware/upload.middleware.js';
+import { deleteFile } from '../utils/deleteFile.util.js';
 
 const uploadsDir = 'uploads';
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
@@ -40,8 +42,8 @@ const facultyRepo = createFacultyRepository(prisma);
 const programRepo = createProgramRepository(prisma);
 const getFaculty = getFacultyUsecase(facultyRepo);
 const createFaculty = createFacultyUsecase(facultyRepo);
-const deleteFaculty = deleteFacultyUsecase(facultyRepo);
-const updateFaculty = updateFacultyUsecase(facultyRepo);
+const deleteFaculty = deleteFacultyUsecase({ facultyRepo, deleteFile });
+const updateFaculty = updateFacultyUsecase({ facultyRepo, deleteFile });
 const syncProgramFaculty = syncProgramFacultyUsecase({ facultyRepo, programRepo });
 
 
@@ -71,12 +73,7 @@ router.get('/faculty', async (req, res) => {
 
 router.post('/faculty', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('photo'), async (req, res) => {
   try {
-    const photo = req.file ? req.file.filename : (req.body.photo || null);
-    const credentials = typeof req.body.credentials === 'string'
-      ? JSON.parse(req.body.credentials)
-      : req.body.credentials;
-
-    const faculty = await createFaculty({ ...req.body, photo, credentials });
+    const faculty = await createFaculty({ ...req.body, file: req.file });
 
     res.status(200).json({
       message: "Faculty Created!",
@@ -110,12 +107,7 @@ router.delete('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, Ad
 router.put('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), upload.single('photo'), async (req, res) => {
   try {
     const { id } = req.params;
-    const photo = req.file ? req.file.filename : (req.body.photo || null);
-    const credentials = req.body.credentials
-      ? (typeof req.body.credentials === 'string' ? JSON.parse(req.body.credentials) : req.body.credentials)
-      : undefined;
-
-    const faculty = await updateFaculty({ id, ...req.body, photo, ...(credentials && { credentials }) });
+    const faculty = await updateFaculty({ id, ...req.body, file: req.file });
 
     res.status(200).json({
       message: `Faculty ${id} updated successfully`,
