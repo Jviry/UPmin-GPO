@@ -42,7 +42,7 @@ router.get('/faculty', async (req, res) => {
   }
 });
 
-router.post('/faculty', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('single'), async (req, res) => {
+router.post('/faculty', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('photo'), async (req, res) => {
   try {
     const faculty = await createFaculty({ ...req.body, file: req.file });
 

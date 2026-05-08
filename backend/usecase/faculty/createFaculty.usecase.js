@@ -1,7 +1,7 @@
 import { validateCreateFaculty } from '../../domain/faculty.js';
 
 export function createFacultyUsecase(facultyRepo) {
-  return async function({ name, email, photo, position, credentials, file }) {
+  return async function({ name, email, position, credentials, file }) {
     validateCreateFaculty({ name, position, email, credentials });
 
     const photo = file ? `/uploads/${file.filename}` : null;
