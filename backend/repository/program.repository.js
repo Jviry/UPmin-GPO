@@ -20,13 +20,14 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async create({ type, name, description, history }) {
+    async create({ type, name, description, history, photo = null }) {
       return prisma.program.create({
         data: {
           type,
           name,
           description,
           history,
+          photo,
 
           program_application: {
             create: {
@@ -50,7 +51,7 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async update({ id, type, name, description, history }) {
+    async update({ id, type, name, description, history, photo = null }) {
       return prisma.program.update({
         where: {
           program_id: parseInt(id),
@@ -59,7 +60,8 @@ export function createProgramRepository(prisma) {
           type,
           name,
           description,
-          history
+          history,
+          photo
         },
       });
     },

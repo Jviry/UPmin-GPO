@@ -1,7 +1,7 @@
 import { DomainError } from './errors.js';
 
-export function validateCreateProgram(data) {
-  if (!data.type || !data.name || !data.description || !data.history) throw new DomainError('All fields are required');
+export function validateCreateProgram({ type, name, description, history }) {
+  if (!type || !name || !description || !history) throw new DomainError('All fields are required except photo');
 }
 
 export function validateProgramId(id) {
