@@ -7,6 +7,11 @@ import { createFacultyUsecase } from '../usecase/faculty/createFaculty.usecase.j
 import { deleteFacultyUsecase } from '../usecase/faculty/deleteFaculty.usecase.js';
 import { updateFacultyUsecase } from '../usecase/faculty/updateFaculty.usecase.js';
 import { syncProgramFacultyUsecase } from '../usecase/faculty/syncProgramFaculty.usecase.js';
+import { authenticate } from '../middleware/authenticate.middleware.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
+import { upload } from '../middleware/upload.middleware.js';
+import { deleteFile } from '../utils/deleteFile.util.js';
 
 const router = express.Router();
 
@@ -14,8 +19,8 @@ const facultyRepo = createFacultyRepository(prisma);
 const programRepo = createProgramRepository(prisma);
 const getFaculty = getFacultyUsecase(facultyRepo);
 const createFaculty = createFacultyUsecase(facultyRepo);
-const deleteFaculty = deleteFacultyUsecase(facultyRepo);
-const updateFaculty = updateFacultyUsecase(facultyRepo);
+const deleteFaculty = deleteFacultyUsecase({ facultyRepo, deleteFile });
+const updateFaculty = updateFacultyUsecase({ facultyRepo, deleteFile });
 const syncProgramFaculty = syncProgramFacultyUsecase({ facultyRepo, programRepo });
 
 
@@ -37,9 +42,9 @@ router.get('/faculty', async (req, res) => {
   }
 });
 
-router.post('/faculty', async (req, res) => {
+router.post('/faculty', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('photo'), async (req, res) => {
   try {
-    const faculty = await createFaculty(req.body);
+    const faculty = await createFaculty({ ...req.body, file: req.file });
 
     res.status(200).json({
       message: "Faculty Created!",
@@ -53,7 +58,7 @@ router.post('/faculty', async (req, res) => {
   }
 });
 
-router.delete('/faculty/:id', async (req, res) => {
+router.delete('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -70,10 +75,10 @@ router.delete('/faculty/:id', async (req, res) => {
   }
 });
 
-router.put('/faculty/:id', async (req, res) => {
+router.put('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), upload.single('photo'), async (req, res) => {
   try {
     const { id } = req.params;
-    const faculty = await updateFaculty({ id, ...req.body });
+    const faculty = await updateFaculty({ id, ...req.body, file: req.file });
 
     res.status(200).json({
       message: `Faculty ${id} updated successfully`,
@@ -87,7 +92,7 @@ router.put('/faculty/:id', async (req, res) => {
   }
 });
 
-router.put('/programs/:program_id/faculty', async (req, res) => {
+router.put('/programs/:program_id/faculty', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { program_id } = req.params;
     const { faculty_ids } = req.body;

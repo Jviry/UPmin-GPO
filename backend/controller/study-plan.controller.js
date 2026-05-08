@@ -7,6 +7,9 @@ import { getStudyPlanByProgramIDUSecase } from '../usecase/study-plan/getStudyPl
 import { createStudyPlanUsecase } from '../usecase/study-plan/createStudyPlan.usecase.js';
 import { deleteStudyPlanUsecase } from '../usecase/study-plan/deleteStudyPlan.usecase.js';
 import { syncStudyPlanCoursesUsecase } from '../usecase/study-plan/syncStudyPlanCourses.usecase.js';
+import { authenticate } from '../middleware/authenticate.middleware.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 
 const router = express.Router({ mergeParams: true });
@@ -44,7 +47,7 @@ router.get('/study-plan', async (req, res) => {
   }
 });
 
-router.post('/study-plan', async (req, res) => {
+router.post('/study-plan', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { program_id } = req.params;
     const studyPlan = await addStudyPlan({ ...req.body, program_id });
@@ -62,7 +65,7 @@ router.post('/study-plan', async (req, res) => {
 });
 
 
-router.delete('/study-plan/:id', async (req, res) => {
+router.delete('/study-plan/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id: study_plan_id } = req.params;
     const deletedStudyPlan = await deleteStudyPlan(study_plan_id);
@@ -79,7 +82,7 @@ router.delete('/study-plan/:id', async (req, res) => {
   }
 });
 
-router.post('/study-plan/:id/entries', async (req, res) => {
+router.post('/study-plan/:id/entries', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id: study_plan_id } = req.params;
     const { courses } = req.body;

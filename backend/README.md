@@ -89,7 +89,7 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | Method | Endpoint  | Access | Description              |
 | ------ | --------- | ------ | ------------------------ |
 | GET    | `/office` | Public | Get office data (seeded) |
-| PUT    | `/office` | Public(to be updated) | Update office attributes |
+| PATCH    | `/office` | Admin/Superadmin | Patch Organizational Chart |
 
 ### Announcement
 

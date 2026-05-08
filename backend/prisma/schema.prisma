@@ -105,11 +105,12 @@ model ProgramFaculty {
 }
 
 model Program {
-  program_id  Int    @id @default(autoincrement())
+  program_id  Int     @id @default(autoincrement())
   type        String // e.g., "Diploma Program", "Graduate Program", "Doctoral Program"
   name        String
   description String
   history     String
+  photo       String?
 
   course_pools CoursePool[]
   study_plans  StudyPlan[]
