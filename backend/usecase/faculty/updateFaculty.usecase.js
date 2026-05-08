@@ -1,6 +1,6 @@
 import { DomainError } from '../../domain/errors.js';
 
-export function updateFacultyUsecase(facultyRepo) {
+export function updateFacultyUsecase({ facultyRepo, deleteFile }) {
   return async function({ id, name, position, email, credentials, file }) {
     const existing = await facultyRepo.findByID(id)
     if (!existing) {

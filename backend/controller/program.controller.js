@@ -21,7 +21,7 @@ const createProgram = createProgramUsecase({ programRepo });
 const getAllPrograms = getAllProgramsUsecase({ programRepo });
 const getProgramById = getProgramByIdUsecase({ programRepo });
 const deleteProgram = deleteProgramUsecase({ programRepo, deleteFile });
-const updateProgram = updateProgramUsecase({ programRepo });
+const updateProgram = updateProgramUsecase({ programRepo, deleteFile });
 const updateProgramApplication = updateProgramApplicationUsecase({ programRepo });
 
 // Public routes (no authentication required)

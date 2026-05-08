@@ -20,7 +20,7 @@ const programRepo = createProgramRepository(prisma);
 const getFaculty = getFacultyUsecase(facultyRepo);
 const createFaculty = createFacultyUsecase(facultyRepo);
 const deleteFaculty = deleteFacultyUsecase({ facultyRepo, deleteFile });
-const updateFaculty = updateFacultyUsecase(facultyRepo);
+const updateFaculty = updateFacultyUsecase({ facultyRepo, deleteFile });
 const syncProgramFaculty = syncProgramFacultyUsecase({ facultyRepo, programRepo });
 
 
