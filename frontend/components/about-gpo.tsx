@@ -14,12 +14,12 @@ export default function AboutGPO() {
       try {
         const [officeRes, facultyRes, testimonyRes] = await Promise.all([
           apiClient.get('/office'),
-          apiClient.get('/faculty?position=Program Coordinator'), 
+          apiClient.get('/faculty?position=Program Coordinator'),
           apiClient.get('/testimonies')
         ]);
-        
+
         setOffice(officeRes.data.office || officeRes.data[0]);
-        setCoordinators(facultyRes.data.faculty || []);
+        setCoordinators(facultyRes.data.faculties || []);
         setTestimonies(testimonyRes.data.testimonies || []);
       } catch (error) {
         console.error("Failed to fetch About GPO data:", error);
@@ -43,13 +43,13 @@ export default function AboutGPO() {
         <div className="bg-[var(--up-maroon)] border-t-4 border-[var(--up-gold)] py-12 w-full">
           <div className="max-w-6xl mx-auto px-4">
             {office?.org_chart_url ? (
-              <img 
-                src={`http://localhost:3001${office.org_chart_url}`} 
-                alt="Organization Chart" 
-                className="w-full h-full object-cover" 
+              <img
+                src={`http://localhost:3001${office.org_chart_url}`}
+                alt="Organization Chart"
+                className="w-full h-full object-cover"
               />
             ) : (
-               <PlaceholderProfileImg className="h-full" />
+              <PlaceholderProfileImg className="h-full" />
             )}
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function AboutGPO() {
                 </div>
               </div>
             )) : (
-               <div className="p-4 text-[var(--text-muted)] italic">No coordinators listed.</div>
+              <div className="p-4 text-[var(--text-muted)] italic">No coordinators listed.</div>
             )}
           </div>
         </div>

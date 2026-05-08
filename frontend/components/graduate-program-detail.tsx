@@ -13,9 +13,8 @@ function CourseRows({ courses }: { courses: any[] }) {
       {courses.map((course, index) => (
         <div
           key={course.code || index}
-          className={`flex items-center justify-between gap-4 px-4 py-3 text-sm text-[var(--text-primary)] sm:px-6 sm:text-[0.95rem] ${
-            index % 2 === 0 ? 'bg-[rgba(118,9,12,0.07)]' : 'bg-[rgba(118,9,12,0.13)]'
-          }`}
+          className={`flex items-center justify-between gap-4 px-4 py-3 text-sm text-[var(--text-primary)] sm:px-6 sm:text-[0.95rem] ${index % 2 === 0 ? 'bg-[rgba(118,9,12,0.07)]' : 'bg-[rgba(118,9,12,0.13)]'
+            }`}
         >
           <span className="w-24 shrink-0 font-mono text-xs font-medium uppercase tracking-wider text-[var(--up-maroon)] sm:text-sm">
             {course.code}
@@ -27,7 +26,7 @@ function CourseRows({ courses }: { courses: any[] }) {
         </div>
       ))}
       {courses.length === 0 && (
-         <div className="px-4 py-3 text-sm text-[var(--text-muted)] italic">No courses mapped yet.</div>
+        <div className="px-4 py-3 text-sm text-[var(--text-muted)] italic">No courses mapped yet.</div>
       )}
     </div>
   );
@@ -39,9 +38,8 @@ function StructureSummaryRows({ summary }: { summary: any[] }) {
       {summary.map((row, index) => (
         <div
           key={row.category}
-          className={`flex items-center justify-between gap-4 px-4 py-2.5 sm:px-6 ${
-            index % 2 === 0 ? 'bg-[rgba(1,68,33,0.12)]' : 'bg-[rgba(1,68,33,0.20)]'
-          } ${index < summary.length - 1 ? 'border-b border-[rgba(1,68,33,0.25)]' : ''}`}
+          className={`flex items-center justify-between gap-4 px-4 py-2.5 sm:px-6 ${index % 2 === 0 ? 'bg-[rgba(1,68,33,0.12)]' : 'bg-[rgba(1,68,33,0.20)]'
+            } ${index < summary.length - 1 ? 'border-b border-[rgba(1,68,33,0.25)]' : ''}`}
         >
           <span className="text-sm leading-tight text-[var(--text-primary)] sm:text-[0.95rem]">
             {row.category}
@@ -94,7 +92,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
     category: pool.name,
     units: pool.entries?.reduce((sum: number, e: any) => sum + (e.course?.units || 0), 0) || 0
   })) || [];
-  
+
   const totalUnits = structureSummary.reduce((sum: number, s: any) => sum + s.units, 0);
   if (structureSummary.length > 0) {
     structureSummary.push({ category: 'Total', units: totalUnits });
@@ -106,16 +104,16 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
     plan.program_courses?.forEach((pc: any) => {
       const key = `${pc.year}-${pc.semester}`;
       const existing = termsMap.get(key) || { year: pc.year, sem: pc.semester, units: 0, courses: [] as any[] };
-      
+
       const courseUnits = pc.course?.units || (pc.is_elective_slot ? 3 : 0);
       existing.units += courseUnits;
-      
+
       if (pc.course) {
         existing.courses.push(pc.course);
       } else if (pc.is_elective_slot) {
         existing.courses.push({ code: 'Elective', name: 'Elective Slot', units: 3 });
       }
-      
+
       termsMap.set(key, existing);
     });
     const terms = Array.from(termsMap.values()).sort((a, b) => a.year === b.year ? a.sem - b.sem : a.year - b.year);
@@ -135,7 +133,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
     : ["No specific file requirements listed."];
 
   // Faculty Data (Mapped directly from the program)
-  const facultyList = program.faculty || [];
+  const facultyList = program.faculties?.map((pf: any) => pf.faculty) || [];
 
   return (
     <>
@@ -160,11 +158,10 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`rounded px-2 py-2 transition-colors duration-200 ${
-                  activeTab === tab
-                    ? 'text-[var(--up-gold)]'
-                    : 'text-[rgba(255,255,255,0.92)] hover:text-[var(--up-gold)]'
-                }`}
+                className={`rounded px-2 py-2 transition-colors duration-200 ${activeTab === tab
+                  ? 'text-[var(--up-gold)]'
+                  : 'text-[rgba(255,255,255,0.92)] hover:text-[var(--up-gold)]'
+                  }`}
               >
                 {tab === 'structure' ? 'Structure' : tab === 'application' ? 'Application' : 'Faculty'}
               </button>
@@ -225,9 +222,8 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                       return (
                         <div
                           key={i}
-                          className={`flex flex-col gap-2 px-5 py-3 ${
-                            i % 2 === 0 ? 'bg-[rgba(118,9,12,0.07)]' : 'bg-[rgba(118,9,12,0.13)]'
-                          }`}
+                          className={`flex flex-col gap-2 px-5 py-3 ${i % 2 === 0 ? 'bg-[rgba(118,9,12,0.07)]' : 'bg-[rgba(118,9,12,0.13)]'
+                            }`}
                         >
                           <div className="flex items-center justify-between">
                             <span className="text-xs uppercase tracking-widest text-[var(--text-primary)] font-bold">Year {term.year} - {sem}</span>
@@ -244,12 +240,12 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                         </div>
                       );
                     }) : (
-                       <div className="px-5 py-3 text-xs text-[var(--text-muted)] italic">No courses planned yet.</div>
+                      <div className="px-5 py-3 text-xs text-[var(--text-muted)] italic">No courses planned yet.</div>
                     )}
                   </div>
                 ))}
                 {studyPlans.length === 0 && (
-                   <p className="text-gray-300 col-span-2">Study plans are currently unavailable.</p>
+                  <p className="text-gray-300 col-span-2">Study plans are currently unavailable.</p>
                 )}
               </div>
             </div>
@@ -336,9 +332,9 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                   <div className="relative aspect-[3/4] w-full bg-[var(--surface-muted)] overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center">
                       {member.photo ? (
-                         <img src={member.photo} alt={member.name} className="h-full w-full object-cover" />
+                        <img src={member.photo} alt={member.name} className="h-full w-full object-cover" />
                       ) : (
-                         <PlaceholderProfileImg className="rounded-none border-0" />
+                        <PlaceholderProfileImg className="rounded-none border-0" />
                       )}
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 h-3 bg-[var(--up-gold)]" />
@@ -357,7 +353,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                   </div>
                 </div>
               )) : (
-                 <div className="p-6 text-[var(--text-muted)]">No faculty directory available.</div>
+                <div className="p-6 text-[var(--text-muted)]">No faculty directory available.</div>
               )}
             </div>
           </div>
