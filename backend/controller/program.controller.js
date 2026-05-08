@@ -8,6 +8,8 @@ import { deleteProgramUsecase } from '../usecase/program/deleteProgram.usecase.j
 import { updateProgramUsecase } from '../usecase/program/updateProgram.usecase.js';
 import { updateProgramApplicationUsecase } from '../usecase/program/updateProgramApplication.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 const router = express.Router();
 
@@ -58,7 +60,7 @@ router.get('/programs/:id', async (req, res) => {
 });
 
 // Protected routes (authentication required)
-router.post('/programs', authenticate, async (req, res) => {
+router.post('/programs', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const program = await createProgram(req.body);
 
@@ -75,7 +77,7 @@ router.post('/programs', authenticate, async (req, res) => {
   }
 });
 
-router.delete('/programs/:id', authenticate, async (req, res) => {
+router.delete('/programs/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const { id } = req.params;
     const deletedProgram = await deleteProgram(id);
@@ -93,7 +95,7 @@ router.delete('/programs/:id', authenticate, async (req, res) => {
   }
 });
 
-router.put('/programs/:id', authenticate, async (req, res) => {
+router.put('/programs/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
     const program = await updateProgram(id, req.body);
@@ -111,7 +113,7 @@ router.put('/programs/:id', authenticate, async (req, res) => {
   }
 });
 
-router.put('/programs/:id/application', authenticate, async (req, res) => {
+router.put('/programs/:id/application', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
     const applicationDetails = await updateProgramApplication(id, req.body);
