@@ -10,6 +10,8 @@ import { syncProgramFacultyUsecase } from '../usecase/faculty/syncProgramFaculty
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 import { AdminRole } from '../domain/admin.js';
+import { upload } from '../middleware/upload.middleware.js';
+import { deleteFile } from '../utils/deleteFile.util.js';
 
 const router = express.Router();
 
@@ -17,7 +19,7 @@ const facultyRepo = createFacultyRepository(prisma);
 const programRepo = createProgramRepository(prisma);
 const getFaculty = getFacultyUsecase(facultyRepo);
 const createFaculty = createFacultyUsecase(facultyRepo);
-const deleteFaculty = deleteFacultyUsecase(facultyRepo);
+const deleteFaculty = deleteFacultyUsecase({ facultyRepo, deleteFile });
 const updateFaculty = updateFacultyUsecase(facultyRepo);
 const syncProgramFaculty = syncProgramFacultyUsecase({ facultyRepo, programRepo });
 
@@ -40,9 +42,9 @@ router.get('/faculty', async (req, res) => {
   }
 });
 
-router.post('/faculty', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
+router.post('/faculty', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('single'), async (req, res) => {
   try {
-    const faculty = await createFaculty(req.body);
+    const faculty = await createFaculty({ ...req.body, file: req.file });
 
     res.status(200).json({
       message: "Faculty Created!",
@@ -73,10 +75,10 @@ router.delete('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, Ad
   }
 });
 
-router.put('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
+router.put('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), upload.single('photo'), async (req, res) => {
   try {
     const { id } = req.params;
-    const faculty = await updateFaculty({ id, ...req.body });
+    const faculty = await updateFaculty({ id, ...req.body, file: req.file });
 
     res.status(200).json({
       message: `Faculty ${id} updated successfully`,
