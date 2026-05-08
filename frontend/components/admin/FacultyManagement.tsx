@@ -18,6 +18,12 @@ export default function FacultyManagement() {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+
+  const PAGE_SIZE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -28,17 +34,18 @@ export default function FacultyManagement() {
     photo: '',
   });
 
-  // Load faculty on mount
   useEffect(() => {
-    loadFaculty();
-  }, []);
+    loadFaculty(currentPage);
+  }, [currentPage]);
 
-  const loadFaculty = async () => {
+  const loadFaculty = async (page = 1) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getFaculty();
-      setFaculties(data || []);
+      const result = await getFaculty(undefined, page, PAGE_SIZE);
+      setFaculties(result.faculties || []);
+      setTotalPages(result.totalPages || 1);
+      setTotalCount(result.total || 0);
     } catch (err: any) {
       setError(err.message || 'Failed to load faculty');
     } finally {
@@ -48,6 +55,7 @@ export default function FacultyManagement() {
 
   const handleAddClick = () => {
     setEditingId(null);
+    setPhotoFile(null);
     setFormData({
       name: '',
       email: '',
@@ -60,6 +68,7 @@ export default function FacultyManagement() {
 
   const handleEditClick = (faculty: Faculty) => {
     setEditingId(faculty.faculty_id);
+    setPhotoFile(null);
     setFormData({
       name: faculty.name,
       email: faculty.email,
@@ -112,22 +121,31 @@ export default function FacultyManagement() {
     try {
       setError(null);
       
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        position: formData.position,
-        credentials: formData.credentials.filter(c => c.trim()),
-        ...(formData.photo && { photo: formData.photo }),
-      };
+      const credentials = formData.credentials.filter(c => c.trim());
 
       if (editingId) {
-        await updateFaculty(editingId, payload);
+        await updateFaculty(editingId, {
+          name: formData.name,
+          email: formData.email,
+          position: formData.position,
+          credentials,
+          photoFile,
+          existingPhoto: formData.photo || undefined,
+        });
       } else {
-        await createFaculty(payload);
+        await createFaculty({
+          name: formData.name,
+          email: formData.email,
+          position: formData.position,
+          credentials,
+          photoFile,
+        });
       }
 
       setIsModalOpen(false);
-      await loadFaculty();
+      const targetPage = editingId ? currentPage : 1;
+      if (!editingId) setCurrentPage(1);
+      await loadFaculty(targetPage);
     } catch (err: any) {
       setError(err.message || 'Failed to save faculty');
     }
@@ -141,7 +159,11 @@ export default function FacultyManagement() {
     try {
       setError(null);
       await deleteFaculty(id);
-      await loadFaculty();
+      const newTotal = totalCount - 1;
+      const newLastPage = Math.max(1, Math.ceil(newTotal / PAGE_SIZE));
+      const targetPage = Math.min(currentPage, newLastPage);
+      setCurrentPage(targetPage);
+      await loadFaculty(targetPage);
     } catch (err: any) {
       setError(err.message || 'Failed to delete faculty');
     }
@@ -150,6 +172,7 @@ export default function FacultyManagement() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingId(null);
+    setPhotoFile(null);
     setFormData({
       name: '',
       email: '',
@@ -187,7 +210,7 @@ export default function FacultyManagement() {
           No faculty members found.
         </div>
       ) : (
-        <div className="modern-scrollbar max-h-[500px] overflow-y-auto">
+        <div>
           <table className="w-full text-sm">
             <thead className="sticky top-0">
               <tr className="border-b border-[var(--line)] bg-[var(--surface-muted)]">
@@ -236,6 +259,44 @@ export default function FacultyManagement() {
               ))}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-[var(--line)] px-6 py-4">
+              <span className="text-[0.7rem] text-[var(--text-muted)]">
+                Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, totalCount)} of {totalCount}
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.15em] border border-[var(--line)] text-[var(--text-secondary)] hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setCurrentPage(p)}
+                    className={`px-3 py-1.5 text-[0.7rem] font-bold border transition ${
+                      p === currentPage
+                        ? 'bg-[var(--up-maroon)] border-[var(--up-maroon)] text-white'
+                        : 'border-[var(--line)] text-[var(--text-secondary)] hover:bg-gray-50'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.15em] border border-[var(--line)] text-[var(--text-secondary)] hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
       </div>
@@ -307,18 +368,30 @@ export default function FacultyManagement() {
                 </select>
               </div>
 
-              {/* Photo URL */}
+              {/* Photo Upload */}
               <div>
                 <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-3">
-                  Photo URL
+                  Photo
                 </label>
-                <input
-                  type="url"
-                  value={formData.photo}
-                  onChange={(e) => handleInputChange('photo', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
-                  placeholder="https://example.com/photo.jpg"
-                />
+                <label className="flex flex-col items-center justify-center w-full h-28 border border-dashed border-[var(--line)] cursor-pointer bg-[var(--bg-secondary)] hover:border-[var(--up-maroon)] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mb-2 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4" />
+                  </svg>
+                  {photoFile ? (
+                    <span className="text-[0.7rem] text-[var(--up-maroon)] font-semibold">{photoFile.name}</span>
+                  ) : formData.photo ? (
+                    <span className="text-[0.7rem] text-[var(--text-secondary)]">{formData.photo}</span>
+                  ) : (
+                    <span className="text-[0.7rem] text-[var(--text-muted)]">Click to upload photo</span>
+                  )}
+                  <span className="text-[0.65rem] text-[var(--text-muted)] mt-1">PNG, JPG up to 5MB</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
+                  />
+                </label>
               </div>
 
               {/* Credentials */}

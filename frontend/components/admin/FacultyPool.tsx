@@ -154,8 +154,8 @@ export default function FacultyPool({ programId, programName }: FacultyPoolProps
       setLoading(true);
       setError(null);
 
-      const allFacultyData = await getFaculty();
-      setAllFaculty(allFacultyData || []);
+      const allFacultyData = await getFaculty(undefined, 1, 1000);
+      setAllFaculty(allFacultyData.faculties || []);
 
       try {
         const programRes = await apiClient.get(`/programs/${programId}`);

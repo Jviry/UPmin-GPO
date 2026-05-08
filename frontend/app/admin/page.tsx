@@ -70,41 +70,6 @@ export default function AdminDashboard() {
           </h2>
         </div>
 
-        <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-4">
-          <div className="col-span-1 flex flex-col space-y-4">
-            <input 
-              type="text" 
-              defaultValue={office?.email || ''} 
-              className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-              placeholder="Email" 
-            />
-            <input 
-              type="text" 
-              defaultValue={office?.phone || ''} 
-              className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-              placeholder="Phone" 
-            />
-            <input 
-              type="text" 
-              className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-              placeholder="Location" 
-            />
-          </div>
-
-          <div className="col-span-2">
-             <textarea 
-               defaultValue={office?.mission || ''} 
-               className="h-full min-h-[140px] w-full resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm text-[var(--text-secondary)] focus:border-[var(--up-gold)] focus:outline-none" 
-               placeholder="About GPO Description..."
-             />
-          </div>
-
-          <div className="col-span-1 flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[var(--line)] bg-[var(--surface-muted)] p-4 text-center transition hover:border-[var(--up-maroon)]">
-            <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Featured Photo</span>
-            <span className="mt-1 text-xs text-[var(--up-maroon)]">Click to upload</span>
-          </div>
-        </div>
-
         <div className="mb-8 flex h-32 cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[var(--line)] bg-[var(--surface-muted)] text-center transition hover:border-[var(--up-maroon)]">
           <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Organizational Chart</span>
           {office?.org_chart_url ? (
