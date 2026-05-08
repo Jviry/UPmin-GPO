@@ -7,6 +7,8 @@ import { createScholarshipUsecase } from '../usecase/scholarship/createScholarsh
 import { updateScholarshipUsecase } from '../usecase/scholarship/updateScholarship.usecase.js';
 import { deleteScholarshipUsecase } from '../usecase/scholarship/deleteScholarship.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 const router = express.Router();
 
@@ -56,7 +58,7 @@ router.get('/scholarships/:id', async (req, res) => {
 });
 
 // Protected routes
-router.post('/scholarships', authenticate, async (req, res) => {
+router.post('/scholarships', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const admin_id = req.user.admin_id;
     const scholarshipData = {
@@ -79,7 +81,7 @@ router.post('/scholarships', authenticate, async (req, res) => {
   }
 });
 
-router.put('/scholarships/:id', authenticate, async (req, res) => {
+router.put('/scholarships/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
     const result = await updateScholarship(id, req.body);
@@ -97,7 +99,7 @@ router.put('/scholarships/:id', authenticate, async (req, res) => {
   }
 });
 
-router.delete('/scholarships/:id', authenticate, async (req, res) => {
+router.delete('/scholarships/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
     const result = await deleteScholarship(id);

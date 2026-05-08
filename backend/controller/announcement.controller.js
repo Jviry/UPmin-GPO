@@ -8,6 +8,7 @@ import { getAnnouncementsUsecase } from '../usecase/announcement/getAnnouncement
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { updateAnnouncementUsecase } from '../usecase/announcement/updateAnnouncement.usecase.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo });
 const getAnnouncementById = getAnnouncementByIdUsecase({ announcementRepo });
 const getAnnouncements = getAnnouncementsUsecase({ announcementRepo });
 
-router.post('/announcements', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
+router.post('/announcements', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const admin_id = req.user.admin_id;
     const { title, content_description } = req.body;
@@ -79,7 +80,7 @@ router.get('/announcements', async (req, res) => {
   }
 });
 
-router.put('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
+router.put('/announcements/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const { admin_id } = req.user.admin_id;
     const { id } = req.params;
@@ -100,7 +101,7 @@ router.put('/announcements/:id', authenticate, authenticateRole('admin', 'supera
   }
 });
 
-router.delete('/announcements/:id', authenticate, authenticateRole('admin', 'superadmin'), async (req, res) => {
+router.delete('/announcements/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { admin_id } = req.user.admin_id;
     const { id } = req.params;

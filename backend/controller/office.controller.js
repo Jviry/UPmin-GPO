@@ -5,6 +5,7 @@ import { createGetOfficeUsecase } from '../usecase/office/getOffice.Usecase.js';
 import { createUpdateOfficeUsecase } from '../usecase/office/updateOffice.Usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.get('/office', async (req, res) => {
   }
 });
 
-router.put('/office', authenticate, authenticateRole('superadmin'), async (req, res) => {
+router.put('/office', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const result = await updateOffice(req.body);
 

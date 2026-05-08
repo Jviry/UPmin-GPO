@@ -10,6 +10,7 @@ import { createDeleteAdminUsecase } from '../usecase/admin/deleteAdmin.usecase.j
 import { createGetAdminsUsecase } from '../usecase/admin/getAdmins.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 dotenv.config();
 
@@ -42,7 +43,7 @@ const getAdmins = createGetAdminsUsecase(
   adminRepo
 );
 
-router.post('/admins', authenticate, authenticateRole('superadmin'), async (req, res) => {
+router.post('/admins', authenticate, authenticateRole(AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const admin = await createAdmin(req.body);
     res.status(200).json({
@@ -57,7 +58,7 @@ router.post('/admins', authenticate, authenticateRole('superadmin'), async (req,
   }
 });
 
-router.put('/admins/:id', authenticate, authenticateRole('superadmin'), async (req, res) => {
+router.put('/admins/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
     const { newPassword } = req.body;
@@ -76,7 +77,7 @@ router.put('/admins/:id', authenticate, authenticateRole('superadmin'), async (r
   }
 });
 
-router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async (req, res) => {
+router.delete('/admins/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -91,7 +92,7 @@ router.delete('/admins/:id', authenticate, authenticateRole('superadmin'), async
   }
 });
 
-router.get('/admins', authenticate, authenticateRole('superadmin'), async (req, res) => {
+router.get('/admins', authenticate, authenticateRole(AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const admins = await getAdmins();
 
