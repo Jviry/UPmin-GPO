@@ -57,3 +57,64 @@ export const getPrograms = async () => {
     throw new Error(GENERIC_ERROR_MSG);
   }
 };
+
+// --- FACULTY API ---
+export const getFaculty = async (position?: string) => {
+  try {
+    const params = position ? `?position=${position}` : '';
+    const response = await apiClient.get(`/faculty${params}`);
+    // Map response shape: { message, faculties }
+    return response.data.faculties;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const createFaculty = async (facultyData: {
+  name: string;
+  email: string;
+  position: string;
+  credentials: string[];
+  photo?: string;
+}) => {
+  try {
+    const response = await apiClient.post('/faculty', facultyData);
+    // Map response shape: { message, faculty }
+    return response.data.faculty;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateFaculty = async (
+  id: number,
+  facultyData: {
+    name?: string;
+    email?: string;
+    position?: string;
+    credentials?: string[];
+    photo?: string;
+  }
+) => {
+  try {
+    const response = await apiClient.put(`/faculty/${id}`, facultyData);
+    // Map response shape: { message, faculty }
+    return response.data.faculty;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteFaculty = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`/faculty/${id}`);
+    // Map response shape: { message, faculty }
+    return response.data.faculty;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
