@@ -55,7 +55,7 @@ async function main() {
       { name: "Special Topics in Management", code: "M234", type: "elective", units: 3 },
       { name: "Managing an Environmentally & Economically Sustainable Enterprise", code: "M235", type: "elective", units: 3 },
 
-      // Diploma in Urban and Regional Planning Core Courses
+      // Diploma in Urban and Regional Planning Core Courses 
       { name: "Theory and Practice of Planning", code: "P201", type: "core", units: 3 },
       { name: "Land Use Planning", code: "P203", type: "core", units: 3 },
       { name: "Project Planning and Development", code: "P205", type: "core", units: 3 },
@@ -68,6 +68,11 @@ async function main() {
       // Additional Courses for Master of Arts in Urban and Regional Planning
       { name: "Special Problems in Regional Planning", code: "P229", type: "required", units: 3 },
       { name: "MASTER'S THESIS", code: "P300", type: "required", units: 6 },
+
+      // Diploma in Exercise and Sports Science Core Courses
+
+      // Additional Courses for Master of Science in Human Movement Science
+
 
       // Master in Biology Core Courses
       { name: "Chemical Physiology", code: "BIO 220", type: "core", units: 3 },
@@ -298,82 +303,82 @@ async function main() {
   await prisma.faculty.createMany({
     data: [
       // Program Coordinators
-      { name: "Jackie Lou J. Tagubase", email: "jlTagubase@up.edu.ph", photo: "photo1.jpg", position: "Program Coordinator" }, // MS Food Science Coordinator
-      { name: "Micah Amor P. Yares", email: "maYares@up.edu.ph", photo: "photo2.jpg", position: "Program Coordinator" }, // MA Urban and Regional Planning Coordinator
-      { name: "Mae A. Responte", email: "mResponte@up.edu.ph", photo: "photo3.jpg", position: "Program Coordinator" }, // MS Biology Coordinator
-      { name: "Imee Marie A. Acopiado ", email: "imAcopiado@up.edu.ph", photo: null, position: "Program Coordinator" }, // MM Coordinator
-      { name: "Pedro A. Alviola IV", email: "pAlviola@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" }, // PhD by Research Coordinator
-      { name: "Jonathan Y. Cagas", email: "jCagas@up.edu.ph", photo: "photo5.jpg", position: "Program Coordinator" }, // MS Human Movement Science Coordinator
+      { name: "Jackie Lou J. Tagubase", email: "jjTagubase@up.edu.ph", photo: "photo1.jpg", position: "Associate Professor" }, // MS Food Science Coordinator
+      { name: "Micah Amor P. Yares", email: "mpYares@up.edu.ph", photo: "photo2.jpg", position: "Assistant Professor" }, // MA Urban and Regional Planning Coordinator
+      { name: "Mae A. Responte", email: "maResponte@up.edu.ph", photo: "photo3.jpg", position: "Assistant Professor" }, // MS Biology Coordinator
+      { name: "Imee Marie A. Acopiado ", email: "iaAcopiado@up.edu.ph", photo: null, position: "Assistant Professor" }, // MM Coordinator
+      { name: "Pedro A. Alviola IV", email: "paAlviola@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // PhD by Research Coordinator
+      { name: "Jonathan Y. Cagas", email: "jyCagas@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MS Human Movement Science Coordinator
 
       // MS Food Science Faculty Members
-      { name: "Juma Novie A. Alviola", email: "jnAlviola@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Kriza Faye A. Calumba", email: "kfCalumba@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Dann Marie N. Del Mundo", email: "dmDelMundo@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Jennifer P. Fronteras", email: "jFronteras@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
-      { name: "Erwin Oliver V. Fundador", email: "eoFundador@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Noreen Grace V. Fundador", email: "ngFundador@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Joel Hassan G. Tolentino", email: "jhTolentino@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
-      { name: "Rovi Gem E. Villame-Gayagas", email: "rgVillame-Gayagas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Marbie A. Alpos-Entero", email: "mAlpos-Entero@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Julious B. Cerna", email: "jCerna@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Juma Novie A. Alviola", email: "jaAlviola@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Kriza Faye A. Calumba", email: "kaCalumba@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Dann Marie N. Del Mundo", email: "dnDelMundo@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Jennifer P. Fronteras", email: "jpFronteras@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Erwin Oliver V. Fundador", email: "evFundador@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Noreen Grace V. Fundador", email: "nvFundador@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Joel Hassan G. Tolentino", email: "jgTolentino@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Rovi Gem E. Villame-Gayagas", email: "reVillame-Gayagas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Marbie A. Alpos-Entero", email: "maAlpos-Entero@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Julious B. Cerna", email: "jbCerna@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
 
       // MS Biology Faculty Members
-      { name: "Marion John Michael A. Achondo", email: "mjAchondo@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
-      { name: "Fritzie A. Camino", email: "fCamino@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Aleyla E. De Cadiz", email: "aDeCadiz@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Aileen Grace D. Delima", email: "agDelima@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Lief Erikson D. Gamalo", email: "leGamalo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Junaldo A. Mantiquilla", email: "jMantiquilla@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Marion John Michael A. Achondo", email: "maAchondo@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Fritzie A. Camino", email: "faCamino@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Aleyla E. De Cadiz", email: "aeDeCadiz@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Aileen Grace D. Delima", email: "adDelima@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Lief Erikson D. Gamalo", email: "ldGamalo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Junaldo A. Mantiquilla", email: "jaMantiquilla@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
       { name: "Cyrose Suzie S. Millado", email: "csMillado@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Lyre Anni E. Murao", email: "lMurao@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Cleto L. Nanola", email: "cNanola@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Mae A. Responté", email: "mResponté@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Rose L. Catiempo", email: "rCatiempo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Aaron Froilan M. Raganas", email: "afRaganas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Lyre Anni E. Murao", email: "leMurao@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Cleto L. Nanola", email: "clNanola@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Mae A. Responté", email: "maResponté@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Rose L. Catiempo", email: "rlCatiempo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Aaron Froilan M. Raganas", email: "amRaganas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       
       // Master in Management Faculty Members (also PhD by Research Faculty Members)
-      { name: "Thaddeus R. Acuña", email: "tAcuña@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Roxanne T. Aguinaldo", email: "rAguinaldo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Miko Mariz C. Castro", email: "mmCastro@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Larry N. Digal", email: "lDigal@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
-      { name: "Aurelia Luzviminda V. Gomez", email: "alGomez@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
-      { name: "Glory Dee A. Romo", email: "gdRomo@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
-      { name: "Jon Marx P. Sarmiento", email: "jmSarmiento@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" }, // MM and PhD by Research Faculty Member
-      { name: "Ligaya R. Leal", email: "lLeal@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" }, // MM and PhD by Research Faculty Member
-      { name: "Vlademir A. Shuck", email: "vShuck@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Rodgessa A. Lopez", email: "rLopez@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Shemaiah Gail P. Placencia", email: "sgPlacencia@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Thaddeus R. Acuña", email: "trAcuña@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Roxanne T. Aguinaldo", email: "rtAguinaldo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Miko Mariz C. Castro", email: "mcCastro@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Larry N. Digal", email: "lnDigal@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Aurelia Luzviminda V. Gomez", email: "avGomez@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Glory Dee A. Romo", email: "gaRomo@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Jon Marx P. Sarmiento", email: "jpSarmiento@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Ligaya R. Leal", email: "lrLeal@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" }, // MM and PhD by Research Faculty Member
+      { name: "Vlademir A. Shuck", email: "vaShuck@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Rodgessa A. Lopez", email: "raLopez@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Shemaiah Gail P. Placencia", email: "spPlacencia@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
 
       // Diploma of Exercise and Sports Science and Master of Science in Human Movement Science Faculty Members
-      { name: "Jessa C. Gubalani", email: "jGubalani@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Ester Mace V. Villela-Go", email: "emVillela-Go@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Annaliza R. Castro", email: "aCastro@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Juvanie C. Lapesigue", email: "jLapesigue@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Catherine Joy D. Lariosa", email: "cjLariosa@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Raisalam D. Angoy", email: "rAngoy@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Ryce B. Jubane", email: "rJubane@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Jezreel M. Abarca", email: "jAbarca@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
-      { name: "Bhen Joshua F. Acosta", email: "bjAcosta@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Ma. Stella R. Salazar", email: "msSalazar@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
-      { name: "Pio Gerardo R. Solon", email: "pgSolon@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
-      { name: "Ritchie Ian A. Solana", email: "riSolana@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
-      { name: "Mohammad Khalil A. Guinomla", email: "mkGuinomla@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
+      { name: "Jessa C. Gubalani", email: "jcGubalani@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Ester Mace V. Villela-Go", email: "evVillela-Go@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Annaliza R. Castro", email: "arCastro@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Juvanie C. Lapesigue", email: "jcLapesigue@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Catherine Joy D. Lariosa", email: "cdLariosa@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Raisalam D. Angoy", email: "rdAngoy@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Ryce B. Jubane", email: "rbJubane@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Jezreel M. Abarca", email: "jmAbarca@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Bhen Joshua F. Acosta", email: "bfAcosta@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Ma. Stella R. Salazar", email: "mrSalazar@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Pio Gerardo R. Solon", email: "prSolon@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
+      { name: "Ritchie Ian A. Solana", email: "raSolana@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
+      { name: "Mohammad Khalil A. Guinomla", email: "maGuinomla@up.edu.ph", photo: "photo5.jpg", position: "Lecturer" },
 
       // Diploma of Urban and Regional Planning and Master of Arts in Urban and Regional Planning Faculty Members
-      { name: "Isidoro R. Malaque III", email: "iMalaqueIII@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
-      { name: "Angelo Felix N. Regalado", email: "afRegalado@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Minerva C. Rosel", email: "mRosel@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Ryan C. Songcayauon", email: "rSongcayauon@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Micah Amor P. Yares", email: "maYares@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
-      { name: "Marie Danielle V. Guillen", email: "mdGuillen@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
-      { name: "Sophremiano B. Antipolo", email: "sAntipolo@up.edu.ph", photo: "photo5.jpg", position: "Professorial Lecturer" },
-      { name: "Joseph Raymund A. Sumabal", email: "jrSumabal@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" },
-      { name: "Marlon C. Suelto", email: "mSuelto@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" }
+      { name: "Isidoro R. Malaque III", email: "irMalaqueIII@up.edu.ph", photo: "photo5.jpg", position: "Professor" },
+      { name: "Angelo Felix N. Regalado", email: "anRegalado@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Minerva C. Rosel", email: "mcRosel@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Ryan C. Songcayauon", email: "rcSongcayauon@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Micah Amor P. Yares", email: "mpYares@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Marie Danielle V. Guillen", email: "mvGuillen@up.edu.ph", photo: "photo5.jpg", position: "Associate Professor" },
+      { name: "Sophremiano B. Antipolo", email: "sbAntipolo@up.edu.ph", photo: "photo5.jpg", position: "Professorial Lecturer" },
+      { name: "Joseph Raymund A. Sumabal", email: "jaSumabal@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" },
+      { name: "Marlon C. Suelto", email: "mcSuelto@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" }
     ]
   });
 
   const faculties = await prisma.faculty.findMany();
-  const getFactulty = (email) => faculties.find(f => f.email === email);
+  const getFaculty = (email) => faculties.find(f => f.email === email);
 
   await prisma.facultyCredential.createMany({
     data: [
@@ -405,81 +410,81 @@ async function main() {
       { degree: "MS Biology", faculty_id: getFaculty("afRaganas@up.edu.ph").faculty_id },
 
       // Master in Management Faculty Credentials
-      { degree: "Master in Management", faculty_id: getFactulty("imAcopiado@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("tAcuña@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("rAguinaldo@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("pAlviolaIV@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("mmCastro@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("lDigal@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("alGomez@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("gdRomo@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("jmSarmiento@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("lLeal@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("vShuck@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("rLopez@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFactulty("sgPlacencia@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("imAcopiado@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("tAcuña@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("rAguinaldo@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("pAlviolaIV@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("mmCastro@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("lDigal@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("alGomez@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("gdRomo@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("jmSarmiento@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("lLeal@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("vShuck@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("rLopez@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("sgPlacencia@up.edu.ph").faculty_id },
 
       // Diploma of Exercise and Sports Science Faculty Credentials
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("jGubalani@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("jCagas@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("emVillela-Go@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("aCastro@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("jLapesigue@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("cjLariosa@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("rAngoy@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("rJubane@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("jAbarca@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("bjAcosta@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("msSalazar@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("pgSolon@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("riSolana@up.edu.ph").faculty_id },
-      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFactulty("mkGuinomla@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jGubalani@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jCagas@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("emVillela-Go@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("aCastro@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jLapesigue@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("cjLariosa@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("rAngoy@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("rJubane@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("jAbarca@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("bjAcosta@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("msSalazar@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("pgSolon@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("riSolana@up.edu.ph").faculty_id },
+      { degree: "Diploma of Exercise and Sports Science", faculty_id: getFaculty("mkGuinomla@up.edu.ph").faculty_id },
 
       // Master of Science in Human Movement Science Faculty Credentials (same as DESS Faculty Credentials)
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("jGubalani@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("jCagas@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("emVillela-Go@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("aCastro@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("jLapesigue@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("cjLariosa@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("rAngoy@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("rJubane@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("jAbarca@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("bjAcosta@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("msSalazar@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("pgSolon@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("riSolana@up.edu.ph").faculty_id },
-      { degree: "Master of Science in Human Movement Science", faculty_id: getFactulty("mkGuinomla@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jGubalani@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jCagas@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("emVillela-Go@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("aCastro@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jLapesigue@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("cjLariosa@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("rAngoy@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("rJubane@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("jAbarca@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("bjAcosta@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("msSalazar@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("pgSolon@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("riSolana@up.edu.ph").faculty_id },
+      { degree: "Master of Science in Human Movement Science", faculty_id: getFaculty("mkGuinomla@up.edu.ph").faculty_id },
 
       // Diploma in Urban and Regional Planning
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("iMalaqueIII@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("afRegalado@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("mRosel@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("rSongcayauon@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("maYares@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("mdGuillen@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("sAntipolo@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("jrSumabal@up.edu.ph").faculty_id },
-      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFactulty("mSuelto@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("iMalaqueIII@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("afRegalado@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mRosel@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("rSongcayauon@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("maYares@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mdGuillen@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("sAntipolo@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("jrSumabal@up.edu.ph").faculty_id },
+      { degree: "Diploma in Urban and Regional Planning", faculty_id: getFaculty("mSuelto@up.edu.ph").faculty_id },
 
       // Master of Arts in Urban and Regional Planning Faculty Credentials (same as DURP Faculty Credentials)
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("iMalaqueIII@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("afRegalado@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("mRosel@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("rSongcayauon@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("maYares@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("mdGuillen@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("sAntipolo@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("jrSumabal@up.edu.ph").faculty_id },
-      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFactulty("mSuelto@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("iMalaqueIII@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("afRegalado@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mRosel@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("rSongcayauon@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("maYares@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mdGuillen@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("sAntipolo@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("jrSumabal@up.edu.ph").faculty_id },
+      { degree: "Master of Arts in Urban and Regional Planning", faculty_id: getFaculty("mSuelto@up.edu.ph").faculty_id },
 
       // PhD by Research Faculty Credentials (some are the same as MM Faculty Credentials)
-      { degree: "PhD by Research", faculty_id: getFactulty("pAlviolaIV@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFactulty("lDigal@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFactulty("alGomez@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFactulty("gdRomo@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFactulty("jmSarmiento@up.edu.ph").faculty_id },
-      { degree: "PhD by Research", faculty_id: getFactulty("lLeal@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("pAlviolaIV@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("lDigal@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("alGomez@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("gdRomo@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("jmSarmiento@up.edu.ph").faculty_id },
+      { degree: "PhD by Research", faculty_id: getFaculty("lLeal@up.edu.ph").faculty_id },
     ]
   });
 
@@ -488,11 +493,109 @@ async function main() {
   // =======================
   await prisma.programFaculty.createMany({
     data: [
-      { program_id: program.program_id, faculty_id: getFactulty("maria@univ.edu").faculty_id },
-      { program_id: program.program_id, faculty_id: getFactulty("juan@univ.edu").faculty_id },
-      { program_id: program.program_id, faculty_id: getFactulty("ana@univ.edu").faculty_id },
-      { program_id: program.program_id, faculty_id: getFactulty("carlos@univ.edu").faculty_id },
-      { program_id: program.program_id, faculty_id: getFactulty("jose@univ.edu").faculty_id },
+      // DESS Faculty Members
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jGubalani@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jCagas@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("emVillela-Go@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("aCastro@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jLapesigue@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("cjLariosa@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("rAngoy@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("rJubane@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("jAbarca@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("bjAcosta@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("msSalazar@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("pgSolon@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("riSolana@up.edu.ph").faculty_id },
+      { program_id: dessProgram.program_id, faculty_id: getFactulty("mkGuinomla@up.edu.ph").faculty_id },
+
+      // DURP Faculty Members
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("iMalaqueIII@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("afRegalado@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("mRosel@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("rSongcayauon@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("maYares@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("mdGuillen@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("sAntipolo@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("jrSumabal@up.edu.ph").faculty_id },
+      { program_id: durpProgram.program_id, faculty_id: getFactulty("mSuelto@up.edu.ph").faculty_id },
+
+      // MAURP Faculty Members (same as DURP)
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("iMalaqueIII@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("afRegalado@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mRosel@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("rSongcayauon@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("maYares@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mdGuillen@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("sAntipolo@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("jrSumabal@up.edu.ph").faculty_id },
+      { program_id: maurpProgram.program_id, faculty_id: getFactulty("mSuelto@up.edu.ph").faculty_id },
+
+      // MS Biology Faculty Members
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("mjAchondo@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("fCamino@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("aDeCadiz@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("agDelima@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("leGamalo@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("jMantiquilla@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("csMillado@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("lMurao@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("cNanola@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("mResponté@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("rCatiempo@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFactulty("afRaganas@up.edu.ph").faculty_id },
+
+      // MS Human Movement Science Faculty Members (same as DESS)
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jGubalani@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jCagas@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("emVillela-Go@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("aCastro@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jLapesigue@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("cjLariosa@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("rAngoy@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("rJubane@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("jAbarca@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("bjAcosta@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("msSalazar@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("pgSolon@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("riSolana@up.edu.ph").faculty_id },
+      { program_id: mshmsProgram.program_id, faculty_id: getFactulty("mkGuinomla@up.edu.ph").faculty_id },
+
+      // MS Food Science Faculty Members
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jlTagubase@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jnAlviola@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("kfCalumba@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("dmDelMundo@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jFronteras@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("eoFundador@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("ngFundador@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jhTolentino@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("rgVillame-Gayagas@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("mAlpos-Entero@up.edu.ph").faculty_id },
+      { program_id: msfsProgram.program_id, faculty_id: getFactulty("jCerna@up.edu.ph").faculty_id },
+
+      // Master in Management Faculty Members
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("imAcopiado@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("tAcuña@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("rAguinaldo@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("pAlviolaIV@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("mmCastro@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("lDigal@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("alGomez@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("gdRomo@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("jmSarmiento@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("lLeal@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("vShuck@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("rLopez@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFactulty("sgPlacencia@up.edu.ph").faculty_id },
+
+      // PhD by Research Faculty Members (same as some MM Faculty Members)
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("pAlviolaIV@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("lDigal@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("alGomez@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("gdRomo@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("jmSarmiento@up.edu.ph").faculty_id },
+      { program_id: phdByResearchProgram.program_id, faculty_id: getFactulty("lLeal@up.edu.ph").faculty_id },
     ]
   });
 
