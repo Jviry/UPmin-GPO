@@ -155,3 +155,21 @@ export const syncProgramFaculty = async (programId: number, facultyIds: number[]
     throw new Error(message);
   }
 };
+
+export const getTestimonies = async () => {
+  try {
+    const response = await apiClient.get('/testimonies');
+    return response.data.testimonies; // Ensure your backend returns { testimonies: [...] }
+  } catch (error) {
+    throw new Error("Failed to load testimonies.");
+  }
+};
+
+export const getCoordinators = async () => {
+  try {
+    const response = await apiClient.get('/faculty?position=Program Coordinator');
+    return response.data.faculties;
+  } catch (error) {
+    throw new Error("Failed to load coordinators.");
+  }
+};
