@@ -48,7 +48,7 @@ model Scholarship {
 }
 
 model Office {
-  office_id              Int    @id @default(autoincrement())
+  office_id              Int     @id @default(autoincrement())
   logo                   String
   mission                String
   vision                 String
@@ -56,8 +56,8 @@ model Office {
   history                String
   phone                  String
   email                  String
-  org_chart_url          String
-  application_google_url String
+  org_chart_url          String?
+  application_google_url String?
 
   featuredPhotos FeaturedPhoto[]
 }

@@ -41,6 +41,9 @@ router.patch('/office', authenticate, authenticateRole(AdminRole.SUPERADMIN, Adm
       orgChartUrl
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }

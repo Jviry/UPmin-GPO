@@ -72,6 +72,9 @@ router.post('/programs', authenticate, authenticateRole(AdminRole.ADMIN, AdminRo
       program
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
@@ -108,6 +111,9 @@ router.put('/programs/:id', authenticate, authenticateRole(AdminRole.ADMIN, Admi
       program,
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
@@ -134,6 +140,13 @@ router.put('/programs/:id/application', authenticate, authenticateRole(AdminRole
       applicationDetails,
     });
   } catch (error) {
+    if (req.files) {
+      Object.values(req.files).forEach(fileArray => {
+        fileArray.forEach(file => {
+          deleteFile(`/uploads/${file.filename}`);
+        });
+      });
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }

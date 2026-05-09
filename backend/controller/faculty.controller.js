@@ -61,6 +61,9 @@ router.post('/faculty', authenticate, authenticateRole(AdminRole.SUPERADMIN, Adm
       faculty
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
@@ -95,6 +98,9 @@ router.put('/faculty/:id', authenticate, authenticateRole(AdminRole.ADMIN, Admin
       faculty
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
