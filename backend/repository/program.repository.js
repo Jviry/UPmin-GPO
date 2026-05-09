@@ -67,17 +67,18 @@ export function createProgramRepository(prisma) {
     },
 
     // Update ProgramApplication details, kept here since its still closely tied to Program entity
-    async updateProgramApplication(id, data) {
+    async updateProgramApplication({ program_id, qualifications, application_instructions, application_requirements, application_url, recommendation_url, fees_url }) {
       return prisma.programApplication.update({
         where: {
-          program_id: parseInt(id)
+          program_id: parseInt(program_id)
         },
         data: {
-          qualifications: data.qualifications,
-          application_instructions: data.application_instructions,
-          application_url: data.application_url,
-          application_requirements: data.application_requirements,
-          recommendation_url: data.recommendation_url
+          qualifications,
+          application_instructions,
+          application_url,
+          application_requirements,
+          recommendation_url,
+          fees_url
         }
       });
     }
