@@ -10,17 +10,23 @@ export function validateProgramId(id) {
 }
 
 // Validate application details but allow partial updates as some fields are optional
-export function validateUpdateProgramApplication(data) {
-  if (data.qualifications !== undefined && typeof data.qualifications !== 'string') {
+export function validateUpdateProgramApplication({ qualifications, application_instructions, application_requirements, application_url, recommendation_url, fees_url }) {
+  if (qualifications !== undefined && typeof qualifications !== 'string') {
     throw new DomainError('Qualifications must be a string');
   }
-  if (data.application_instructions !== undefined && typeof data.application_instructions !== 'string') {
+  if (application_instructions !== undefined && typeof application_instructions !== 'string') {
     throw new DomainError('Application instructions must be a string');
   }
-  if (data.application_url !== undefined && typeof data.application_url !== 'string') {
+  if (application_requirements !== undefined && typeof application_requirements !== 'string') {
+    throw new DomainError('Application requirements must be a string');
+  }
+  if (application_url !== undefined && typeof application_url !== 'string') {
     throw new DomainError('Application URL must be a string');
   }
-  if (data.recommendation_url !== undefined && data.recommendation_url !== null && typeof data.recommendation_url !== 'string') {
+  if (recommendation_url !== undefined && recommendation_url !== null && typeof data.recommendation_url !== 'string') {
     throw new DomainError('Recommendation URL must be a string or null');
+  }
+  if (fees_url !== undefined && fees_url !== null && typeof data.recommendation_url !== 'string') {
+    throw new DomainError('Fees URL must be a string or null');
   }
 }
