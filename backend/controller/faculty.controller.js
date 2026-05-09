@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'fs';
 import { prisma } from '../db/db.js';
 import { createFacultyRepository } from '../repository/faculty.repository.js';
 import { createProgramRepository } from '../repository/program.repository.js';
@@ -13,6 +14,9 @@ import { AdminRole } from '../domain/admin.js';
 import { upload } from '../middleware/upload.middleware.js';
 import { deleteFile } from '../utils/deleteFile.util.js';
 
+const uploadsDir = 'public/uploads';
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
 const router = express.Router();
 
 const facultyRepo = createFacultyRepository(prisma);
@@ -26,14 +30,20 @@ const syncProgramFaculty = syncProgramFacultyUsecase({ facultyRepo, programRepo 
 
 router.get('/faculty', async (req, res) => {
   try {
-    const { position } = req.query;
+    const { position, page, limit } = req.query;
+    const parsedPage = page ? parseInt(page, 10) : 1;
+    const parsedLimit = limit ? parseInt(limit, 10) : 10;
 
-    const faculties = await getFaculty(position);
+    const result = await getFaculty(position, { page: parsedPage, limit: parsedLimit });
 
     res.status(200).json({
       message: position ? `${position} faculty retrieved successfully` : 'Faculty retrieved successfully',
-      faculties
-    })
+      faculties: result.faculties,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: Math.ceil(result.total / result.limit),
+    });
   } catch (error) {
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
