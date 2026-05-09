@@ -2,46 +2,65 @@
 
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
+import { apiClient } from '@/lib/apiClient';
 
-const departments = [
-  {
-    name: 'Department Alpha',
-    programs: [
-      { label: 'Program Alpha', slug: 'program-alpha' },
-      { label: 'Program Beta', slug: 'program-beta' },
-      { label: 'Program Gamma', slug: 'program-gamma' },
-    ],
-  },
-  {
-    name: 'Department Beta',
-    programs: [
-      { label: 'Program Delta', slug: 'program-delta' },
-      { label: 'Program Epsilon', slug: 'program-epsilon' },
-      { label: 'Program Zeta', slug: 'program-zeta' },
-    ],
-  },
-  {
-    name: 'Department Gamma',
-    programs: [
-      { label: 'Program Eta', slug: 'program-eta' },
-      { label: 'Program Theta', slug: 'program-theta' },
-      { label: 'Program Iota', slug: 'program-iota' },
-    ],
-  },
-];
+type ProgramData = {
+  program_id: number;
+  name: string;
+  type: string;
+};
 
+type ProgramGroup = {
+  name: string;
+  programs: { label: string; slug: string }[];
+};
 
 export function SiteHeader() {
   const [programsOpen, setProgramsOpen] = useState(false);
+  const [programGroups, setProgramGroups] = useState<ProgramGroup[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Click outside listener for dropdown
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setProgramsOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
+    
+    // Fetch programs and group them by their type (e.g., "Graduate Program", "Diploma Program")
+    const fetchPrograms = async () => {
+      try {
+        const res = await apiClient.get('/programs');
+        const data: ProgramData[] = res.data.programs || res.data;
+
+        // Dynamically group the fetched programs by their Type
+        const grouped = data.reduce((acc, curr) => {
+          const groupName = curr.type || 'Other Programs';
+          let group = acc.find(g => g.name === groupName);
+          
+          if (!group) {
+            group = { name: groupName, programs: [] };
+            acc.push(group);
+          }
+          
+          group.programs.push({
+            label: curr.name,
+            slug: String(curr.program_id) // We use program_id as the slug
+          });
+          
+          return acc;
+        }, [] as ProgramGroup[]);
+
+        setProgramGroups(grouped);
+      } catch (error) {
+        console.error("Failed to load programs for header:", error);
+      }
+    };
+
+    fetchPrograms();
+
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
@@ -78,14 +97,15 @@ export function SiteHeader() {
 
             {programsOpen && (
               <div className="absolute left-1/2 top-full mt-3 w-[540px] -translate-x-1/2 overflow-hidden rounded-sm border border-[var(--line)] bg-white shadow-[0_12px_32px_rgba(0,0,0,0.14)]">
-                <div className="grid grid-cols-3 divide-x divide-[var(--line)]">
-                  {departments.map((dept) => (
-                    <div key={dept.name} className="flex flex-col p-4">
+                {/* Dynamically scales columns based on how many program types exist (max 3 per row) */}
+                <div className={`grid grid-cols-${Math.min(programGroups.length || 1, 3)} divide-x divide-[var(--line)]`}>
+                  {programGroups.length > 0 ? programGroups.map((group) => (
+                    <div key={group.name} className="flex flex-col p-4">
                       <p className="mb-2 text-[0.6rem] font-bold uppercase tracking-[0.22em] text-[var(--up-maroon)] opacity-70">
-                        {dept.name}
+                        {group.name}
                       </p>
                       <div className="flex flex-col gap-1">
-                        {dept.programs.map((prog) => (
+                        {group.programs.map((prog) => (
                           <a
                             key={prog.slug}
                             href={`/programs/${prog.slug}`}
@@ -97,7 +117,9 @@ export function SiteHeader() {
                         ))}
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="p-4 text-xs text-[var(--text-muted)]">Loading programs...</div>
+                  )}
                 </div>
               </div>
             )}

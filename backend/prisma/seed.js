@@ -26,7 +26,8 @@ async function main() {
       history: 'Graduate office history...',
       phone: '123-4567',
       email: 'grad@university.edu',
-      org_chart_url: '/seed-assets/office/chart.png',
+      org_chart_url: '/seed-assets/office/GPO-Organizational-Chart.png',
+
       featuredPhotos: {
         create: [
           { url: '/seed-assets/office/photo1.jpg' },
