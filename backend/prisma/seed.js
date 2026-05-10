@@ -117,7 +117,6 @@ async function main() {
       { name: "Differentiation in Embryonic Systems", code: "BIO 230", type: "core", units: 3 },
       { name: "Advanced Cell and Molecular Biology", code: "BIO 250", type: "core", units: 3 },
       { name: "Advanced Ecology", code: "BIO 260", type: "core", units: 3 },
-      { name: "Thesis", code: "BIO 300", type: "core", units: 6 },
 
       // Required Courses
       { name: "Seminar", code: "BIO 296", type: "core", units: 1 },
@@ -664,6 +663,8 @@ async function main() {
   // =======================
   // COURSE POOL
   // =======================
+
+  // Master in Management Course Pools
   await prisma.coursePool.create({
     data: {
       name: "Electives",
@@ -683,8 +684,11 @@ async function main() {
           { course_id: getCourse("M235").course_id },
         ]
       }
-    },
+    }
+  });
 
+  // Master of Science in Food Science Course Pools
+  await prisma.coursePool.create({
     data: {
       name: "Major Electives",
       program_id: msfsProgram.program_id,
@@ -701,7 +705,10 @@ async function main() {
         ]
       }
     }, 
+  });
 
+  // Master of Science in Biology Course Pools
+  await prisma.coursePool.create({
     data: {
       name: "Specialty Electives",
       program_id: msbProgram.program_id,
@@ -712,7 +719,32 @@ async function main() {
         ]
       }
     }, 
+  });
 
+  await prisma.coursePool.create({
+    data: {
+      name: "Specialty Electives",
+      program_id: msbProgram.program_id,
+      entries: {
+        create: [
+          { course_id: getCourse("BIO 301").course_id },
+          { course_id: getCourse("BIO 302").course_id },
+        ]
+      }
+    }, 
+  });
+
+  await prisma.coursePool.create({
+    data: {
+      name: "Major Electives",
+      program_id: msbProgram.program_id,
+      entries: {
+        create: [
+          { course_id: getCourse("P229").course_id },
+          { course_id: getCourse("P300").course_id },
+        ]
+      }
+    }, 
   });
 
   // =======================
