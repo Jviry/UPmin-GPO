@@ -5,7 +5,7 @@ import { DomainError } from '../../domain/errors.js';
 export function updateProgramApplicationUsecase({ programRepo, deleteFile }) {
   return async function({ program_id, qualifications, application_instructions, application_requirements, application_url, recommendation_url, fees_url }) {
     validateProgramId(program_id);
-    validateUpdateProgramApplication({ qualifications, application_instructions, application_requirements, application_url, recommendation_url, fees_url });
+    validateUpdateProgramApplication({ qualifications, application_instructions, application_requirements, });
 
     const existing = await programRepo.findByID(program_id);
     if (!existing) {
@@ -14,6 +14,15 @@ export function updateProgramApplicationUsecase({ programRepo, deleteFile }) {
 
     const existingApplication = existing.program_application;
 
+    if (!application_url && !existingApplication?.application_url) {
+      throw new DomainError('Application URL is required');
+    }
+    if (!recommendation_url && !existingApplication?.recommendation_url) {
+      throw new DomainError('Recommendation URL is required');
+    }
+    if (!fees_url && !existingApplication?.fees_url) {
+      throw new DomainError('Fees URL is required');
+    }
 
     if (application_url && existingApplication.application_url) deleteFile(existingApplication.application_url);
     if (recommendation_url && existingApplication.recommendation_url) deleteFile(existingApplication.recommendation_url);
