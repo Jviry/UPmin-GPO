@@ -1,28 +1,13 @@
-import { Footer } from '@/components/footer';
-import { GraduateProgramDetail } from '@/components/graduate-program-detail';
-import { SiteHeader } from '@/components/site-header';
+import { GraduateProgramDetail } from "@/components/graduate-program-detail";
+import { SiteHeader } from "@/components/site-header";
 
-type ProgramPageProps = {
-  params: { slug?: string } | Promise<{ slug?: string }>;
-};
-
-function toTitleCase(slug: string) {
-  return slug
-    .split('-')
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-export default async function ProgramPage({ params }: ProgramPageProps) {
-  const resolvedParams = await Promise.resolve(params);
-  const programTitle = toTitleCase(resolvedParams.slug ?? 'Graduate Program');
+export default async function ProgramPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
 
   return (
-    <main className="min-h-screen bg-[var(--page-bg)] text-[var(--text-primary)]">
+    <main className="min-h-screen bg-[var(--page-bg)]">
       <SiteHeader />
-      <GraduateProgramDetail programTitle={programTitle} />
-      <Footer />
+      <GraduateProgramDetail programId={resolvedParams.slug} />
     </main>
   );
 }

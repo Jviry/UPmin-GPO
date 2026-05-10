@@ -1,7 +1,7 @@
 import { DomainError } from './errors.js';
 
-export function validateCreateProgram(data) {
-  if (!data.type || !data.name || !data.description || !data.history) throw new DomainError('All fields are required');
+export function validateCreateProgram({ type, name, description, history }) {
+  if (!type || !name || !description || !history) throw new DomainError('All fields are required except photo');
 }
 
 export function validateProgramId(id) {
@@ -10,17 +10,32 @@ export function validateProgramId(id) {
 }
 
 // Validate application details but allow partial updates as some fields are optional
-export function validateUpdateProgramApplication(data) {
-  if (data.qualifications !== undefined && typeof data.qualifications !== 'string') {
+export function validateUpdateProgramApplication({ qualifications, application_instructions, application_requirements, application_url, recommendation_url, fees_url }) {
+  if (!qualifications || qualifications.trim() === '') {
+    throw new DomainError('Qualifications is required');
+  }
+  if (typeof qualifications !== 'string') {
     throw new DomainError('Qualifications must be a string');
   }
-  if (data.application_instructions !== undefined && typeof data.application_instructions !== 'string') {
+  if (!application_instructions || application_instructions.trim() === '') {
+    throw new DomainError('Application instructions is required');
+  }
+  if (typeof application_instructions !== 'string') {
     throw new DomainError('Application instructions must be a string');
   }
-  if (data.application_url !== undefined && typeof data.application_url !== 'string') {
-    throw new DomainError('Application URL must be a string');
+  if (!application_requirements || application_requirements.trim() === '') {
+    throw new DomainError('Application requirements is required');
   }
-  if (data.recommendation_url !== undefined && data.recommendation_url !== null && typeof data.recommendation_url !== 'string') {
-    throw new DomainError('Recommendation URL must be a string or null');
+  if (typeof application_requirements !== 'string') {
+    throw new DomainError('Application requirements must be a string');
+  }
+  if (!application_url) {
+    throw new DomainError('Application URL is required');
+  }
+  if (!recommendation_url) {
+    throw new DomainError('Recommendation URL is required');
+  }
+  if (!fees_url) {
+    throw new DomainError('Fees URL is required');
   }
 }

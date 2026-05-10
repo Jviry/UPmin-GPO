@@ -5,7 +5,7 @@ export function createCoursePoolUsecase({ coursePoolRepo, programRepo }) {
   return async function({ name, program_id }) {
     validateCoursePoolName(name);
 
-    const program = await programRepo.findProgramByID(program_id);
+    const program = await programRepo.findByID(program_id);
     if (!program) {
       throw new DomainError('Program not found');
     }

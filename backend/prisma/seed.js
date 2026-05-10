@@ -19,18 +19,19 @@ async function main() {
   // =======================
   await prisma.office.create({
     data: {
-      logo: '/public/seed-assets/office/default-logo.png',
+      logo: '/seed-assets/office/default-logo.png',
       mission: 'Provide high-quality graduate education.',
       vision: 'Center of excellence in research.',
       core_values: 'Integrity, Excellence, Innovation',
       history: 'Graduate office history...',
       phone: '123-4567',
       email: 'grad@university.edu',
-      org_chart_url: '/public/seed-assets/office/chart.png',
+      org_chart_url: '/seed-assets/office/GPO-Organizational-Chart.png',
+
       featuredPhotos: {
         create: [
-          { url: '/public/seed-assets/office/photo1.jpg' },
-          { url: '/public/seed-assets/office/photo2.jpg' }
+          { url: '/seed-assets/office/photo1.jpg' },
+          { url: '/seed-assets/office/photo2.jpg' }
         ]
       }
     }

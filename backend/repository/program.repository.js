@@ -2,7 +2,7 @@ export function createProgramRepository(prisma) {
   return {
     async getAllPrograms() {
       return await prisma.program.findMany({
-        select: { name: true, program_id: true, program_application: true },
+        select: { name: true, program_id: true, program_application: true, type: true },
       });
     },
 
@@ -20,14 +20,14 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async create({ type, name, description, history, department_id }) {
+    async create({ type, name, description, history, photo = null }) {
       return prisma.program.create({
         data: {
           type,
           name,
           description,
           history,
-          department_id: parseInt(department_id),
+          photo,
 
           program_application: {
             create: {
@@ -40,9 +40,6 @@ export function createProgramRepository(prisma) {
           }
         },
         include: {
-          department: {
-            select: { department_id: true, name: true }
-          },
           program_application: true
         }
       });
@@ -54,7 +51,7 @@ export function createProgramRepository(prisma) {
       });
     },
 
-    async update({ id, type, name, description, history }) {
+    async update({ id, type, name, description, history, photo = null }) {
       return prisma.program.update({
         where: {
           program_id: parseInt(id),
@@ -63,23 +60,25 @@ export function createProgramRepository(prisma) {
           type,
           name,
           description,
-          history
+          history,
+          photo
         },
       });
     },
 
     // Update ProgramApplication details, kept here since its still closely tied to Program entity
-    async updateProgramApplication(id, data) {
+    async updateProgramApplication({ program_id, qualifications, application_instructions, application_requirements, application_url, recommendation_url, fees_url }) {
       return prisma.programApplication.update({
         where: {
-          program_id: parseInt(id)
+          program_id: parseInt(program_id)
         },
         data: {
-          qualifications: data.qualifications,
-          application_instructions: data.application_instructions,
-          application_url: data.application_url,
-          application_requirements: data.application_requirements,
-          recommendation_url: data.recommendation_url
+          qualifications,
+          application_instructions,
+          application_url,
+          application_requirements,
+          recommendation_url,
+          fees_url
         }
       });
     }

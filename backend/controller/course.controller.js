@@ -4,6 +4,9 @@ import { createCourseRepository } from '../repository/course.repository.js';
 import { createCourseUsecase } from '../usecase/course/createCourse.usecase.js';
 import { getCourseByTypeUsecase } from '../usecase/course/getCourseByType.usecase.js';
 import { deleteCourseUsecase } from '../usecase/course/deleteCourse.usecase.js';
+import { authenticate } from '../middleware/authenticate.middleware.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 const router = express.Router();
 
@@ -12,18 +15,18 @@ const addCourse = createCourseUsecase(courseRepo);
 const getCourseByType = getCourseByTypeUsecase(courseRepo);
 const deleteCourse = deleteCourseUsecase(courseRepo);
 
-router.get('/course/:type', async (req, res) => {
+router.get('/courses', async (req, res) => {
   try {
-    const { type } = req.params;
+    const { type } = req.query;
     const courses = await getCourseByType(type);
 
     res.status(200).json({
       message: `${type} courses retrieved`,
       courses
     });
+    return res.status(400).json({ message: error.message });
   } catch (error) {
     if (error.isDomainError) {
-      return res.status(400).json({ message: error.message });
     }
     res.status(500).json({ message: error.message });
   }
@@ -31,7 +34,7 @@ router.get('/course/:type', async (req, res) => {
 
 
 
-router.post('/course', async (req, res) => {
+router.post('/courses', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const course = await addCourse(req.body);
     res.status(200).json({
@@ -46,7 +49,7 @@ router.post('/course', async (req, res) => {
   }
 });
 
-router.delete('/course/:id', async (req, res) => {
+router.delete('/courses/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const { id } = req.params;
 

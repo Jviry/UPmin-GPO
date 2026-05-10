@@ -89,7 +89,7 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | Method | Endpoint  | Access | Description              |
 | ------ | --------- | ------ | ------------------------ |
 | GET    | `/office` | Public | Get office data (seeded) |
-| PUT    | `/office` | Public(to be updated) | Update office attributes |
+| PATCH    | `/office` | Admin/Superadmin | Patch Organizational Chart |
 
 ### Announcement
 
@@ -136,7 +136,6 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 | Method | Endpoint | Access | Description |
 | ------ | -------- | ------ | ----------- |
 | GET | `/programs/:program_id/course-pool` | Public | Get all course pools by program |
-| GET | `/programs/:program_id/course-pool/:id` | Public | Get course pool by ID with entries |
 | POST | `/programs/:program_id/course-pool` | Admin/Superadmin | Create course pool under a program |
 | DELETE | `/programs/:program_id/course-pool/:id` | Admin/Superadmin | Delete course pool by ID |
 | PUT | `/programs/:program_id/course-pool/:id/entries` | Admin/Superadmin | Sync courses in a pool |
@@ -145,7 +144,6 @@ npx prisma migrate reset  # wipes DB, runs migrations, then auto-runs seed
 
 | Method | Endpoint | Access | Description |
 | ------ | -------- | ------ | ----------- |
-| GET | `/courses` | Public | Get all courses |
 | GET | `/courses?type=core` | Public | Get courses filtered by type |
 | POST | `/courses` | Admin/Superadmin | Create new course |
 | DELETE | `/courses/:id` | Admin/Superadmin | Delete course by ID |

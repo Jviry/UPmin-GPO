@@ -8,6 +8,9 @@ import { getCoursePoolsUsecase } from '../usecase/course-pool/getCoursePools.use
 import { getCoursePoolByProgramIDUsecase } from '../usecase/course-pool/getCoursePoolByProgramID.usecase.js';
 import { syncCoursePoolEntriesUsecase } from '../usecase/course-pool/syncCoursePoolEntries.usecase.js';
 import { deleteCoursePoolUsecase } from '../usecase/course-pool/deleteCoursePool.usecase.js';
+import { authenticate } from '../middleware/authenticate.middleware.js';
+import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
+import { AdminRole } from '../domain/admin.js';
 
 
 const router = express.Router({ mergeParams: true });
@@ -29,7 +32,7 @@ const syncPoolEntries = syncCoursePoolEntriesUsecase({
 });
 const deleteCoursePool = deleteCoursePoolUsecase(coursePoolRepo);
 
-router.post('/course-pool', async (req, res) => {
+router.post('/course-pool', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const { program_id } = req.params;
     const coursePool = await addCoursePool({ ...req.body, program_id });
@@ -79,7 +82,7 @@ router.get('/course-pool', async (req, res) => {
   }
 });
 
-router.post('/course-pool/:id/entries', async (req, res) => {
+router.post('/course-pool/:id/entries', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const { id: course_pool_id } = req.params;
     const { course_ids } = req.body;
@@ -97,7 +100,7 @@ router.post('/course-pool/:id/entries', async (req, res) => {
   }
 });
 
-router.delete('/course-pool/:id', async (req, res) => {
+router.delete('/course-pool/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
   try {
     const { id: course_pool_id } = req.params;
     const deletedCoursePool = await deleteCoursePool(course_pool_id);

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { StudyPlanBuilder } from '@/components/admin/StudyPlanBuilder';
+import FacultyPool from '@/components/admin/FacultyPool';
 import { apiClient } from '@/lib/apiClient';
 import LoadingScreen from '@/components/admin/LoadingScreen';
 
@@ -328,7 +329,7 @@ export default function AdminPrograms() {
             </section>
 
             {/* Block 3: Faculty Management */}
-            <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
+            <section className="mb-10 border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
                 <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
                 <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
@@ -336,38 +337,7 @@ export default function AdminPrograms() {
                 </h2>
               </div>
 
-              <div className="mb-8 flex h-[350px] flex-col overflow-hidden border border-[var(--line)] bg-white">
-                <div className="grid grid-cols-12 gap-4 border-b border-[var(--line)] bg-[var(--surface-muted)] px-6 py-3 text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">
-                  <div className="col-span-4">Name</div>
-                  <div className="col-span-4">Position</div>
-                  <div className="col-span-4">Email</div>
-                </div>
-                
-                <div className="modern-scrollbar flex-1 overflow-y-auto">
-                  {activeProgramDetails.department?.faculty && activeProgramDetails.department.faculty.length > 0 ? (
-                    activeProgramDetails.department.faculty.map((member, index) => (
-                      <div 
-                        key={member.faculty_id} 
-                        className={`grid grid-cols-12 gap-4 border-b border-[var(--line)] px-6 py-4 text-sm transition hover:bg-gray-50 cursor-pointer ${
-                          index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'
-                        }`}
-                      >
-                        <div className="col-span-4 font-semibold text-[var(--text-primary)]">{member.name}</div>
-                        <div className="col-span-4 text-[var(--text-secondary)]">{member.position}</div>
-                        <div className="col-span-4 text-[var(--text-secondary)]">{member.email}</div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-4 text-center text-sm text-gray-500">No faculty members assigned to this department.</div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
-                <button className="border border-[var(--up-maroon)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--up-maroon)] transition hover:bg-red-50">Delete</button>
-                <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Edit</button>
-                <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Add</button>
-              </div>
+              <FacultyPool programId={activeProgramId!} programName={activeProgramDetails.name} />
             </section>
           </>
         ) : (

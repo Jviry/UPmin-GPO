@@ -1,3 +1,4 @@
+import { DomainError } from '../../domain/errors.js';
 export function syncStudyPlanCoursesUsecase({ studyPlanRepo, courseRepo }) {
   return async function({ study_plan_id, entryCourses }) {
     if (!Array.isArray(entryCourses)) {

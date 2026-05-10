@@ -9,9 +9,8 @@ app.use(cors());
 app.use(express.json());
 
 //serve 
-app.use('/uploads', express.static('uploads'));
-app.use('/public', express.static('public'));
-
+app.use('/seed-assets', express.static('public/seed-assets'));
+app.use('/uploads', express.static('public/uploads'));
 //route
 apiController(app);
 

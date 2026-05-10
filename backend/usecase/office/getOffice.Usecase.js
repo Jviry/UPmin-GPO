@@ -1,4 +1,3 @@
-import { DomainError } from '../../domain/errors.js';
 
 export function createGetOfficeUsecase(officeRepo) {
   return async function(id) {

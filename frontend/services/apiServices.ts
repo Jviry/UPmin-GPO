@@ -57,3 +57,119 @@ export const getPrograms = async () => {
     throw new Error(GENERIC_ERROR_MSG);
   }
 };
+
+// --- FACULTY API ---
+export const getFaculty = async (position?: string, page = 1, limit = 10) => {
+  try {
+    const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+    if (position) params.set('position', position);
+    const response = await apiClient.get(`/faculty?${params}`);
+    return {
+      faculties: response.data.faculties,
+      total: response.data.total as number,
+      totalPages: response.data.totalPages as number,
+      page: response.data.page as number,
+    };
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const createFaculty = async (facultyData: {
+  name: string;
+  email: string;
+  position: string;
+  credentials: string[];
+  photoFile?: File | null;
+}) => {
+  try {
+    const form = new FormData();
+    form.append('name', facultyData.name);
+    form.append('email', facultyData.email);
+    form.append('position', facultyData.position);
+    form.append('credentials', JSON.stringify(facultyData.credentials));
+    if (facultyData.photoFile) form.append('photo', facultyData.photoFile);
+
+    const response = await apiClient.post('/faculty', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.faculty;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateFaculty = async (
+  id: number,
+  facultyData: {
+    name?: string;
+    email?: string;
+    position?: string;
+    credentials?: string[];
+    existingPhoto?: string;
+    photoFile?: File | null;
+  }
+) => {
+  try {
+    const form = new FormData();
+    if (facultyData.name !== undefined) form.append('name', facultyData.name);
+    if (facultyData.email !== undefined) form.append('email', facultyData.email);
+    if (facultyData.position !== undefined) form.append('position', facultyData.position);
+    if (facultyData.credentials !== undefined) form.append('credentials', JSON.stringify(facultyData.credentials));
+    if (facultyData.photoFile) {
+      form.append('photo', facultyData.photoFile);
+    } else if (facultyData.existingPhoto) {
+      form.append('photo', facultyData.existingPhoto);
+    }
+
+    const response = await apiClient.put(`/faculty/${id}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.faculty;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteFaculty = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`/faculty/${id}`);
+    // Map response shape: { message, faculty }
+    return response.data.faculty;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const syncProgramFaculty = async (programId: number, facultyIds: number[]) => {
+  try {
+    const response = await apiClient.put(`/programs/${programId}/faculty`, { faculty_ids: facultyIds });
+    // Map response shape: { message, faculties }
+    return response.data.faculties;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const getTestimonies = async () => {
+  try {
+    const response = await apiClient.get('/testimonies');
+    return response.data.testimonies; // Ensure your backend returns { testimonies: [...] }
+  } catch (error) {
+    throw new Error("Failed to load testimonies.");
+  }
+};
+
+export const getCoordinators = async () => {
+  try {
+    const response = await apiClient.get('/faculty?position=Program Coordinator');
+    return response.data.faculties;
+  } catch (error) {
+    throw new Error("Failed to load coordinators.");
+  }
+};
