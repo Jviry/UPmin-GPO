@@ -55,7 +55,7 @@ async function main() {
       { name: "Special Topics in Management", code: "M234", type: "pool", units: 3 },
       { name: "Managing an Environmentally & Economically Sustainable Enterprise", code: "M235", type: "pool", units: 3 },
 
-      // Diploma in Urban and Regional Planning Core Courses 
+      // Diploma in Urban and Regional Planning Courses 
       { name: "Theory and Practice of Planning", code: "P201", type: "core", units: 3 },
       { name: "Land Use Planning", code: "P203", type: "core", units: 3 },
       { name: "Project Planning and Development", code: "P205", type: "core", units: 3 },
@@ -66,26 +66,88 @@ async function main() {
       { name: "Research Methods in Planning", code: "P299", type: "core", units: 3 },
 
       // Additional Courses for Master of Arts in Urban and Regional Planning
-      { name: "Special Problems in Regional Planning", code: "P229", type: "required", units: 3 },
-      { name: "MASTER'S THESIS", code: "P300", type: "required", units: 6 },
+      { name: "Special Problems in Regional Planning", code: "P229", type: "pool", units: 3 },
+      { name: "MASTER'S THESIS", code: "P300", type: "pool", units: 6 },
 
-      // Diploma in Exercise and Sports Science Core Courses
+      // Diploma in Exercise and Sports Science Courses
+      // Course Codes are tentative and subject to change, provided info by GPO does NOT contain them
+      { name: "Human Anatomy & Physiology", code: "PE001", type: "core", units: 3 },
+      { name: "Philosophy of Sports & Physical Education", code: "PE002", type: "core", units: 3 },
+      { name: "Principles of Coaching", code: "PE003", type: "core", units: 3 },
+      { name: "Administration & Supervision of Physical Education", code: "PE004", type: "core", units: 3 },
+      { name: "First Aid", code: "PE005", type: "core", units: 3 },
+      { name: "Tests & Measurements in Human Movement", code: "PE006", type: "core", units: 3 },
+      { name: "Management of Sports and Recreation Related Services Exercise Physiology", code: "PE007", type: "core", units: 3 },
+      { name: "Acquisition of Motor Skills", code: "PE008", type: "core", units: 3 },
+      { name: "Internship", code: "PE009", type: "core", units: 3 },
+      { name: "Philippine Games", code: "PE010", type: "core", units: 3 },
+      { name: "Psychology in Sports", code: "PE011", type: "core", units: 3 },
+
 
       // Additional Courses for Master of Science in Human Movement Science
+      // Course Codes are tentative and subject to change, provided info by GPO does NOT contain them
+      { name: "Philosophy of Human Movement Science", code: "PE012", type: "core", units: 3 },
+      { name: "Research in Human Movement Science", code: "PE013", type: "core", units: 3 },
+      { name: "Measurement and Evaluation in Human Movement Science", code: "PE014", type: "core", units: 3 },
+      
+      // AREAS OF SPECIALIZATION
+      // 1. Exercise Science
+      { name: "Sports Psychology", code: "PE015", type: "core", units: 3 },
+      { name: "Motor Control", code: "PE016", type: "core", units: 3 }, // Also in Physical Education
+      { name: "Analysis of Human Movement", code: "PE017", type: "core", units: 3 },
+      { name: "Applied Exercise Physiology", code: "PE018", type: "core", units: 3 },
+
+      // 2. Physical Education
+      { name: "Advanced Administration of Physical Education", code: "PE019", type: "core", units: 3 },
+      { name: "Current Trends in Physical Education", code: "PE020", type: "core", units: 3 },
+      { name: "Psycho-social Issues in Physical Education", code: "PE021", type: "core", units: 3 },
+
+      // 3. Leisure Studies
+      { name: "Management of Leisure", code: "PE022", type: "core", units: 3 },
+      { name: "Leisure for Special Groups", code: "PE023", type: "core", units: 3 },
+      { name: "Contemporary Issues in Leisure", code: "PE024", type: "core", units: 3 },
+      { name: "Leisure in Education", code: "PE025", type: "core", units: 3 },
 
 
-      // Master in Biology Core Courses
+      // Master in Biology Courses
+      // Core Courses
       { name: "Chemical Physiology", code: "BIO 220", type: "core", units: 3 },
       { name: "Advanced Genetics", code: "BIO 240", type: "core", units: 3 },
       { name: "Differentiation in Embryonic Systems", code: "BIO 230", type: "core", units: 3 },
       { name: "Advanced Cell and Molecular Biology", code: "BIO 250", type: "core", units: 3 },
       { name: "Advanced Ecology", code: "BIO 260", type: "core", units: 3 },
+      { name: "Thesis", code: "BIO 300", type: "core", units: 6 },
 
-      { name: "Seminar", code: "BIO 296", type: "required", units: 1 },
-      { name: "Research in Biology", code: "BIO 299", type: "required", units: 2 },
-      { name: "Thesis", code: "BIO 300", type: "required", units: 6 },
-      
-      // Master in Management Core Courses
+      // Required Courses
+      { name: "Seminar", code: "BIO 296", type: "core", units: 1 },
+      { name: "Research in Biology", code: "BIO 299", type: "core", units: 2 },
+      { name: "Thesis", code: "BIO 300", type: "core", units: 6 },
+
+      // Specialty Tracks 
+      // Course Codes are tentative and subject to change, provided info by GPO does NOT contain them
+      { name: "Cell and Molecular Biology", code: "BIO 301", type: "pool", units: 3 },
+      { name: "Ecology and Taxonomy", code: "BIO 302", type: "pool", units: 3 },
+
+      // Master in Food Science Courses
+      // Core Courses
+      { name: "Food Analysis", code: "FST 202", type: "core", units: 3 },
+      { name: "Food Biochemistry", code: "FST 210", type: "core", units: 3 },
+      { name: "Advanced Food Microbiology", code: "FST 221", type: "core", units: 3 },
+      { name: "Thermal Processing", code: "FST 235", type: "core", units: 3 },
+      { name: "Graduate Seminar", code: "FST 299", type: "core", units: 3 },
+      { name: "Master's Thesis", code: "FST 300", type: "core", units: 4 },
+
+      // Other Major Courses
+      { name: "Postharvest Biochemistry of Fruits & Vegetables", code: "FST 219", type: "pool", units: 3 },
+      { name: "Microbiological Aspects of Food Processing", code: "FST 220", type: "pool", units: 3 },
+      { name: "Dehydration and Freezing", code: "FST 236", type: "pool", units: 3 },
+      { name: "Tropical Food Processing", code: "FST 240", type: "pool", units: 3 },
+      { name: "Tropical Fruits & Vegetables Processing", code: "FST 241", type: "pool", units: 3 },
+      { name: "Processing of Protein-Rich Foods", code: "FST 242", type: "pool", units: 3 },
+      { name: "Special Problems", code: "FST 290", type: "pool", units: 3 },
+      { name: "Special Topics", code: "FST 291", type: "pool", units: 3 },
+
+      // Master in Management Courses
       { name: "Organizational Analysis", code: "M206", type: "core", units: 3 },
       { name: "Systems Approach to Strategic Planning", code: "M209", type: "core", units: 3 },
       { name: "Mixed Methods Approach for Business and Management Research", code: "M210", type: "core", units: 3 },
@@ -131,11 +193,11 @@ async function main() {
 
       program_application: {
         create: {
-          qualifications: "BS CS or related",
-          application_instructions: "Submit docs",
-          application_requirements: "",
-          application_url: "https://apply.com",
-          recommendation_url: "https://reco.com"
+          qualifications: "Must be a Bachelor's Degree holder",
+          application_instructions: "TBA",
+          application_requirements: "Completed Application Form with a recent 2x2 pic (white background); PSA Birth Certificate, if single; OR Marriage Certificate, if married (for female only); Official Transcript of Records (OTR); Recommendation letter from two (2) superiors and/or former professors. ",
+          application_url: "http://bit.ly/dess-forms",
+          recommendation_url: "TBA"
         }
       }
     },
@@ -153,11 +215,11 @@ async function main() {
 
       program_application: {
         create: {
-          qualifications: "TBA",
+          qualifications: "A bachelor's degree from a recognized institution of higher learning; A minimum weighted average grade of 2.5 or its equivalent; Relevant work experience of at least two years.",
           application_instructions: "Interested applicants may fill out the form and submit the requirements via the application URL below. The reference forms are to be duly accomplished by at least 2 references and sent directly to architecture.upmin@up.edu.ph.",
-          application_requirements: "A bachelor's degree from a recognized institution of higher learning; A minimum weighted average grade of 2.5 or its equivalent; Relevant work experience of at least two years; A favorable letter of recommendation from a former superior and at least one other person who is well acquainted with, but not related to the applicant; Passing the Graduate Admission Test; Favorable assessment of interview results.",
+          application_requirements: "A favorable letter of recommendation from a former superior and at least one other person who is well acquainted with, but not related to the applicant; Passing the Graduate Admission Test; Favorable assessment of interview results.",
           application_url: "http://bit.ly/UPMindanaoDURP2023",
-          recommendation_url: "https://reco.com"
+          recommendation_url: "TBA"
         }
       }
     },
@@ -176,10 +238,10 @@ async function main() {
       program_application: {
         create: {
           qualifications: "To qualify for the Master's Program (MAURP), a student must have a weighted average of 1.75 or better in his/her Diploma Program and upon he recommendation of the Program Adviser and approval of the Dean.",
-          application_instructions: "TBA",
+          application_instructions: "Interested applicants may fill out the form and submit the requirements via the application URL below. The reference forms are to be duly accomplished by at least 2 references and sent directly to architecture.upmin@up.edu.ph.",
           application_requirements: "TBA",
-          application_url: "https://apply.com",
-          recommendation_url: "https://reco.com"
+          application_url: "TBA",
+          recommendation_url: "TBA"
         }
       }
     },
@@ -219,11 +281,11 @@ async function main() {
 
       program_application: {
         create: {
-          qualifications: "TBA",
-          application_instructions: "TBA",
-          application_requirements: "Duly accomplished application form (Form 1); Cover letter signifying intent and degree sought, addressed to the Department Chair: Assoc. Dann Marie N. Del Mundo, Ph.D.; Updated Curriculum Vitae; Original or certified true copy of official Transcript of Records (TOR); True Copy of Grades showing your final General Weighted Average (GWA); Two letters of recommendation (Form 2) – one from your former professor and one from your employer or direct supervisor; Payment receipt/proof of payment for the non-refundable fee amounting to PHP 200.00. Must be deposited to the following account: Account name: UP Mindanao Revolving Fund; Account number: 00-0-00494-915-2; Name of Bank: Development Bank of the Philippines; Branch: Davao City; All files should be in PDF format. Email the documents to the MSHMS Coordinator, Assoc. Micah Amor P. Yares, Ph.D., at mpYares@up.edu.ph on or before June 30, 2024.",
-          application_url: "https://apply.com",
-          recommendation_url: "https://reco.com"
+          qualifications: "Undegraduate Degree must be the ff: Major in Physical Education, Major in Sports Science, or Allied Medical Science (Physiotherapy/Medicine); General Weighted Average of 2.25 or better (if from other universities) OR 2.5 or better (if a graduate from UP Diliman College of Human Kinetics)",
+          application_instructions: "You can transact payment of your application fee and other fees via PISO NET or INTER/INTRABANK TRANSFER; Account Name: UP Mindanao, Account Number: 000-004949152, Bank: DBP; Please send your transaction reciept to cash.upmindanao@up.edu.ph and ktbalino1@up.edu.ph | Subject: MSHMS_(FAMILYNAME)-8FEE. Reciept can be in pdf or jpeg form and name file as: (FAMILYNAME)_8FEE",
+          application_requirements: "Completed Application Form with a recent 2x2 pic; Official Transcript of Records (OTR); Certificate of GWA/GPA (or any equivalent); PSA Birth Certificate, if single; OR Marriage Certificate, if married (for women only); Certificate of English Language Proficiency (TOEFL, or equivalent); A preliminary research proposal; Recommendation from two (2) superiors and/or former professor; Must pass the written examination and interview; Application Fee, Filipino/Foreign Resident: Php 500.00, Foreign Non-Resident: USD 25.00.",
+          application_url: "http://bit.ly/mshms-forms",
+          recommendation_url: "TBA"
         }
       }
     },
@@ -241,9 +303,9 @@ async function main() {
 
       program_application: {
         create: {
-          qualifications: "TBA",
+          qualifications: "Holder's of bachelor's degree in Food Science and Technology or related disciplines with a general weighted average of 2.50 or better.",
           application_instructions: "TBA",
-          application_requirements: "TBA",
+          application_requirements: "A duly accomplished Application form (GS-Form 1) must be submitted with the following documents: Cover letter addressed to the Dean, signifying intent to apply and the degree sought; Original or Certified Copy of Official Transcript of Records; Two sealed letters of recommendation (GS-Form 2) from former professorsm, supervisors, or collegues; For foreign applicants: Certification of medium of instructions (in previous degree) by the University Registrar or results of TOEFL (min score: 600) or IELTS (min score: 6.5); Non-refundable application fee (Php 200.00 for Filipino appplicants and USD 25.00 for foreign applicants).",
           application_url: "https://apply.com",
           recommendation_url: "https://reco.com"
         }
@@ -620,7 +682,36 @@ async function main() {
           { course_id: getCourse("M235").course_id },
         ]
       }
-    }
+    },
+
+    data: {
+      name: "Major Electives",
+      program_id: msfsProgram.program_id,
+      entries: {
+        create: [
+          { course_id: getCourse("FST 219").course_id },
+          { course_id: getCourse("FST 220").course_id },
+          { course_id: getCourse("FST 236").course_id },
+          { course_id: getCourse("FST 240").course_id },
+          { course_id: getCourse("FST 241").course_id },
+          { course_id: getCourse("FST 242").course_id },
+          { course_id: getCourse("FST 290").course_id },
+          { course_id: getCourse("FST 291").course_id },
+        ]
+      }
+    }, 
+
+    data: {
+      name: "Specialty Electives",
+      program_id: msbProgram.program_id,
+      entries: {
+        create: [
+          { course_id: getCourse("BIO 301").course_id },
+          { course_id: getCourse("BIO 302").course_id },
+        ]
+      }
+    }, 
+
   });
 
   // =======================
@@ -647,6 +738,14 @@ async function main() {
       years: 3,
       name: "Standard 3 Year Plan",
       program_id: phdByResearchProgram.program_id,
+    }
+  });
+
+  const msbStudyPlan = await prisma.studyPlan.create({
+    data: {
+      years: 2,
+      name: "Standard Plan",
+      program_id: msbProgram.program_id,
     }
   });
 
@@ -681,6 +780,21 @@ async function main() {
 
       { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M241").course_id, year: 2, semester: 2 },
 
+      // Master of Science in Biology Study Plan
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 220").course_id, year: 1, semester: 1 },
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 240").course_id, year: 1, semester: 1 },
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 230").course_id, year: 1, semester: 1 },
+
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 260").course_id, year: 1, semester: 2 },
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 250").course_id, year: 1, semester: 2 },
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: null, year: 1, semester: 2, is_elective_slot: true },
+
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 296").course_id, year: 2, semester: 1 },
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 299").course_id, year: 2, semester: 1 },
+
+      { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 300").course_id, year: 2, semester: 2 },
     ],
   });
 
