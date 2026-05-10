@@ -48,15 +48,16 @@ model Scholarship {
 }
 
 model Office {
-  office_id     Int    @id @default(autoincrement())
-  logo          String
-  mission       String
-  vision        String
-  core_values   String
-  history       String
-  phone         String
-  email         String
-  org_chart_url String
+  office_id              Int     @id @default(autoincrement())
+  logo                   String
+  mission                String
+  vision                 String
+  core_values            String
+  history                String
+  phone                  String
+  email                  String
+  org_chart_url          String?
+  application_google_url String?
 
   featuredPhotos FeaturedPhoto[]
 }
@@ -126,6 +127,7 @@ model ProgramApplication {
   application_requirements String @default("")
   application_url          String @default("")
   recommendation_url       String @default("")
+  fees_url                 String @default("")
 
   program    Program @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
   program_id Int     @unique

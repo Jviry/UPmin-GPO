@@ -11,6 +11,7 @@ import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 import { AdminRole } from '../domain/admin.js';
 import { upload } from '../middleware/upload.middleware.js';
+import { pdfUpload } from '../middleware/upload.middleware.js';
 import { deleteFile } from '../utils/deleteFile.util.js';
 
 const router = express.Router();
@@ -22,7 +23,7 @@ const getAllPrograms = getAllProgramsUsecase({ programRepo });
 const getProgramById = getProgramByIdUsecase({ programRepo });
 const deleteProgram = deleteProgramUsecase({ programRepo, deleteFile });
 const updateProgram = updateProgramUsecase({ programRepo, deleteFile });
-const updateProgramApplication = updateProgramApplicationUsecase({ programRepo });
+const updateProgramApplication = updateProgramApplicationUsecase({ programRepo, deleteFile });
 
 // Public routes (no authentication required)
 router.get('/programs', async (req, res) => {
@@ -71,6 +72,9 @@ router.post('/programs', authenticate, authenticateRole(AdminRole.ADMIN, AdminRo
       program
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
@@ -107,6 +111,9 @@ router.put('/programs/:id', authenticate, authenticateRole(AdminRole.ADMIN, Admi
       program,
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
@@ -115,16 +122,31 @@ router.put('/programs/:id', authenticate, authenticateRole(AdminRole.ADMIN, Admi
   }
 });
 
-router.put('/programs/:id/application', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
+router.put('/programs/:id/application', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), pdfUpload.fields([{ name: 'application_url', maxCount: 1 }, { name: 'recommendation_url', maxCount: 1 }, { name: 'fees_url', maxCount: 1 }]), async (req, res) => {
   try {
     const { id } = req.params;
-    const applicationDetails = await updateProgramApplication(id, req.body);
+    const files = req.files;
+
+    const applicationDetails = await updateProgramApplication({
+      program_id: id,
+      ...req.body,
+      application_url: files?.application_url?.[0],
+      recommendation_url: files?.recommendation_url?.[0],
+      fees_url: files?.fees_url?.[0]
+    });
 
     res.status(200).json({
       message: `Program application details for program ${id} updated successfully`,
       applicationDetails,
     });
   } catch (error) {
+    if (req.files) {
+      Object.values(req.files).forEach(fileArray => {
+        fileArray.forEach(file => {
+          deleteFile(`/uploads/${file.filename}`);
+        });
+      });
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
