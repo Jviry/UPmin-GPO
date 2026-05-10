@@ -197,7 +197,8 @@ async function main() {
           application_instructions: "TBA",
           application_requirements: "Completed Application Form with a recent 2x2 pic (white background); PSA Birth Certificate, if single; OR Marriage Certificate, if married (for female only); Official Transcript of Records (OTR); Recommendation letter from two (2) superiors and/or former professors. ",
           application_url: "http://bit.ly/dess-forms",
-          recommendation_url: "TBA"
+          recommendation_url: "TBA",
+          fees_url: "TBA",
         }
       }
     },
@@ -219,7 +220,8 @@ async function main() {
           application_instructions: "Interested applicants may fill out the form and submit the requirements via the application URL below. The reference forms are to be duly accomplished by at least 2 references and sent directly to architecture.upmin@up.edu.ph.",
           application_requirements: "A favorable letter of recommendation from a former superior and at least one other person who is well acquainted with, but not related to the applicant; Passing the Graduate Admission Test; Favorable assessment of interview results.",
           application_url: "http://bit.ly/UPMindanaoDURP2023",
-          recommendation_url: "TBA"
+          recommendation_url: "TBA",
+          fees_url: "TBA",
         }
       }
     },
@@ -241,7 +243,8 @@ async function main() {
           application_instructions: "Interested applicants may fill out the form and submit the requirements via the application URL below. The reference forms are to be duly accomplished by at least 2 references and sent directly to architecture.upmin@up.edu.ph.",
           application_requirements: "TBA",
           application_url: "TBA",
-          recommendation_url: "TBA"
+          recommendation_url: "TBA",
+          fees_url: "TBA",
         }
       }
     },
@@ -263,7 +266,8 @@ async function main() {
           application_instructions: "TBA",
           application_requirements: "Applicants of the MS Biology program must be holders of a bachelor's degree in biology or related fields subject to evaluation of the Graduate Committee of the Department; A general weighted average (GWA) of at least 2.0; An applicant with a GWA between 2.01 and 2.75 may be admitted to the program on probation until and provided that the student will obtain an average grade of at least 2.0 in the first 9 units of graduate courses he/she enrolls in; The Graduate Committee may recommend additional requirement as needed; Must have taken Bio 133 (Developmental Biology) or equivalent/COI; Proof of English proficiency for students whose native language is not English or Filipino, except those who graduated from institutions where the medium of instruction is English or Filipino; Completed application form, official transcript of records, two (2) written recommendations from former professors or experts in the field, prescribed application fee, and other required documents submitted to the Graduate Committee; Taking of the graduate placement exam (GPE) and interview – Applicants must pass at least three of five areas (Cell and Molecular Biology, Developmental Biology, Ecology and Taxonomy, Genetics, and Physiology) of the GPE administered by the Graduate Committee.",
           application_url: "https://forms.gle/13TK3peosTJCHNo27",
-          recommendation_url: "N/A"
+          recommendation_url: "N/A",
+          fees_url: "TBA",
         }
       }
     },
@@ -285,7 +289,8 @@ async function main() {
           application_instructions: "You can transact payment of your application fee and other fees via PISO NET or INTER/INTRABANK TRANSFER; Account Name: UP Mindanao, Account Number: 000-004949152, Bank: DBP; Please send your transaction reciept to cash.upmindanao@up.edu.ph and ktbalino1@up.edu.ph | Subject: MSHMS_(FAMILYNAME)-8FEE. Reciept can be in pdf or jpeg form and name file as: (FAMILYNAME)_8FEE",
           application_requirements: "Completed Application Form with a recent 2x2 pic; Official Transcript of Records (OTR); Certificate of GWA/GPA (or any equivalent); PSA Birth Certificate, if single; OR Marriage Certificate, if married (for women only); Certificate of English Language Proficiency (TOEFL, or equivalent); A preliminary research proposal; Recommendation from two (2) superiors and/or former professor; Must pass the written examination and interview; Application Fee, Filipino/Foreign Resident: Php 500.00, Foreign Non-Resident: USD 25.00.",
           application_url: "http://bit.ly/mshms-forms",
-          recommendation_url: "TBA"
+          recommendation_url: "TBA",
+          fees_url: "TBA",
         }
       }
     },
@@ -307,7 +312,8 @@ async function main() {
           application_instructions: "TBA",
           application_requirements: "A duly accomplished Application form (GS-Form 1) must be submitted with the following documents: Cover letter addressed to the Dean, signifying intent to apply and the degree sought; Original or Certified Copy of Official Transcript of Records; Two sealed letters of recommendation (GS-Form 2) from former professorsm, supervisors, or collegues; For foreign applicants: Certification of medium of instructions (in previous degree) by the University Registrar or results of TOEFL (min score: 600) or IELTS (min score: 6.5); Non-refundable application fee (Php 200.00 for Filipino appplicants and USD 25.00 for foreign applicants).",
           application_url: "https://apply.com",
-          recommendation_url: "https://reco.com"
+          recommendation_url: "https://reco.com",
+          fees_url: "TBA,"
         }
       }
     },
@@ -328,8 +334,9 @@ async function main() {
           qualifications: "TBA",
           application_instructions: "The school accepts application for the program from November to May of the following year. Submit the duly accomplished application forms together with (1) your official transcript of records, (2) reciept of application free (P200.00) payable at our Cash Office, and (3) reciept for the examination Fee (P250.00) payable at our office.",
           application_requirements: "A bachelor's degree in any field of study; A minimum of 2.5 or equivalent average grade; At least two years of managerial or supervisory experience; A favorable recommendation from a superior and at least one other person who is well acquainted with, but not related to the applicant; Passing the Graduate Admission Test; Favorable assessment of interview results; Attendance to the Bridging Program.",
-          application_url: "https://apply.com",
-          recommendation_url: "https://reco.com"
+          application_url: "TBA",
+          recommendation_url: "TBA",
+          fees_url: "TBA",
         }
       }
     },
@@ -350,7 +357,8 @@ async function main() {
           application_instructions: "TBA",
           application_requirements: "TBA",
           application_url: "https://apply.com",
-          recommendation_url: "https://reco.com"
+          recommendation_url: "https://reco.com",
+          fees_url: "TBA",
         }
       }
     },
@@ -367,7 +375,7 @@ async function main() {
       // Program Coordinators
       { name: "Jackie Lou J. Tagubase", email: "jjTagubase@up.edu.ph", photo: "photo1.jpg", position: "Associate Professor" }, // MS Food Science Coordinator
       { name: "Micah Amor P. Yares", email: "mpYares@up.edu.ph", photo: "photo2.jpg", position: "Assistant Professor" }, // MA Urban and Regional Planning Coordinator
-      { name: "Mae A. Responte", email: "maResponté@up.edu.ph", photo: "photo3.jpg", position: "Assistant Professor" }, // MS Biology Coordinator
+      { name: "Mae A. Responte", email: "maResponte@up.edu.ph", photo: "photo3.jpg", position: "Assistant Professor" }, // MS Biology Coordinator
       { name: "Imee Marie A. Acopiado ", email: "iaAcopiado@up.edu.ph", photo: null, position: "Assistant Professor" }, // MM Coordinator
       { name: "Pedro A. Alviola IV", email: "paAlviolaIV@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // PhD by Research Coordinator
       { name: "Jonathan Y. Cagas", email: "jyCagas@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MS Human Movement Science Coordinator
@@ -398,7 +406,7 @@ async function main() {
       { name: "Aaron Froilan M. Raganas", email: "amRaganas@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       
       // Master in Management Faculty Members (also PhD by Research Faculty Members)
-      { name: "Thaddeus R. Acuña", email: "trAcuña@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
+      { name: "Thaddeus R. Acuña", email: "trAcuna@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       { name: "Roxanne T. Aguinaldo", email: "rtAguinaldo@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       { name: "Miko Mariz C. Castro", email: "mcCastro@up.edu.ph", photo: "photo5.jpg", position: "Assistant Professor" },
       { name: "Larry N. Digal", email: "lnDigal@up.edu.ph", photo: "photo5.jpg", position: "Professor" }, // MM and PhD by Research Faculty Member
@@ -435,7 +443,8 @@ async function main() {
       { name: "Sophremiano B. Antipolo", email: "sbAntipolo@up.edu.ph", photo: "photo5.jpg", position: "Professorial Lecturer" },
       { name: "Joseph Raymund A. Sumabal", email: "jaSumabal@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" },
       { name: "Marlon C. Suelto", email: "mcSuelto@up.edu.ph", photo: "photo5.jpg", position: "Sr. Lecturer" }
-    ]
+    ],
+    skipDuplicates: true
   });
 
   const faculties = await prisma.faculty.findMany();
@@ -466,13 +475,13 @@ async function main() {
       { degree: "MS Biology", faculty_id: getFaculty("csMillado@up.edu.ph").faculty_id },
       { degree: "MS Biology", faculty_id: getFaculty("leMurao@up.edu.ph").faculty_id },
       { degree: "MS Biology", faculty_id: getFaculty("clNanola@up.edu.ph").faculty_id },
-      { degree: "MS Biology", faculty_id: getFaculty("maResponté@up.edu.ph").faculty_id },
+      { degree: "MS Biology", faculty_id: getFaculty("maResponte@up.edu.ph").faculty_id },
       { degree: "MS Biology", faculty_id: getFaculty("rlCatiempo@up.edu.ph").faculty_id },
       { degree: "MS Biology", faculty_id: getFaculty("amRaganas@up.edu.ph").faculty_id },
 
       // Master in Management Faculty Credentials
       { degree: "Master in Management", faculty_id: getFaculty("iaAcopiado@up.edu.ph").faculty_id },
-      { degree: "Master in Management", faculty_id: getFaculty("trAcuña@up.edu.ph").faculty_id },
+      { degree: "Master in Management", faculty_id: getFaculty("trAcuna@up.edu.ph").faculty_id },
       { degree: "Master in Management", faculty_id: getFaculty("rtAguinaldo@up.edu.ph").faculty_id },
       { degree: "Master in Management", faculty_id: getFaculty("paAlviolaIV@up.edu.ph").faculty_id },
       { degree: "Master in Management", faculty_id: getFaculty("mcCastro@up.edu.ph").faculty_id },
@@ -602,7 +611,7 @@ async function main() {
       { program_id: msbProgram.program_id, faculty_id: getFaculty("csMillado@up.edu.ph").faculty_id },
       { program_id: msbProgram.program_id, faculty_id: getFaculty("leMurao@up.edu.ph").faculty_id },
       { program_id: msbProgram.program_id, faculty_id: getFaculty("clNanola@up.edu.ph").faculty_id },
-      { program_id: msbProgram.program_id, faculty_id: getFaculty("maResponté@up.edu.ph").faculty_id },
+      { program_id: msbProgram.program_id, faculty_id: getFaculty("maResponte@up.edu.ph").faculty_id },
       { program_id: msbProgram.program_id, faculty_id: getFaculty("rlCatiempo@up.edu.ph").faculty_id },
       { program_id: msbProgram.program_id, faculty_id: getFaculty("amRaganas@up.edu.ph").faculty_id },
 
@@ -637,7 +646,7 @@ async function main() {
 
       // Master in Management Faculty Members
       { program_id: mmProgram.program_id, faculty_id: getFaculty("iaAcopiado@up.edu.ph").faculty_id },
-      { program_id: mmProgram.program_id, faculty_id: getFaculty("trAcuña@up.edu.ph").faculty_id },
+      { program_id: mmProgram.program_id, faculty_id: getFaculty("trAcuna@up.edu.ph").faculty_id },
       { program_id: mmProgram.program_id, faculty_id: getFaculty("rtAguinaldo@up.edu.ph").faculty_id },
       { program_id: mmProgram.program_id, faculty_id: getFaculty("paAlviolaIV@up.edu.ph").faculty_id },
       { program_id: mmProgram.program_id, faculty_id: getFaculty("mcCastro@up.edu.ph").faculty_id },
@@ -723,21 +732,8 @@ async function main() {
 
   await prisma.coursePool.create({
     data: {
-      name: "Specialty Electives",
-      program_id: msbProgram.program_id,
-      entries: {
-        create: [
-          { course_id: getCourse("BIO 301").course_id },
-          { course_id: getCourse("BIO 302").course_id },
-        ]
-      }
-    }, 
-  });
-
-  await prisma.coursePool.create({
-    data: {
       name: "Major Electives",
-      program_id: msbProgram.program_id,
+      program_id: maurpProgram.program_id,
       entries: {
         create: [
           { course_id: getCourse("P229").course_id },
