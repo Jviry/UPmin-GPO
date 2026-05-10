@@ -1,52 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-
-const programs = [
-  { title: 'Program Alpha', slug: 'program-alpha' },
-  { title: 'Program Beta', slug: 'program-beta' },
-  { title: 'Program Gamma', slug: 'program-gamma' },
-  { title: 'Program Delta', slug: 'program-delta' },
-  { title: 'Program Epsilon', slug: 'program-epsilon' },
-  { title: 'Program Zeta', slug: 'program-zeta' },
-  { title: 'Program Eta', slug: 'program-eta' },
-  { title: 'Program Theta', slug: 'program-theta' },
-  { title: 'Program Iota', slug: 'program-iota' },
-];
-
-const formRows = [
-  { label: 'Tuition and Fees', file: '#' },
-  { label: 'Curriculum', file: '#' },
-  { label: 'Application Form', file: '#' },
-];
-
-const scholarships = [
-  {
-    title: 'Scholarship Title One',
-    excerpt: 'Placeholder description for this scholarship opportunity. More details will be added here.',
-  },
-  {
-    title: 'Scholarship Title Two',
-    excerpt: 'Placeholder description for a second scholarship. Details and eligibility requirements coming soon.',
-  },
-  {
-    title: 'Scholarship Title Three',
-    excerpt: 'Placeholder description for a third scholarship opportunity available to graduate students.',
-  },
-  {
-    title: 'Scholarship Title Four',
-    excerpt: 'Placeholder description for a fourth scholarship. Contact the GPO for more information.',
-  },
-  {
-    title: 'Scholarship Title Five',
-    excerpt: 'Placeholder description for a fifth scholarship opportunity. Application period details to follow.',
-  },
-];
+import { apiClient } from '@/lib/apiClient';
 
 function ScholarshipCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [scholarships, setScholarships] = useState<any[]>([]);
 
   const updateScrollState = () => {
     const track = trackRef.current;
@@ -54,6 +15,19 @@ function ScholarshipCarousel() {
     setCanScrollLeft(track.scrollLeft > 4);
     setCanScrollRight(track.scrollLeft + track.clientWidth < track.scrollWidth - 4);
   };
+
+  useEffect(() => {
+    const fetchScholarships = async () => {
+      try {
+        // Fetch real scholarships from your backend
+        const res = await apiClient.get('/scholarships');
+        setScholarships(res.data.scholarships || res.data || []);
+      } catch (error) {
+        console.error("Failed to fetch scholarships:", error);
+      }
+    };
+    fetchScholarships();
+  }, []);
 
   useEffect(() => {
     updateScrollState();
@@ -66,7 +40,7 @@ function ScholarshipCarousel() {
       track.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [scholarships]); // Re-run when scholarships load
 
   const scrollTrack = (direction: -1 | 1) => {
     const track = trackRef.current;
@@ -108,7 +82,7 @@ function ScholarshipCarousel() {
               <span className="-translate-x-px leading-none transition-transform duration-200 hover:-translate-x-0.5">←</span>
             </button>
           )}
-          {canScrollRight && (
+          {canScrollRight && scholarships.length > 0 && (
             <button
               type="button"
               aria-label="Next scholarships"
@@ -123,25 +97,25 @@ function ScholarshipCarousel() {
             ref={trackRef}
             className="modern-carousel flex h-full min-h-0 flex-1 snap-x snap-mandatory gap-5 overflow-x-auto overflow-y-hidden pb-2 xl:gap-6"
           >
-            {scholarships.map((scholarship, index) => (
+            {scholarships.length > 0 ? scholarships.map((scholarship) => (
               <button
-                key={scholarship.title}
+                key={scholarship.scholarship_id}
                 type="button"
                 className="group relative flex h-full min-h-[380px] w-[272px] shrink-0 snap-start flex-col bg-[#faf6f0] text-left shadow-[0_8px_32px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px]"
               >
                 {/* Gold top accent strip */}
                 <div className="absolute inset-x-0 top-0 h-[3px] bg-[var(--up-gold)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-                {/* Image placeholder */}
+                {/* Image placeholder (Scholarships don't have images in your DB currently) */}
                 <div className="h-[58%] w-full shrink-0 bg-[var(--surface-muted)]" />
 
                 {/* Text area */}
                 <div className="flex flex-1 flex-col justify-between p-5">
                   <div>
                     <h3 className="[font-family:var(--font-display)] text-[1.1rem] font-semibold leading-snug text-[var(--up-maroon)]">
-                      {scholarship.title}
+                      {scholarship.name}
                     </h3>
-                    <p className="mt-2 text-xs leading-[1.75] text-[#5a5450]">{scholarship.excerpt}</p>
+                    <p className="mt-2 text-xs leading-[1.75] text-[#5a5450] line-clamp-4">{scholarship.description}</p>
                   </div>
                   <div className="mt-4 flex items-center justify-between border-t border-[rgba(118,9,12,0.12)] pt-3 text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[var(--up-maroon)]">
                     <span>Learn more</span>
@@ -149,7 +123,11 @@ function ScholarshipCarousel() {
                   </div>
                 </div>
               </button>
-            ))}
+            )) : (
+              <div className="flex h-full w-full items-center justify-center text-[rgba(255,255,255,0.7)] italic">
+                No scholarship opportunities available at this time.
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -166,6 +144,20 @@ function DownloadIcon() {
 }
 
 export function FormsPage() {
+  const [programs, setPrograms] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const res = await apiClient.get('/programs');
+        setPrograms(res.data.programs || res.data || []);
+      } catch (error) {
+        console.error("Failed to fetch programs for forms page:", error);
+      }
+    };
+    fetchPrograms();
+  }, []);
+
   return (
     <>
       <main className="min-h-screen bg-[var(--page-bg)] text-[var(--text-primary)]">
@@ -176,35 +168,45 @@ export function FormsPage() {
           </h1>
 
           <div className="mt-12 space-y-10">
-            {programs.map((program, pi) => (
-              <div key={program.slug}>
+            {programs.length > 0 ? programs.map((program) => (
+              <div key={program.program_id}>
                 <h2 className="[font-family:var(--font-display)] mb-3 text-xl font-bold text-[var(--text-primary)]">
-                  {program.title}
+                  {program.name}
                 </h2>
 
                 <div className="w-full overflow-hidden rounded-sm border border-[rgba(118,9,12,0.15)]">
-                  {formRows.map((row, i) => (
-                    <div
-                      key={row.label}
-                      className={`grid grid-cols-[1fr_auto] items-center gap-6 px-5 py-3 ${
-                        i % 2 === 0 ? 'bg-[rgba(118,9,12,0.06)]' : 'bg-[rgba(118,9,12,0.11)]'
-                      } ${i < formRows.length - 1 ? 'border-b border-[rgba(118,9,12,0.12)]' : ''}`}
-                    >
-                      <span className="text-sm text-[var(--text-primary)] sm:text-[0.95rem]">
-                        {row.label}
-                      </span>
-                      <a
-                        href={row.file}
-                        className="inline-flex items-center gap-1.5 rounded-sm bg-[var(--up-maroon)] px-4 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-150 hover:bg-[#5c0709]"
+                  {program.programForms && program.programForms.length > 0 ? (
+                    program.programForms.map((form: any, i: number) => (
+                      <div
+                        key={form.form_id || i}
+                        className={`grid grid-cols-[1fr_auto] items-center gap-6 px-5 py-3 ${
+                          i % 2 === 0 ? 'bg-[rgba(118,9,12,0.06)]' : 'bg-[rgba(118,9,12,0.11)]'
+                        } ${i < program.programForms.length - 1 ? 'border-b border-[rgba(118,9,12,0.12)]' : ''}`}
                       >
-                        <DownloadIcon />
-                        Download
-                      </a>
+                        <span className="text-sm text-[var(--text-primary)] sm:text-[0.95rem]">
+                          {form.name}
+                        </span>
+                        <a
+                          href={form.file_url || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-sm bg-[var(--up-maroon)] px-4 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-150 hover:bg-[#5c0709]"
+                        >
+                          <DownloadIcon />
+                          Download
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="px-5 py-4 text-sm text-[var(--text-muted)] italic bg-[rgba(118,9,12,0.03)]">
+                      No specific forms or files uploaded for this program yet.
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="text-[var(--text-muted)] italic">Loading program forms...</div>
+            )}
           </div>
         </div>
         </section>
