@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { apiClient } from '@/lib/apiClient';
 
 function ScholarshipCarousel() {
@@ -19,7 +20,6 @@ function ScholarshipCarousel() {
   useEffect(() => {
     const fetchScholarships = async () => {
       try {
-        // Fetch real scholarships from your backend
         const res = await apiClient.get('/scholarships');
         setScholarships(res.data.scholarships || res.data || []);
       } catch (error) {
@@ -40,7 +40,7 @@ function ScholarshipCarousel() {
       track.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', handleResize);
     };
-  }, [scholarships]); // Re-run when scholarships load
+  }, [scholarships]);
 
   const scrollTrack = (direction: -1 | 1) => {
     const track = trackRef.current;
@@ -98,15 +98,15 @@ function ScholarshipCarousel() {
             className="modern-carousel flex h-full min-h-0 flex-1 snap-x snap-mandatory gap-5 overflow-x-auto overflow-y-hidden pb-2 xl:gap-6"
           >
             {scholarships.length > 0 ? scholarships.map((scholarship) => (
-              <button
+              <Link
                 key={scholarship.scholarship_id}
-                type="button"
-                className="group relative flex h-full min-h-[380px] w-[272px] shrink-0 snap-start flex-col bg-[#faf6f0] text-left shadow-[0_8px_32px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px]"
+                href={`/scholarships/${scholarship.scholarship_id}`}
+                className="group relative flex h-full min-h-[380px] w-[272px] shrink-0 snap-start flex-col bg-[#faf6f0] text-left shadow-[0_8px_32px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px] cursor-pointer"
               >
                 {/* Gold top accent strip */}
                 <div className="absolute inset-x-0 top-0 h-[3px] bg-[var(--up-gold)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-                {/* Image placeholder (Scholarships don't have images in your DB currently) */}
+                {/* Image placeholder */}
                 <div className="h-[58%] w-full shrink-0 bg-[var(--surface-muted)]" />
 
                 {/* Text area */}
@@ -122,7 +122,7 @@ function ScholarshipCarousel() {
                     <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                   </div>
                 </div>
-              </button>
+              </Link>
             )) : (
               <div className="flex h-full w-full items-center justify-center text-[rgba(255,255,255,0.7)] italic">
                 No scholarship opportunities available at this time.
