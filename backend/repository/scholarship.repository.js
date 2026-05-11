@@ -34,10 +34,11 @@ export function createScholarshipRepository(prisma) {
       });
     },
 
-    async createScholarship(name, description, covered_programs, application_instructions, application_url, recommendation_url, contact_info, admin_id) {
+    async createScholarship({ name, description, covered_programs, application_instructions, application_url, recommendation_url, contact_info, admin_id, image_url }) {
       return prisma.scholarship.create({
         data: {
           name: name,
+          image_url: image_url || null,
           description: description,
           covered_programs: covered_programs,
           application_instructions: application_instructions,
@@ -65,6 +66,7 @@ export function createScholarshipRepository(prisma) {
         },
         data: {
           name: data.name,
+          image_url: data.image_url || null,
           description: data.description,
           covered_programs: data.covered_programs,
           application_instructions: data.application_instructions,

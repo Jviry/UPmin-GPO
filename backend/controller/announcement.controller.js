@@ -16,8 +16,8 @@ const router = express.Router();
 
 const announcementRepo = createAnnouncementRepository(prisma);
 const createAnnouncement = createAnnouncementUsecase({ announcementRepo });
-const deleteAnnouncement = deleteAnnouncementUsecase({ announcementRepo });
-const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo });
+const deleteAnnouncement = deleteAnnouncementUsecase({ announcementRepo, deleteFile });
+const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo, deleteFile });
 const getAnnouncementById = getAnnouncementByIdUsecase({ announcementRepo });
 const getAnnouncements = getAnnouncementsUsecase({ announcementRepo });
 
