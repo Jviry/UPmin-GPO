@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { StudyPlanBuilder } from '@/components/admin/StudyPlanBuilder';
 import FacultyPool from '@/components/admin/FacultyPool';
+import { ApplicationSection } from '@/components/admin/ApplicationSection';
 import { apiClient } from '@/lib/apiClient';
 import LoadingScreen from '@/components/admin/LoadingScreen';
 
@@ -119,19 +120,17 @@ export default function AdminPrograms() {
           {programs.map((prog) => (
             <div
               key={prog.program_id}
-              className={`group relative flex items-center border-l-4 transition-colors ${
-                !isCreating && activeProgramId === prog.program_id
-                  ? 'border-[var(--up-gold)] bg-white'
-                  : 'border-transparent hover:bg-gray-100'
-              }`}
+              className={`group relative flex items-center border-l-4 transition-colors ${!isCreating && activeProgramId === prog.program_id
+                ? 'border-[var(--up-gold)] bg-white'
+                : 'border-transparent hover:bg-gray-100'
+                }`}
             >
               <button
                 onClick={() => selectProgram(prog.program_id)}
-                className={`flex-1 px-6 py-3 text-left text-sm font-semibold ${
-                  !isCreating && activeProgramId === prog.program_id
-                    ? 'text-[var(--text-primary)]'
-                    : 'text-[var(--text-muted)]'
-                }`}
+                className={`flex-1 px-6 py-3 text-left text-sm font-semibold ${!isCreating && activeProgramId === prog.program_id
+                  ? 'text-[var(--text-primary)]'
+                  : 'text-[var(--text-muted)]'
+                  }`}
               >
                 {prog.name}
               </button>
@@ -139,9 +138,8 @@ export default function AdminPrograms() {
               {/* Three-dot button — visible on hover or when menu is open */}
               <button
                 onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === prog.program_id ? null : prog.program_id); }}
-                className={`mr-2 flex h-6 w-6 shrink-0 items-center justify-center text-[var(--text-muted)] transition hover:text-[var(--text-primary)] ${
-                  openMenuId === prog.program_id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                }`}
+                className={`mr-2 flex h-6 w-6 shrink-0 items-center justify-center text-[var(--text-muted)] transition hover:text-[var(--text-primary)] ${openMenuId === prog.program_id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  }`}
                 title="Options"
               >
                 <svg viewBox="0 0 4 16" width="4" height="16" fill="currentColor">
@@ -231,29 +229,29 @@ export default function AdminPrograms() {
               <div className="mb-6 grid grid-cols-4 gap-6">
                 <div className="col-span-3 flex flex-col gap-4">
                   <div className="flex gap-4">
-                    <input 
-                      type="text" 
-                      defaultValue={activeProgramDetails.name} 
-                      className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-                      placeholder="Name of Program" 
+                    <input
+                      type="text"
+                      defaultValue={activeProgramDetails.name}
+                      className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
+                      placeholder="Name of Program"
                     />
-                    <input 
-                      type="text" 
-                      defaultValue={activeProgramDetails.department?.name || ''} 
-                      className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-                      placeholder="Department" 
+                    <input
+                      type="text"
+                      defaultValue={activeProgramDetails.department?.name || ''}
+                      className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
+                      placeholder="Department"
                     />
                   </div>
-                  <textarea 
+                  <textarea
                     defaultValue={activeProgramDetails.description}
-                    className="flex-1 min-h-[140px] resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
+                    className="flex-1 min-h-[140px] resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
                     placeholder="About Graduate Program..."
                   />
                 </div>
 
                 <div className="col-span-1 flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[var(--line)] bg-[var(--surface-muted)] p-4 text-center transition hover:border-[var(--up-maroon)]">
-                   <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Featured Photo</span>
-                   <span className="mt-1 text-xs text-[var(--up-maroon)]">Click to upload</span>
+                  <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Featured Photo</span>
+                  <span className="mt-1 text-xs text-[var(--up-maroon)]">Click to upload</span>
                 </div>
               </div>
 
@@ -271,62 +269,10 @@ export default function AdminPrograms() {
             </section>
 
             {/* Block 2: Edit Application Information */}
-            <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
-                <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
-                  Edit Application Information
-                </h2>
-              </div>
-
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Qualifications</label>
-                  <textarea
-                    defaultValue={(activeProgramDetails as any).program_application?.qualifications ?? ''}
-                    className="min-h-[140px] w-full resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Enter qualifications..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Instructions</label>
-                  <textarea
-                    defaultValue={(activeProgramDetails as any).program_application?.application_instructions ?? ''}
-                    className="min-h-[140px] w-full resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Enter application instructions..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Requirements</label>
-                  <textarea
-                    className="min-h-[140px] w-full resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Enter requirements..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Application URL</label>
-                  <input
-                    type="text"
-                    defaultValue={(activeProgramDetails as any).program_application?.application_url ?? ''}
-                    className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="https://..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Recommendation URL</label>
-                  <input
-                    type="text"
-                    defaultValue={(activeProgramDetails as any).program_application?.recommendation_url ?? ''}
-                    className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="https://..."
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-4 border-t border-[var(--line)] mt-6 pt-6">
-                <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Save</button>
-              </div>
-            </section>
+            <ApplicationSection
+              programId={activeProgramId!}
+              application={(activeProgramDetails as any).program_application}
+            />
 
             {/* Block 3: Faculty Management */}
             <section className="mb-10 border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
@@ -358,8 +304,8 @@ export default function AdminPrograms() {
             <div className="modern-scrollbar flex-1 overflow-y-auto p-4 space-y-3 bg-[var(--page-bg)]">
               {activeProgramDetails?.forms && activeProgramDetails.forms.length > 0 ? (
                 activeProgramDetails.forms.map((file: any) => (
-                  <div 
-                    key={file.form_id} 
+                  <div
+                    key={file.form_id}
                     className="flex items-center justify-between rounded border border-[var(--line)] bg-white p-4 shadow-sm transition hover:border-[var(--up-gold)] cursor-pointer"
                   >
                     <div className="flex items-center gap-4">
@@ -374,7 +320,7 @@ export default function AdminPrograms() {
                         </p>
                       </div>
                     </div>
-                    
+
                     {/* Select Checkbox (Visual Only) */}
                     <div className="h-4 w-4 rounded-sm border border-[var(--text-muted)]"></div>
                   </div>
