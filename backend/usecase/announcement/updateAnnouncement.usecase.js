@@ -6,7 +6,7 @@ export function updateAnnouncementUsecase({ announcementRepo, deleteFile }) {
     validateAnnouncementId(id);
     
     // Validate updates if there are any fields other than image_url
-    const { image_url, ...otherUpdates } = updates;
+    const { image_url: existingImageUrl, ...otherUpdates } = updates;
     if (Object.keys(otherUpdates).length > 0) {
       validateAnnouncementUpdates(otherUpdates);
     }
@@ -21,11 +21,11 @@ export function updateAnnouncementUsecase({ announcementRepo, deleteFile }) {
       deleteFile(existing.image_url);
     }
 
-    const image_url = file ? `/uploads/${file.filename}` : existing.image_url;
+    const newImageUrl = file ? `/uploads/${file.filename}` : existing.image_url;  // ← Renamed to newImageUrl
 
     const updateData = {
       ...updates,
-      image_url: image_url && image_url.trim() !== '' ? image_url : null,
+      image_url: newImageUrl && newImageUrl.trim() !== '' ? newImageUrl : null,
     };
 
     const updatedAnnouncement = await announcementRepo.update(id, updateData);
