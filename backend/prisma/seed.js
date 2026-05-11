@@ -161,13 +161,13 @@ async function main() {
       { name: "Policy and Strategic Planning", code: "M241", type: "core", units: 4 },
 
       // PhD by Research Core Courses
-      { name: "Agribusiness Management and Entreprenuership", code: "ABME 399", type: "core", units: 1 },
-      { name: "Agricultural and Applied Economics", code: "AECO 399", type: "core", units: 2 },
-      { name: "Economics", code: "ECON 399", type: "core", units: 2 },
+      { name: "Agribusiness Management and Entreprenuership", code: "ABME 399", type: "pool", units: 1 },
+      { name: "Agricultural and Applied Economics", code: "AECO 399", type: "pool", units: 2 },
+      { name: "Economics", code: "ECON 399", type: "pool", units: 2 },
 
-      { name: "Agribusiness Management and Entreprenuership", code: "ABME 400", type: "core", units: 1 },
-      { name: "Agricultural and Applied Economics", code: "AECO 400", type: "core", units: 2 },
-      { name: "Economics", code: "ECON 400", type: "core", units: 2 },
+      { name: "Agribusiness Management and Entreprenuership", code: "ABME 400", type: "pool", units: 1 },
+      { name: "Agricultural and Applied Economics", code: "AECO 400", type: "pool", units: 2 },
+      { name: "Economics", code: "ECON 400", type: "pool", units: 2 },
     ],
     skipDuplicates: true
   });
@@ -743,6 +743,34 @@ async function main() {
     }, 
   });
 
+  await prisma.coursePool.create({
+    data: {
+      name: "Graduate Seminar Courses",
+      program_id: phdByResearchProgram.program_id,
+      entries: {
+        create: [
+          { course_id: getCourse("ABME 399").course_id },
+          { course_id: getCourse("AECO 399").course_id },
+          { course_id: getCourse("ECON 399").course_id },
+        ]
+      }
+    }, 
+  });  
+
+  await prisma.coursePool.create({
+    data: {
+      name: "Doctoral Courses",
+      program_id: phdByResearchProgram.program_id,
+      entries: {
+        create: [
+          { course_id: getCourse("ABME 400").course_id },
+          { course_id: getCourse("AECO 400").course_id },
+          { course_id: getCourse("ECON 400").course_id },
+        ]
+      }
+    }, 
+  }); 
+
   // =======================
   // STUDY PLAN
   // =======================
@@ -800,15 +828,38 @@ async function main() {
       { study_plan_id: mmStudyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
       { study_plan_id: mmStudyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
 
-      // PhD by Research Study Plan 1 (Unfinished)
-      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M206").course_id, year: 1, semester: 1 },
+      // PhD by Research Study Plan 1 (4 years)
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M211").course_id, year: 1, semester: 2 },
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 2, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M217").course_id, year: 2, semester: 1 },
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: getCourse("M241").course_id, year: 2, semester: 2 },
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
 
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 2, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 4, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 4, semester: 1, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 4, semester: 2, is_elective_slot: true },
+
+      // PhD by Research Study Plan 2 (3 years)
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 1, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 2, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
+
+      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 2, is_elective_slot: true },   
+      
       // Master of Science in Biology Study Plan
       { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 220").course_id, year: 1, semester: 1 },
       { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 240").course_id, year: 1, semester: 1 },
