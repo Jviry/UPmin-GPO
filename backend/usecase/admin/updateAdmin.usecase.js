@@ -10,6 +10,10 @@ export function createUpdateAdminUsecase({ adminRepo, hashPassword }) {
       throw new DomainError('Invalid role');
     }
 
+    if (existing.role === AdminRole.SUPERADMIN && role === AdminRole.ADMIN) {
+      throw new DomainError('Cannot downgrade a superadmin to admin');
+    }
+
     if (email && email !== existing.email) {
       const taken = await adminRepo.findByEmail(email);
       if (taken) throw new DomainError('Email is already in use');

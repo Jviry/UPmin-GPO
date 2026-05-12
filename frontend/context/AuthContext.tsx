@@ -7,6 +7,7 @@ interface User {
   admin_id: number;
   role: string;
   email: string;
+  name: string;
 }
 
 interface AuthContextType {
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             localStorage.removeItem("jwt_token");
           } else {
             setToken(storedToken);
-            setUser({ admin_id: payload.admin_id, role: payload.role, email: payload.email ?? "" });
+            setUser({ admin_id: payload.admin_id, role: payload.role, email: payload.email ?? "", name: payload.name ?? "" });
           }
         }
       } catch {
@@ -68,12 +69,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         admin_id: payload.admin_id,
         role: payload.role,
         email: payload.email ?? "",
+        name: payload.name ?? "",
       });
     } catch (e) {
       console.error("Failed to decode token:", e);
-      // Token is valid from backend but decode failed
-      // Still consider user authenticated but with minimal info
-      setUser({ admin_id: 0, role: "unknown", email: "" });
+      setUser({ admin_id: 0, role: "unknown", email: "", name: "" });
     }
   };
 

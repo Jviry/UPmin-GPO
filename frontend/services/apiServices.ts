@@ -203,6 +203,26 @@ export const getCoordinators = async () => {
   }
 };
 
+// --- SELF-SERVICE PROFILE API ---
+export const updateOwnProfile = async (data: { name?: string; email?: string }) => {
+  try {
+    const response = await apiClient.put('/auth/profile', data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const changeOwnPassword = async (currentPassword: string, newPassword: string) => {
+  try {
+    await apiClient.put('/auth/password', { currentPassword, newPassword });
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
 // --- ADMIN MANAGEMENT API (superadmin only) ---
 export const getAdmins = async () => {
   try {
