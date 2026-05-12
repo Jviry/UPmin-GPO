@@ -224,9 +224,21 @@ export const createAdmin = async (data: { name: string; email: string; password:
   }
 };
 
-export const updateAdminPassword = async (id: number, newPassword: string) => {
+export const verifyPassword = async (password: string) => {
   try {
-    const response = await apiClient.put(`/admins/${id}`, { newPassword });
+    await apiClient.post('/auth/verify-password', { password });
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateAdmin = async (
+  id: number,
+  data: { name?: string; email?: string; role?: string; newPassword?: string }
+) => {
+  try {
+    const response = await apiClient.put(`/admins/${id}`, data);
     return response.data.admin;
   } catch (error: any) {
     const message = error.response?.data?.message || GENERIC_ERROR_MSG;

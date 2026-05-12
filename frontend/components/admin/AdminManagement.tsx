@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAdmins, createAdmin, updateAdminPassword, deleteAdmin } from '@/services/apiServices';
+import { getAdmins, createAdmin, updateAdmin, deleteAdmin, verifyPassword } from '@/services/apiServices';
 
 interface Admin {
   admin_id: number;
@@ -10,31 +10,35 @@ interface Admin {
   role: string;
 }
 
-type ModalMode = 'add' | 'edit';
+type ModalMode = 'add' | 'verify' | 'edit';
+
+const EMPTY_ADD_FORM = { name: '', email: '', password: '', role: 'admin' };
 
 export default function AdminManagement() {
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<ModalMode>('add');
+  const [modalMode, setModalMode] = useState<ModalMode | null>(null);
   const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const [addForm, setAddForm] = useState({ name: '', email: '', password: '', role: 'admin' });
-  const [newPassword, setNewPassword] = useState('');
+  // Add form
+  const [addForm, setAddForm] = useState(EMPTY_ADD_FORM);
 
-  useEffect(() => {
-    loadAdmins();
-  }, []);
+  // Verification step
+  const [verifyPasswordInput, setVerifyPasswordInput] = useState('');
+
+  // Edit form
+  const [editForm, setEditForm] = useState({ name: '', email: '', role: '', newPassword: '' });
+
+  useEffect(() => { loadAdmins(); }, []);
 
   const loadAdmins = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getAdmins();
-      setAdmins(data);
+      setAdmins(await getAdmins());
     } catch (err: any) {
       setError(err.message || 'Failed to load admins');
     } finally {
@@ -43,25 +47,25 @@ export default function AdminManagement() {
   };
 
   const openAddModal = () => {
-    setModalMode('add');
-    setAddForm({ name: '', email: '', password: '', role: 'admin' });
+    setAddForm(EMPTY_ADD_FORM);
     setError(null);
-    setIsModalOpen(true);
+    setModalMode('add');
   };
 
   const openEditModal = (admin: Admin) => {
-    setModalMode('edit');
     setEditingAdmin(admin);
-    setNewPassword('');
+    setVerifyPasswordInput('');
+    setEditForm({ name: admin.name, email: admin.email, role: admin.role, newPassword: '' });
     setError(null);
-    setIsModalOpen(true);
+    setModalMode('verify');
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setModalMode(null);
     setEditingAdmin(null);
-    setNewPassword('');
-    setAddForm({ name: '', email: '', password: '', role: 'admin' });
+    setVerifyPasswordInput('');
+    setEditForm({ name: '', email: '', role: '', newPassword: '' });
+    setAddForm(EMPTY_ADD_FORM);
     setError(null);
   };
 
@@ -84,20 +88,43 @@ export default function AdminManagement() {
     }
   };
 
-  const handleEditSubmit = async (e: React.FormEvent) => {
+  const handleVerifySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newPassword.trim()) {
-      setError('New password is required');
+    if (!verifyPasswordInput.trim()) {
+      setError('Please enter your password');
       return;
     }
     try {
       setSubmitting(true);
       setError(null);
-      await updateAdminPassword(editingAdmin!.admin_id, newPassword);
+      await verifyPassword(verifyPasswordInput);
+      setModalMode('edit');
+    } catch (err: any) {
+      setError(err.message || 'Incorrect password');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editForm.name.trim() || !editForm.email.trim()) {
+      setError('Name and email are required');
+      return;
+    }
+    try {
+      setSubmitting(true);
+      setError(null);
+      await updateAdmin(editingAdmin!.admin_id, {
+        name: editForm.name,
+        email: editForm.email,
+        role: editForm.role,
+        newPassword: editForm.newPassword || undefined,
+      });
       closeModal();
       await loadAdmins();
     } catch (err: any) {
-      setError(err.message || 'Failed to update password');
+      setError(err.message || 'Failed to update admin');
     } finally {
       setSubmitting(false);
     }
@@ -116,10 +143,8 @@ export default function AdminManagement() {
 
   return (
     <div>
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 text-sm">
-          {error}
-        </div>
+      {error && !modalMode && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 text-sm">{error}</div>
       )}
 
       <div className="mb-4 flex flex-col border border-[var(--line)] bg-white">
@@ -149,17 +174,12 @@ export default function AdminManagement() {
             </thead>
             <tbody>
               {admins.map((admin, index) => (
-                <tr
-                  key={admin.admin_id}
-                  className={`border-b border-[var(--line)] hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'}`}
-                >
+                <tr key={admin.admin_id} className={`border-b border-[var(--line)] hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'}`}>
                   <td className="py-4 px-6 font-semibold text-[var(--text-primary)]">{admin.name}</td>
                   <td className="py-4 px-6 text-[var(--text-secondary)]">{admin.email}</td>
                   <td className="py-4 px-6">
                     <span className={`inline-block rounded px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-widest ${
-                      admin.role === 'superadmin'
-                        ? 'bg-[var(--up-maroon)] text-white'
-                        : 'bg-gray-200 text-gray-700'
+                      admin.role === 'superadmin' ? 'bg-[var(--up-maroon)] text-white' : 'bg-gray-200 text-gray-700'
                     }`}>
                       {admin.role}
                     </span>
@@ -186,30 +206,39 @@ export default function AdminManagement() {
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
+      {modalMode && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white shadow-lg max-w-lg w-full">
+
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[var(--line)] px-8 py-6">
-              <h3 className="text-lg font-bold uppercase tracking-widest text-[var(--text-primary)]">
-                {modalMode === 'add' ? 'Add Admin' : 'Change Password'}
-              </h3>
-              <button
-                onClick={closeModal}
-                className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-2xl leading-none"
-              >
-                ×
-              </button>
+              <div>
+                <h3 className="text-lg font-bold uppercase tracking-widest text-[var(--text-primary)]">
+                  {modalMode === 'add' && 'Add Admin'}
+                  {modalMode === 'verify' && 'Verify Identity'}
+                  {modalMode === 'edit' && `Edit Admin`}
+                </h3>
+                {modalMode === 'verify' && (
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">
+                    Enter your password to edit <span className="font-semibold text-[var(--text-primary)]">{editingAdmin?.name}</span>
+                  </p>
+                )}
+                {modalMode === 'edit' && (
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">Editing {editingAdmin?.name}</p>
+                )}
+              </div>
+              <button onClick={closeModal} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-2xl leading-none">×</button>
             </div>
 
             {/* Body */}
-            <form onSubmit={modalMode === 'add' ? handleAddSubmit : handleEditSubmit} className="px-8 py-6 space-y-5">
+            <div className="px-8 py-6">
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-sm">{error}</div>
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 text-sm">{error}</div>
               )}
 
-              {modalMode === 'add' ? (
-                <>
+              {/* ADD FORM */}
+              {modalMode === 'add' && (
+                <form onSubmit={handleAddSubmit} className="space-y-5">
                   <div>
                     <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
                       Name <span className="text-red-600">*</span>
@@ -222,7 +251,6 @@ export default function AdminManagement() {
                       placeholder="Full name"
                     />
                   </div>
-
                   <div>
                     <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
                       Email <span className="text-red-600">*</span>
@@ -235,7 +263,6 @@ export default function AdminManagement() {
                       placeholder="email@example.com"
                     />
                   </div>
-
                   <div>
                     <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
                       Password <span className="text-red-600">*</span>
@@ -248,7 +275,6 @@ export default function AdminManagement() {
                       placeholder="Password"
                     />
                   </div>
-
                   <div>
                     <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
                       Role <span className="text-red-600">*</span>
@@ -262,44 +288,103 @@ export default function AdminManagement() {
                       <option value="superadmin">Superadmin</option>
                     </select>
                   </div>
-                </>
-              ) : (
-                <>
-                  <p className="text-sm text-[var(--text-secondary)]">
-                    Changing password for <span className="font-semibold">{editingAdmin?.name}</span>
-                  </p>
+                  <div className="flex gap-3 justify-end pt-2 border-t border-[var(--line)]">
+                    <button type="button" onClick={closeModal} className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition">Cancel</button>
+                    <button type="submit" disabled={submitting} className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition disabled:opacity-60">
+                      {submitting ? 'Creating...' : 'Create Admin'}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* VERIFY STEP */}
+              {modalMode === 'verify' && (
+                <form onSubmit={handleVerifySubmit} className="space-y-5">
+                  <div className="flex items-start gap-3 p-3 bg-amber-50 border border-amber-200 text-amber-800 text-sm">
+                    <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z" />
+                    </svg>
+                    <span>Confirm your identity before making changes to another admin's account.</span>
+                  </div>
                   <div>
                     <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
-                      New Password <span className="text-red-600">*</span>
+                      Your Password <span className="text-red-600">*</span>
                     </label>
                     <input
                       type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
+                      value={verifyPasswordInput}
+                      onChange={(e) => setVerifyPasswordInput(e.target.value)}
+                      autoFocus
                       className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
-                      placeholder="New password"
+                      placeholder="Enter your password"
                     />
                   </div>
-                </>
+                  <div className="flex gap-3 justify-end pt-2 border-t border-[var(--line)]">
+                    <button type="button" onClick={closeModal} className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition">Cancel</button>
+                    <button type="submit" disabled={submitting} className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition disabled:opacity-60">
+                      {submitting ? 'Verifying...' : 'Verify'}
+                    </button>
+                  </div>
+                </form>
               )}
 
-              <div className="flex gap-3 justify-end pt-2 border-t border-[var(--line)]">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition disabled:opacity-60"
-                >
-                  {submitting ? 'Saving...' : modalMode === 'add' ? 'Create Admin' : 'Update Password'}
-                </button>
-              </div>
-            </form>
+              {/* EDIT FORM */}
+              {modalMode === 'edit' && (
+                <form onSubmit={handleEditSubmit} className="space-y-5">
+                  <div>
+                    <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
+                      Name <span className="text-red-600">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.name}
+                      onChange={(e) => setEditForm(f => ({ ...f, name: e.target.value }))}
+                      className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
+                      Email <span className="text-red-600">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={editForm.email}
+                      onChange={(e) => setEditForm(f => ({ ...f, email: e.target.value }))}
+                      className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">Role</label>
+                    <select
+                      value={editForm.role}
+                      onChange={(e) => setEditForm(f => ({ ...f, role: e.target.value }))}
+                      className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] focus:outline-none focus:border-[var(--up-maroon)]"
+                    >
+                      <option value="admin">Admin</option>
+                      <option value="superadmin">Superadmin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
+                      New Password <span className="text-[0.6rem] font-normal normal-case tracking-normal text-[var(--text-muted)]">(leave blank to keep current)</span>
+                    </label>
+                    <input
+                      type="password"
+                      value={editForm.newPassword}
+                      onChange={(e) => setEditForm(f => ({ ...f, newPassword: e.target.value }))}
+                      className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
+                      placeholder="Leave blank to keep current password"
+                    />
+                  </div>
+                  <div className="flex gap-3 justify-end pt-2 border-t border-[var(--line)]">
+                    <button type="button" onClick={closeModal} className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition">Cancel</button>
+                    <button type="submit" disabled={submitting} className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition disabled:opacity-60">
+                      {submitting ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}

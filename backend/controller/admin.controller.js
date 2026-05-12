@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createAdminRepository } from '../repository/admin.repository.js';
 import { createAdminUsecase } from '../usecase/admin/createAdmin.usecase.js';
-import { createUpdatePasswordUsecase } from '../usecase/admin/updatePassword.usecase.js'
+import { createUpdateAdminUsecase } from '../usecase/admin/updateAdmin.usecase.js';
 import { createDeleteAdminUsecase } from '../usecase/admin/deleteAdmin.usecase.js';
 import { createGetAdminsUsecase } from '../usecase/admin/getAdmins.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
@@ -29,10 +29,9 @@ const createAdmin = createAdminUsecase({
   hashPassword: (pw) => bcrypt.hash(pw, 10)
 });
 
-const updatePassword = createUpdatePasswordUsecase({
+const updateAdmin = createUpdateAdminUsecase({
   adminRepo,
   hashPassword: (pw) => bcrypt.hash(pw, 10),
-  comparePassword: bcrypt.compare
 });
 
 const deleteAdmin = createDeleteAdminUsecase(
@@ -58,15 +57,32 @@ router.post('/admins', authenticate, authenticateRole(AdminRole.SUPERADMIN), asy
   }
 });
 
+router.post('/auth/verify-password', authenticate, async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password) return res.status(400).json({ message: 'Password is required' });
+
+    const admin = await adminRepo.findByID(req.user.admin_id);
+    if (!admin) return res.status(400).json({ message: 'Admin not found' });
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) return res.status(400).json({ message: 'Incorrect password' });
+
+    res.status(200).json({ message: 'Password verified' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.put('/admins/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN), async (req, res) => {
   try {
     const { id } = req.params;
-    const { newPassword } = req.body;
+    const { name, email, role, newPassword } = req.body;
 
-    const admin = await updatePassword(id, newPassword);
+    const admin = await updateAdmin(id, { name, email, role, newPassword });
 
     res.status(200).json({
-      message: `Admin ${id} password updated`,
+      message: `Admin ${id} updated`,
       admin,
     });
   } catch (error) {
