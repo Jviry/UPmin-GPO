@@ -12,13 +12,13 @@ export function createAdminRepository(prisma) {
       });
     },
 
-    async create({ email, name, password }) {
+    async create({ email, name, password, role }) {
       return prisma.admin.create({
         data: {
           email,
           name,
           password,
-          role: 'admin',
+          role: role ?? 'admin',
         },
         select: {
           admin_id: true,
@@ -62,6 +62,25 @@ export function createAdminRepository(prisma) {
           name: true,
           email: true,
           role: true
+        }
+      });
+    },
+
+    async update(id, { name, email, role, hashedPassword }) {
+      const data = {};
+      if (name !== undefined) data.name = name;
+      if (email !== undefined) data.email = email;
+      if (role !== undefined) data.role = role;
+      if (hashedPassword !== undefined) data.password = hashedPassword;
+
+      return prisma.admin.update({
+        where: { admin_id: Number(id) },
+        data,
+        select: {
+          admin_id: true,
+          email: true,
+          name: true,
+          role: true,
         }
       });
     }

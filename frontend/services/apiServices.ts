@@ -47,6 +47,16 @@ export const getOfficeInfo = async () => {
   }
 };
 
+export const updateGoogleFormUrl = async (url: string) => {
+  try {
+    const response = await apiClient.patch('/office/google-url', { application_google_url: url });
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
 // --- PROGRAM API ---
 export const getPrograms = async () => {
   try {
@@ -200,5 +210,78 @@ export const getCoordinators = async () => {
     return response.data.faculties;
   } catch (error) {
     throw new Error("Failed to load coordinators.");
+  }
+};
+
+// --- SELF-SERVICE PROFILE API ---
+export const updateOwnProfile = async (data: { name?: string; email?: string }) => {
+  try {
+    const response = await apiClient.put('/auth/profile', data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const changeOwnPassword = async (currentPassword: string, newPassword: string) => {
+  try {
+    await apiClient.put('/auth/password', { currentPassword, newPassword });
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+// --- ADMIN MANAGEMENT API (superadmin only) ---
+export const getAdmins = async () => {
+  try {
+    const response = await apiClient.get('/admins');
+    return response.data.admins as Array<{ admin_id: number; name: string; email: string; role: string }>;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const createAdmin = async (data: { name: string; email: string; password: string; role: string }) => {
+  try {
+    const response = await apiClient.post('/admins', data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const verifyPassword = async (password: string) => {
+  try {
+    await apiClient.post('/auth/verify-password', { password });
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateAdmin = async (
+  id: number,
+  data: { name?: string; email?: string; role?: string; newPassword?: string }
+) => {
+  try {
+    const response = await apiClient.put(`/admins/${id}`, data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteAdmin = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`/admins/${id}`);
+    return response.data.deletedAdmin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
   }
 };
