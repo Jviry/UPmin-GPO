@@ -14,15 +14,23 @@ export function EditProgramInfoBlock({ program, programId }: { program: any; pro
 
       <div className="mb-6 grid grid-cols-4 gap-6">
         <div className="col-span-3 flex flex-col gap-4">
-          {/* Department removed. Name input now spans full width */}
-          <input
-            type="text"
-            defaultValue={program.name}
-            className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-            placeholder="Name of Program"
-          />
+          <div className="flex gap-4">
+            <input
+              type="text"
+              defaultValue={program?.name}
+              className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
+              placeholder="Name of Program"
+            />
+            {/* Note: Remove this Department input if it is completely purged from your schema */}
+            <input
+              type="text"
+              defaultValue={program?.department?.name || ''}
+              className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
+              placeholder="Department"
+            />
+          </div>
           <textarea
-            defaultValue={program.description}
+            defaultValue={program?.description}
             className="flex-1 min-h-[140px] resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
             placeholder="About Graduate Program..."
           />
@@ -39,12 +47,8 @@ export function EditProgramInfoBlock({ program, programId }: { program: any; pro
       </div>
 
       <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
-        <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">
-          Cancel
-        </button>
-        <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
-          Save
-        </button>
+        <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Cancel</button>
+        <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Save</button>
       </div>
     </section>
   );

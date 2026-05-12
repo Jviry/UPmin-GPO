@@ -12,12 +12,19 @@ export function CreateProgramBlock({ onCancel }: { onCancel: () => void }) {
 
       <div className="mb-6 grid grid-cols-4 gap-6">
         <div className="col-span-3 flex flex-col gap-4">
-          {/* Department removed. Name input now spans full width of the left block */}
-          <input
-            type="text"
-            className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-            placeholder="Name of Program"
-          />
+          <div className="flex gap-4">
+            <input
+              type="text"
+              className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
+              placeholder="Name of Program"
+            />
+            {/* Note: Remove this Department input if it is completely purged from your schema */}
+            <input
+              type="text"
+              className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
+              placeholder="Department"
+            />
+          </div>
           <textarea
             className="flex-1 min-h-[140px] resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
             placeholder="About Graduate Program..."
