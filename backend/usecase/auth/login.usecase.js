@@ -11,7 +11,7 @@ export function createLoginUsecase({ adminRepo, comparePassword, signToken }) {
     const isMatch = await comparePassword(password, admin.password);
     if (!isMatch) throw new DomainError('Invalid Password');
 
-    const token = signToken({ admin_id: admin.admin_id, role: admin.role });
+    const token = signToken({ admin_id: admin.admin_id, role: admin.role, name: admin.name, email: admin.email });
 
     return { token };
   }

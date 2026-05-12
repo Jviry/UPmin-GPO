@@ -2,7 +2,7 @@ import { validateNewAdmin } from '../../domain/admin.js';
 import { DomainError } from '../../domain/errors.js';
 
 export function createAdminUsecase({ adminRepo, hashPassword }) {
-  return async function({ email, password, name }) {
+  return async function({ email, password, name, role }) {
     validateNewAdmin({ email, password, name });
 
     const existing = await adminRepo.findByEmail(email);
@@ -10,6 +10,6 @@ export function createAdminUsecase({ adminRepo, hashPassword }) {
 
     const hashedPassword = await hashPassword(password);
 
-    return await adminRepo.create({ email, name, password: hashedPassword });
+    return await adminRepo.create({ email, name, password: hashedPassword, role });
   }
 }
