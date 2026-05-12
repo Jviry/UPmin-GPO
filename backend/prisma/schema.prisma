@@ -36,6 +36,7 @@ model Announcement {
 model Scholarship {
   scholarship_id           Int     @id @default(autoincrement())
   name                     String
+  image_url                String?
   description              String
   covered_programs         String
   application_instructions String

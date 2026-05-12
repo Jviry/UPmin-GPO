@@ -9,6 +9,8 @@ import { deleteScholarshipUsecase } from '../usecase/scholarship/deleteScholarsh
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 import { AdminRole } from '../domain/admin.js';
+import { upload } from '../middleware/upload.middleware.js';
+import { deleteFile } from '../utils/deleteFile.util.js';
 
 const router = express.Router();
 
@@ -17,8 +19,8 @@ const scholarshipRepo = createScholarshipRepository(prisma);
 const getAllScholarships = getAllScholarshipsUsecase({ scholarshipRepo });
 const getScholarshipById = getScholarshipByIdUsecase({ scholarshipRepo });
 const createScholarship = createScholarshipUsecase({ scholarshipRepo });
-const updateScholarship = updateScholarshipUsecase({ scholarshipRepo });
-const deleteScholarship = deleteScholarshipUsecase({ scholarshipRepo });
+const updateScholarship = updateScholarshipUsecase({ scholarshipRepo, deleteFile });
+const deleteScholarship = deleteScholarshipUsecase({ scholarshipRepo, deleteFile });
 
 // Public routes
 router.get('/scholarships', async (req, res) => {
@@ -58,7 +60,7 @@ router.get('/scholarships/:id', async (req, res) => {
 });
 
 // Protected routes
-router.post('/scholarships', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
+router.post('/scholarships', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), upload.single('image'), async (req, res) => {
   try {
     const admin_id = req.user.admin_id;
     const scholarshipData = {
@@ -66,13 +68,16 @@ router.post('/scholarships', authenticate, authenticateRole(AdminRole.ADMIN, Adm
       admin_id: admin_id
     };
 
-    const result = await createScholarship(scholarshipData);
+    const result = await createScholarship({ ...req.body, admin_id, file: req.file });
 
     res.status(200).json({
       message: 'New scholarship created successfully',
       scholarship: result.scholarship,
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
@@ -81,16 +86,19 @@ router.post('/scholarships', authenticate, authenticateRole(AdminRole.ADMIN, Adm
   }
 });
 
-router.put('/scholarships/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
+router.put('/scholarships/:id', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await updateScholarship(id, req.body);
+    const result = await updateScholarship({ id, ...req.body, file: req.file });
 
     res.status(200).json({
       message: `Scholarship ${id} updated successfully`,
       scholarship: result.scholarship,
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
