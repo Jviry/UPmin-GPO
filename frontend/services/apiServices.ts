@@ -19,7 +19,7 @@ export const getAnnouncements = async () => {
   try {
     const response = await apiClient.get('/announcements');
     // Map response shape: { message, announcements }[span_4](start_span)[span_4](end_span)
-    return response.data.announcements; 
+    return response.data.announcements;
   } catch (error) {
     throw new Error(GENERIC_ERROR_MSG);
   }
@@ -52,12 +52,41 @@ export const getPrograms = async () => {
   try {
     const response = await apiClient.get('/programs');
     // Map response shape: { message, programs }[span_8](start_span)[span_8](end_span)
-    return response.data.programs; 
+    return response.data.programs;
   } catch (error) {
     throw new Error(GENERIC_ERROR_MSG);
   }
 };
 
+export const updateProgramApplication = async (
+  programId: number,
+  data: {
+    qualifications: string;
+    application_instructions: string;
+    application_requirements: string;
+    application_url?: File | null;
+    recommendation_url?: File | null;
+    fees_url?: File | null;
+  }
+) => {
+  try {
+    const form = new FormData();
+    form.append('qualifications', data.qualifications);
+    form.append('application_instructions', data.application_instructions);
+    form.append('application_requirements', data.application_requirements);
+    if (data.application_url) form.append('application_url', data.application_url);
+    if (data.recommendation_url) form.append('recommendation_url', data.recommendation_url);
+    if (data.fees_url) form.append('fees_url', data.fees_url);
+
+    const response = await apiClient.put(`/programs/${programId}/application`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
 // --- FACULTY API ---
 export const getFaculty = async (position?: string, page = 1, limit = 10) => {
   try {

@@ -9,25 +9,29 @@ import { authenticate } from '../middleware/authenticate.middleware.js';
 import { updateAnnouncementUsecase } from '../usecase/announcement/updateAnnouncement.usecase.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 import { AdminRole } from '../domain/admin.js';
+import { upload } from '../middleware/upload.middleware.js';
+import { deleteFile } from '../utils/deleteFile.util.js';
 
 const router = express.Router();
 
 const announcementRepo = createAnnouncementRepository(prisma);
 const createAnnouncement = createAnnouncementUsecase({ announcementRepo });
-const deleteAnnouncement = deleteAnnouncementUsecase({ announcementRepo });
-const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo });
+const deleteAnnouncement = deleteAnnouncementUsecase({ announcementRepo, deleteFile });
+const updateAnnouncement = updateAnnouncementUsecase({ announcementRepo, deleteFile });
 const getAnnouncementById = getAnnouncementByIdUsecase({ announcementRepo });
 const getAnnouncements = getAnnouncementsUsecase({ announcementRepo });
 
-router.post('/announcements', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), async (req, res) => {
+router.post('/announcements', authenticate, authenticateRole(AdminRole.ADMIN, AdminRole.SUPERADMIN), upload.single('image'), async (req, res) => {
   try {
     const admin_id = req.user.admin_id;
-    const { title, content_description } = req.body;
+    const { title, content_description, attached_link } = req.body;
 
     const result = await createAnnouncement({
       title,
       admin_id,
       content_description,
+      attached_link,
+      file: req.file,
     });
 
     res.status(200).json({
@@ -35,6 +39,10 @@ router.post('/announcements', authenticate, authenticateRole(AdminRole.ADMIN, Ad
       announcement: result.newAnnouncement,
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
+
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
@@ -80,12 +88,12 @@ router.get('/announcements', async (req, res) => {
   }
 });
 
-router.put('/announcements/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
+router.put('/announcements/:id', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), upload.single('image'),  async (req, res) => {
   try {
-    const { admin_id } = req.user.admin_id;
     const { id } = req.params;
+    const admin_id = req.user.admin_id;
 
-    const result = await updateAnnouncement(id, req.body);
+    const result = await updateAnnouncement(id, req.body, req.file);
 
     res.status(200).json({
       message: `Announcement ${id} updated successfully`,
@@ -93,6 +101,9 @@ router.put('/announcements/:id', authenticate, authenticateRole(AdminRole.SUPERA
       admin_id
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(`/uploads/${req.file.filename}`);
+    }
     if (error.isDomainError) {
       return res.status(400).json({ message: error.message });
     }
