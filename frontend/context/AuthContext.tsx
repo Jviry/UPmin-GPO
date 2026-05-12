@@ -29,15 +29,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt_token");
     if (storedToken) {
-      setToken(storedToken);
       try {
         const parts = storedToken.split(".");
         if (parts.length === 3) {
           const payload = JSON.parse(atob(parts[1]));
-          setUser({ admin_id: payload.admin_id, role: payload.role, email: payload.email ?? "" });
+          const isExpired = payload.exp && payload.exp * 1000 < Date.now();
+          if (isExpired) {
+            localStorage.removeItem("jwt_token");
+          } else {
+            setToken(storedToken);
+            setUser({ admin_id: payload.admin_id, role: payload.role, email: payload.email ?? "" });
+          }
         }
       } catch {
-        // token unreadable — leave user null, auth guard will redirect
+        // token unreadable — clear it
+        localStorage.removeItem("jwt_token");
       }
     }
     setIsLoading(false);

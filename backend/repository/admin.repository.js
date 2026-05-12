@@ -12,13 +12,13 @@ export function createAdminRepository(prisma) {
       });
     },
 
-    async create({ email, name, password }) {
+    async create({ email, name, password, role }) {
       return prisma.admin.create({
         data: {
           email,
           name,
           password,
-          role: 'admin',
+          role: role ?? 'admin',
         },
         select: {
           admin_id: true,

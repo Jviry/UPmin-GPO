@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
@@ -13,7 +13,14 @@ export default function LoginPage() {
   const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
+
+  // Redirect to dashboard if already logged in with a valid token
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.replace("/admin");
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
