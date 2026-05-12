@@ -291,9 +291,13 @@ export default function AdminManagement() {
                       type="password"
                       value={addForm.password}
                       onChange={(e) => setAddForm(f => ({ ...f, password: e.target.value }))}
+                      minLength={8}
                       className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
                       placeholder="Password"
                     />
+                    {addForm.password && addForm.password.length < 8 && (
+                      <p className="mt-1.5 text-[0.65rem] text-red-500">Must be at least 8 characters</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
@@ -428,9 +432,13 @@ export default function AdminManagement() {
                       type="password"
                       value={editForm.newPassword}
                       onChange={(e) => setEditForm(f => ({ ...f, newPassword: e.target.value }))}
+                      minLength={8}
                       className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
                       placeholder="Leave blank to keep current password"
                     />
+                    {editForm.newPassword && editForm.newPassword.length < 8 && (
+                      <p className="mt-1.5 text-[0.65rem] text-red-500">Must be at least 8 characters</p>
+                    )}
                   </div>
                   <div className="flex gap-3 justify-end pt-2 border-t border-[var(--line)]">
                     <button type="button" onClick={closeModal} className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition">Cancel</button>

@@ -72,6 +72,8 @@ router.put('/auth/password', authenticate, async (req, res) => {
     const admin = await adminRepo.findByID(req.user.admin_id);
     if (!admin) return res.status(400).json({ message: 'Admin not found' });
 
+    if (newPassword.length < 8) return res.status(400).json({ message: 'Password must be at least 8 characters' });
+
     const isMatch = await bcrypt.compare(currentPassword, admin.password);
     if (!isMatch) return res.status(400).json({ message: 'Current password is incorrect' });
 

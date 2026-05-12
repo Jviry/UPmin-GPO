@@ -21,6 +21,7 @@ export function createUpdateAdminUsecase({ adminRepo, hashPassword }) {
 
     let hashedPassword;
     if (newPassword) {
+      if (newPassword.length < 8) throw new DomainError('Password must be at least 8 characters');
       hashedPassword = await hashPassword(newPassword);
     }
 
