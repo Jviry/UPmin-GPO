@@ -18,7 +18,7 @@ model Admin {
   name          String
   password      String
   role          String
-  announcements Announcement[]cr
+  announcements Announcement[]
   scholarships  Scholarship[]
 }
 
