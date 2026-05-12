@@ -202,3 +202,44 @@ export const getCoordinators = async () => {
     throw new Error("Failed to load coordinators.");
   }
 };
+
+// --- ADMIN MANAGEMENT API (superadmin only) ---
+export const getAdmins = async () => {
+  try {
+    const response = await apiClient.get('/admins');
+    return response.data.admins as Array<{ admin_id: number; name: string; email: string; role: string }>;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const createAdmin = async (data: { name: string; email: string; password: string; role: string }) => {
+  try {
+    const response = await apiClient.post('/admins', data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateAdminPassword = async (id: number, newPassword: string) => {
+  try {
+    const response = await apiClient.put(`/admins/${id}`, { newPassword });
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteAdmin = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`/admins/${id}`);
+    return response.data.deletedAdmin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
