@@ -8,10 +8,12 @@ import { useAuth } from '@/context/AuthContext';
 import LoadingScreen from '@/components/admin/LoadingScreen';
 import { updateOwnProfile, changeOwnPassword } from '@/services/apiServices';
 
+// Added Announcements to the navigation array
 const NAV_ITEMS = [
   { label: 'Dashboard', href: '/admin' },
   { label: 'Programs', href: '/admin/programs' },
   { label: 'Scholarships', href: '/admin/scholarships' },
+  { label: 'Announcements', href: '/admin/announcements' },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -151,7 +153,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.href}
                 href={item.href}
                 className={`transition-colors duration-200 hover:text-[var(--up-maroon)] ${
-                  pathname === item.href ? 'text-[var(--up-maroon)] font-semibold' : ''
+                  pathname.startsWith(item.href) && (item.href !== '/admin' || pathname === '/admin') 
+                    ? 'text-[var(--up-maroon)] font-semibold' 
+                    : ''
                 }`}
               >
                 {item.label}
