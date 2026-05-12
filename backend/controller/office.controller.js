@@ -51,4 +51,20 @@ router.patch('/office', authenticate, authenticateRole(AdminRole.SUPERADMIN, Adm
   }
 });
 
+router.patch('/office/google-url', authenticate, authenticateRole(AdminRole.SUPERADMIN, AdminRole.ADMIN), async (req, res) => {
+  try {
+    const { application_google_url } = req.body;
+    if (application_google_url === undefined) {
+      return res.status(400).json({ message: 'application_google_url field is required' });
+    }
+    await officeRepo.patchGoogleUrl(1, application_google_url.trim());
+    res.status(200).json({ message: 'Google Form URL updated', application_google_url });
+  } catch (error) {
+    if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;

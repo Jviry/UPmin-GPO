@@ -47,6 +47,16 @@ export const getOfficeInfo = async () => {
   }
 };
 
+export const updateGoogleFormUrl = async (url: string) => {
+  try {
+    const response = await apiClient.patch('/office/google-url', { application_google_url: url });
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
 // --- PROGRAM API ---
 export const getPrograms = async () => {
   try {
