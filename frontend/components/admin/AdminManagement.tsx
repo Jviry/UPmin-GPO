@@ -10,7 +10,7 @@ interface Admin {
   role: string;
 }
 
-type ModalMode = 'add' | 'verify' | 'edit';
+type ModalMode = 'add' | 'verify' | 'edit' | 'delete-verify';
 
 const EMPTY_ADD_FORM = { name: '', email: '', password: '', role: 'admin' };
 
@@ -58,6 +58,13 @@ export default function AdminManagement() {
     setEditForm({ name: admin.name, email: admin.email, role: admin.role, newPassword: '' });
     setError(null);
     setModalMode('verify');
+  };
+
+  const openDeleteModal = (admin: Admin) => {
+    setEditingAdmin(admin);
+    setVerifyPasswordInput('');
+    setError(null);
+    setModalMode('delete-verify');
   };
 
   const closeModal = () => {
@@ -130,14 +137,23 @@ export default function AdminManagement() {
     }
   };
 
-  const handleDelete = async (admin: Admin) => {
-    if (!confirm(`Delete admin "${admin.name}"? This cannot be undone.`)) return;
+  const handleDeleteVerifySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!verifyPasswordInput.trim()) {
+      setError('Please enter your password');
+      return;
+    }
     try {
+      setSubmitting(true);
       setError(null);
-      await deleteAdmin(admin.admin_id);
+      await verifyPassword(verifyPasswordInput);
+      await deleteAdmin(editingAdmin!.admin_id);
+      closeModal();
       await loadAdmins();
     } catch (err: any) {
-      setError(err.message || 'Failed to delete admin');
+      setError(err.message || 'Incorrect password');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -192,7 +208,7 @@ export default function AdminManagement() {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(admin)}
+                      onClick={() => openDeleteModal(admin)}
                       className="px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-red-600 border border-red-200 hover:bg-red-50 transition"
                     >
                       Delete
@@ -216,7 +232,8 @@ export default function AdminManagement() {
                 <h3 className="text-lg font-bold uppercase tracking-widest text-[var(--text-primary)]">
                   {modalMode === 'add' && 'Add Admin'}
                   {modalMode === 'verify' && 'Verify Identity'}
-                  {modalMode === 'edit' && `Edit Admin`}
+                  {modalMode === 'edit' && 'Edit Admin'}
+                  {modalMode === 'delete-verify' && 'Confirm Deletion'}
                 </h3>
                 {modalMode === 'verify' && (
                   <p className="mt-1 text-xs text-[var(--text-muted)]">
@@ -225,6 +242,9 @@ export default function AdminManagement() {
                 )}
                 {modalMode === 'edit' && (
                   <p className="mt-1 text-xs text-[var(--text-muted)]">Editing {editingAdmin?.name}</p>
+                )}
+                {modalMode === 'delete-verify' && (
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">Verify your identity to proceed</p>
                 )}
               </div>
               <button onClick={closeModal} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-2xl leading-none">×</button>
@@ -292,6 +312,39 @@ export default function AdminManagement() {
                     <button type="button" onClick={closeModal} className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition">Cancel</button>
                     <button type="submit" disabled={submitting} className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition disabled:opacity-60">
                       {submitting ? 'Creating...' : 'Create Admin'}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* DELETE VERIFY STEP */}
+              {modalMode === 'delete-verify' && (
+                <form onSubmit={handleDeleteVerifySubmit} className="space-y-5">
+                  <div className="flex items-start gap-3 p-3 bg-red-50 border border-red-200 text-red-800 text-sm">
+                    <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z" />
+                    </svg>
+                    <span>
+                      You are about to permanently delete <span className="font-semibold">{editingAdmin?.name}</span>. This cannot be undone. Enter your password to confirm.
+                    </span>
+                  </div>
+                  <div>
+                    <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-2">
+                      Your Password <span className="text-red-600">*</span>
+                    </label>
+                    <input
+                      type="password"
+                      value={verifyPasswordInput}
+                      onChange={(e) => setVerifyPasswordInput(e.target.value)}
+                      autoFocus
+                      className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-red-500"
+                      placeholder="Enter your password"
+                    />
+                  </div>
+                  <div className="flex gap-3 justify-end pt-2 border-t border-[var(--line)]">
+                    <button type="button" onClick={closeModal} className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition">Cancel</button>
+                    <button type="submit" disabled={submitting} className="px-10 py-2.5 bg-red-600 text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-red-700 transition disabled:opacity-60">
+                      {submitting ? 'Deleting...' : 'Confirm Delete'}
                     </button>
                   </div>
                 </form>
