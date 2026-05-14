@@ -325,10 +325,16 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
                   <option value="pool">Pool Course (Electives, Seminars)</option>
                 </select>
               </div>
-              <button onClick={handleAddCourse} className="h-10 shrink-0 border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+              <button onClick={handleAddCourse} className="h-10 shrink-0 border border-[var(--line)] bg-white px-8 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">
                 Add to Catalog
               </button>
             </div>
+          </div>
+          <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
+            <button onClick={() => setNewCourse({ code: '', name: '', units: 3, type: 'core' })} className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Cancel</button>
+            <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+              Save Course to Database
+            </button>
           </div>
         </div>
 
@@ -409,6 +415,13 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
               </div>
             </div>
           </div>
+
+          <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
+            <button className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Discard</button>
+            <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+              Save Study Plan
+            </button>
+          </div>
         </section>
 
         {/* --- SECTION 3: COURSE POOL BUILDER --- */}
@@ -443,6 +456,13 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
                 {poolCatalog.map((course) => <DraggablePaletteCourse key={`pool_${course.code}`} id={`pool_${course.code}`} course={course} />)}
               </div>
             </div>
+          </div>
+
+          <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
+            <button className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Discard</button>
+            <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+              Save Course Pool
+            </button>
           </div>
         </section>
 

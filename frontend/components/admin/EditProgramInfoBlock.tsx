@@ -1,7 +1,5 @@
 'use client';
 
-import { StudyPlanBuilder } from '@/components/admin/StudyPlanBuilder';
-
 export function EditProgramInfoBlock({ program, programId }: { program: any; programId: number }) {
   return (
     <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
@@ -21,7 +19,6 @@ export function EditProgramInfoBlock({ program, programId }: { program: any; pro
               className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
               placeholder="Name of Program"
             />
-            {/* Note: Remove this Department input if it is completely purged from your schema */}
             <input
               type="text"
               defaultValue={program?.department?.name || ''}
@@ -42,13 +39,9 @@ export function EditProgramInfoBlock({ program, programId }: { program: any; pro
         </div>
       </div>
 
-      <div className="mb-8">
-        <StudyPlanBuilder programId={programId} />
-      </div>
-
       <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
         <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Cancel</button>
-        <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Save</button>
+        <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Save Program Info</button>
       </div>
     </section>
   );
