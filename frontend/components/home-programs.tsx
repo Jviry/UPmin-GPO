@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { getPrograms } from '../services/apiServices'; // Adjust this path if necessary
 
 export function HomePrograms() {
@@ -68,9 +69,10 @@ export function HomePrograms() {
               {!isLoading && !error && programs.length > 0 && (
                 <div className="grid gap-4 pb-2 sm:gap-5 md:grid-cols-2 xl:gap-6">
                   {programs.map((program) => (
-                    <article
-                      key={program.program_id} // Changed to use the unique database ID
-                      className="group relative aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)]"
+                    <Link
+                      key={program.program_id}
+                      href={`/programs/${program.program_id}`}
+                      className="group relative block aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)] cursor-pointer"
                     >
                       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(0,0,0,0.12))]" />
                       <div className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold tracking-[0.45em] text-[rgba(0,0,0,0.18)] transition-transform duration-300 group-hover:scale-[1.02]">
@@ -79,10 +81,10 @@ export function HomePrograms() {
                       <div className="absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.84))]" />
                       <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
                         <p className="max-w-[75%] text-sm font-semibold uppercase tracking-[0.18em] text-white sm:text-[0.95rem]">
-                          {program.name} {/* Extracted the 'name' string from the object */}
+                          {program.name}
                         </p>
                       </div>
-                    </article>
+                    </Link>
                   ))}
                 </div>
               )}

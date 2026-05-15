@@ -1,11 +1,12 @@
 export function createAnnouncementRepository(prisma) {
   return {
-    async create({ title, content_description, admin_id }) {
+    async create({ title, content_description, admin_id, image_url}) {
       return prisma.announcement.create({
         data: {
           title,
           content_description,
           admin_id: parseInt(admin_id),
+          image_url,
         },
       });
     },
@@ -41,8 +42,12 @@ export function createAnnouncementRepository(prisma) {
           announcement_id: true,
           title: true,
           content_description: true,
-          date_posted: true
-        }
+          date_posted: true,
+          image_url: true,
+          attached_link: true,
+          admin_id: true,
+        },
+        orderBy: { date_posted: 'desc'},
       });
     }
   };

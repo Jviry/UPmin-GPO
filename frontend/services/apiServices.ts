@@ -19,7 +19,7 @@ export const getAnnouncements = async () => {
   try {
     const response = await apiClient.get('/announcements');
     // Map response shape: { message, announcements }[span_4](start_span)[span_4](end_span)
-    return response.data.announcements; 
+    return response.data.announcements;
   } catch (error) {
     throw new Error(GENERIC_ERROR_MSG);
   }
@@ -47,17 +47,123 @@ export const getOfficeInfo = async () => {
   }
 };
 
+export const updateGoogleFormUrl = async (url: string) => {
+  try {
+    const response = await apiClient.patch('/office/google-url', { application_google_url: url });
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
 // --- PROGRAM API ---
 export const getPrograms = async () => {
   try {
     const response = await apiClient.get('/programs');
-    // Map response shape: { message, programs }[span_8](start_span)[span_8](end_span)
-    return response.data.programs; 
+    return response.data.programs;
   } catch (error) {
     throw new Error(GENERIC_ERROR_MSG);
   }
 };
 
+export const createProgram = async (data: {
+  type: string;
+  name: string;
+  description: string;
+  history: string;
+  photoFile?: File | null;
+}) => {
+  try {
+    const form = new FormData();
+    form.append('type', data.type);
+    form.append('name', data.name);
+    form.append('description', data.description);
+    form.append('history', data.history);
+    if (data.photoFile) form.append('photo', data.photoFile);
+
+    const response = await apiClient.post('/programs', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.program;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateProgram = async (
+  id: number,
+  data: {
+    type: string;
+    name: string;
+    description: string;
+    history: string;
+    existingPhoto?: string;
+    photoFile?: File | null;
+  }
+) => {
+  try {
+    const form = new FormData();
+    form.append('type', data.type);
+    form.append('name', data.name);
+    form.append('description', data.description);
+    form.append('history', data.history);
+    if (data.photoFile) {
+      form.append('photo', data.photoFile);
+    } else if (data.existingPhoto) {
+      form.append('photo', data.existingPhoto);
+    }
+
+    const response = await apiClient.put(`/programs/${id}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.program;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteProgram = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`/programs/${id}`);
+    return response.data.deletedProgram;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateProgramApplication = async (
+  programId: number,
+  data: {
+    qualifications: string;
+    application_instructions: string;
+    application_requirements: string;
+    application_url?: File | null;
+    recommendation_url?: File | null;
+    fees_url?: File | null;
+  }
+) => {
+  try {
+    const form = new FormData();
+    form.append('qualifications', data.qualifications);
+    form.append('application_instructions', data.application_instructions);
+    form.append('application_requirements', data.application_requirements);
+    if (data.application_url) form.append('application_url', data.application_url);
+    if (data.recommendation_url) form.append('recommendation_url', data.recommendation_url);
+    if (data.fees_url) form.append('fees_url', data.fees_url);
+
+    const response = await apiClient.put(`/programs/${programId}/application`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
 // --- FACULTY API ---
 export const getFaculty = async (position?: string, page = 1, limit = 10) => {
   try {
@@ -171,5 +277,78 @@ export const getCoordinators = async () => {
     return response.data.faculties;
   } catch (error) {
     throw new Error("Failed to load coordinators.");
+  }
+};
+
+// --- SELF-SERVICE PROFILE API ---
+export const updateOwnProfile = async (data: { name?: string; email?: string }) => {
+  try {
+    const response = await apiClient.put('/auth/profile', data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const changeOwnPassword = async (currentPassword: string, newPassword: string) => {
+  try {
+    await apiClient.put('/auth/password', { currentPassword, newPassword });
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+// --- ADMIN MANAGEMENT API (superadmin only) ---
+export const getAdmins = async () => {
+  try {
+    const response = await apiClient.get('/admins');
+    return response.data.admins as Array<{ admin_id: number; name: string; email: string; role: string }>;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const createAdmin = async (data: { name: string; email: string; password: string; role: string }) => {
+  try {
+    const response = await apiClient.post('/admins', data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const verifyPassword = async (password: string) => {
+  try {
+    await apiClient.post('/auth/verify-password', { password });
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateAdmin = async (
+  id: number,
+  data: { name?: string; email?: string; role?: string; newPassword?: string }
+) => {
+  try {
+    const response = await apiClient.put(`/admins/${id}`, data);
+    return response.data.admin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteAdmin = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`/admins/${id}`);
+    return response.data.deletedAdmin;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
   }
 };

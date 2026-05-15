@@ -1,31 +1,24 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { StudyPlanBuilder } from '@/components/admin/StudyPlanBuilder';
-import FacultyPool from '@/components/admin/FacultyPool';
+import { useState, useEffect } from 'react';
 import { apiClient } from '@/lib/apiClient';
+import { deleteProgram, verifyPassword } from '@/services/apiServices';
 import LoadingScreen from '@/components/admin/LoadingScreen';
+import FacultyPool from '@/components/admin/FacultyPool';
+import { ProgramsSidebar } from '@/components/admin/ProgramsSidebar';
+import { CreateProgramBlock } from '@/components/admin/CreateProgramBlock';
+import { EditProgramInfoBlock } from '@/components/admin/EditProgramInfoBlock';
+import { FormsFeesManagementBlock } from '@/components/admin/FormsFeesManagementBlock';
+import { ApplicationSection } from '@/components/admin/ApplicationSection';
+import { CourseManagementBlock } from '@/components/admin/CourseManagementBlock';
 
-// Types based on Prisma Schema
-type Faculty = {
-  faculty_id: number;
-  name: string;
-  position: string;
-  email: string;
-};
-
-type Department = {
-  department_id: number;
-  name: string;
-  faculty: Faculty[];
-};
-
-type Program = {
+export type Program = {
   program_id: number;
   name: string;
+  type: string;
   description: string;
-  department_id: number;
-  department?: Department;
+  history: string;
+  photo?: string | null;
   forms?: {
     form_id: number;
     name: string;
@@ -33,6 +26,7 @@ type Program = {
     size: string;
     upload_date: string;
   }[];
+  program_application?: any;
 };
 
 export default function AdminPrograms() {
@@ -42,18 +36,16 @@ export default function AdminPrograms() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpenMenuId(null);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const fetchProgramDetails = async (id: number) => {
+    const res = await apiClient.get(`/programs/${id}`);
+    return res.data.program || res.data;
+  };
 
   // Fetch programs list + first program details together so nothing flashes
   useEffect(() => {
@@ -65,12 +57,12 @@ export default function AdminPrograms() {
 
         if (fetchedPrograms.length > 0) {
           const firstId = fetchedPrograms[0].program_id;
-          const detailRes = await apiClient.get(`/programs/${firstId}`);
+          const details = await fetchProgramDetails(firstId);
           setActiveProgramId(firstId);
-          setActiveProgramDetails(detailRes.data.program || detailRes.data);
+          setActiveProgramDetails(details);
         }
       } catch (error) {
-        console.error("Failed to fetch programs:", error);
+        console.error('Failed to fetch programs:', error);
       } finally {
         setIsLoading(false);
       }
@@ -78,257 +70,129 @@ export default function AdminPrograms() {
     fetchInitial();
   }, []);
 
-  // Fetch details when switching programs after initial load
   const selectProgram = async (id: number) => {
     if (id === activeProgramId) return;
     setActiveProgramId(id);
     setActiveProgramDetails(null);
     setIsCreating(false);
-    setOpenMenuId(null);
     setIsLoadingDetails(true);
     try {
-      const res = await apiClient.get(`/programs/${id}`);
-      setActiveProgramDetails(res.data.program || res.data);
+      const details = await fetchProgramDetails(id);
+      setActiveProgramDetails(details);
     } catch (error) {
-      console.error("Failed to fetch program details:", error);
+      console.error('Failed to fetch program details:', error);
     } finally {
       setIsLoadingDetails(false);
     }
   };
 
+  const handleCreated = async (newProgram: any) => {
+    // Re-fetch list and select the newly created program
+    try {
+      const listRes = await apiClient.get('/programs');
+      const fetchedPrograms = listRes.data.programs || listRes.data;
+      setPrograms(fetchedPrograms);
+      const details = await fetchProgramDetails(newProgram.program_id);
+      setActiveProgramId(newProgram.program_id);
+      setActiveProgramDetails(details);
+    } catch (error) {
+      console.error('Failed to refresh after create:', error);
+    }
+    setIsCreating(false);
+  };
+
+  const handleSaved = async (updated: any) => {
+    // Refresh sidebar list name + active details
+    try {
+      const listRes = await apiClient.get('/programs');
+      const fetchedPrograms = listRes.data.programs || listRes.data;
+      setPrograms(fetchedPrograms);
+      const details = await fetchProgramDetails(updated.program_id);
+      setActiveProgramDetails(details);
+    } catch (error) {
+      console.error('Failed to refresh after save:', error);
+    }
+  };
+
+  const handleDeleteRequest = (id: number) => {
+    setDeleteError(null);
+    setDeletePassword('');
+    setShowDeletePassword(false);
+    setDeleteTargetId(id);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteTargetId === null) return;
+    if (!deletePassword.trim()) {
+      setDeleteError('Please enter your password to confirm.');
+      return;
+    }
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      await verifyPassword(deletePassword);
+      await deleteProgram(deleteTargetId);
+      const remaining = programs.filter((p) => p.program_id !== deleteTargetId);
+      setPrograms(remaining);
+
+      if (activeProgramId === deleteTargetId) {
+        if (remaining.length > 0) {
+          const nextId = remaining[0].program_id;
+          setActiveProgramId(nextId);
+          setIsLoadingDetails(true);
+          const details = await fetchProgramDetails(nextId);
+          setActiveProgramDetails(details);
+          setIsLoadingDetails(false);
+        } else {
+          setActiveProgramId(null);
+          setActiveProgramDetails(null);
+        }
+      }
+      setDeleteTargetId(null);
+      setDeletePassword('');
+    } catch (err: any) {
+      setDeleteError(err.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (isLoading) return <LoadingScreen />;
+
+  const deleteTargetName = programs.find((p) => p.program_id === deleteTargetId)?.name ?? '';
 
   return (
     <div className="flex h-[calc(100vh-64px)] overflow-hidden">
 
-      {/* Left Sidebar: Program List */}
-      <aside className="w-64 shrink-0 overflow-y-auto border-r border-[var(--line)] bg-[var(--surface-muted)] py-8">
-        <div className="flex items-center justify-between px-6">
-          <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--up-maroon)]">
-            Programs
-          </h3>
-          <button
-            onClick={() => setIsCreating(true)}
-            title="Create new program"
-            className="flex h-5 w-5 items-center justify-center rounded-sm bg-[var(--up-maroon)] text-white transition hover:bg-[#5c0709] text-sm font-bold leading-none"
-          >
-            +
-          </button>
-        </div>
-        <div className="mt-4 flex flex-col" ref={menuRef}>
-          {programs.map((prog) => (
-            <div
-              key={prog.program_id}
-              className={`group relative flex items-center border-l-4 transition-colors ${
-                !isCreating && activeProgramId === prog.program_id
-                  ? 'border-[var(--up-gold)] bg-white'
-                  : 'border-transparent hover:bg-gray-100'
-              }`}
-            >
-              <button
-                onClick={() => selectProgram(prog.program_id)}
-                className={`flex-1 px-6 py-3 text-left text-sm font-semibold ${
-                  !isCreating && activeProgramId === prog.program_id
-                    ? 'text-[var(--text-primary)]'
-                    : 'text-[var(--text-muted)]'
-                }`}
-              >
-                {prog.name}
-              </button>
+      <ProgramsSidebar
+        programs={programs}
+        activeProgramId={activeProgramId}
+        isCreating={isCreating}
+        selectProgram={selectProgram}
+        setIsCreating={setIsCreating}
+        onDelete={handleDeleteRequest}
+      />
 
-              {/* Three-dot button — visible on hover or when menu is open */}
-              <button
-                onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === prog.program_id ? null : prog.program_id); }}
-                className={`mr-2 flex h-6 w-6 shrink-0 items-center justify-center text-[var(--text-muted)] transition hover:text-[var(--text-primary)] ${
-                  openMenuId === prog.program_id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                }`}
-                title="Options"
-              >
-                <svg viewBox="0 0 4 16" width="4" height="16" fill="currentColor">
-                  <circle cx="2" cy="2" r="1.5" />
-                  <circle cx="2" cy="8" r="1.5" />
-                  <circle cx="2" cy="14" r="1.5" />
-                </svg>
-              </button>
-
-              {/* Dropdown */}
-              {openMenuId === prog.program_id && (
-                <div className="absolute right-2 top-full z-50 mt-0.5 w-32 border border-[var(--line)] bg-white shadow-md">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); }}
-                    className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-widest text-red-600 transition hover:bg-red-50"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </aside>
-
-      {/* Right Content Area */}
       <main className="flex-1 overflow-y-auto space-y-8 p-8">
-
-        {isLoadingDetails ? <LoadingScreen /> : isCreating ? (
-          <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
-              <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
-                Create New Graduate Program
-              </h2>
-            </div>
-
-            <div className="mb-6 grid grid-cols-4 gap-6">
-              <div className="col-span-3 flex flex-col gap-4">
-                <div className="flex gap-4">
-                  <input
-                    type="text"
-                    className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Name of Program"
-                  />
-                  <input
-                    type="text"
-                    className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Department"
-                  />
-                </div>
-                <textarea
-                  className="flex-1 min-h-[140px] resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                  placeholder="About Graduate Program..."
-                />
-              </div>
-
-              <div className="col-span-1 flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[var(--line)] bg-[var(--surface-muted)] p-4 text-center transition hover:border-[var(--up-maroon)]">
-                <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Featured Photo</span>
-                <span className="mt-1 text-xs text-[var(--up-maroon)]">Click to upload</span>
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
-              <button
-                onClick={() => setIsCreating(false)}
-                className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
-                Save
-              </button>
-            </div>
-          </section>
+        {isLoadingDetails ? (
+          <LoadingScreen />
+        ) : isCreating ? (
+          <CreateProgramBlock onCancel={() => setIsCreating(false)} onCreated={handleCreated} />
         ) : activeProgramDetails ? (
           <>
-            {/* Block 1: Edit Program Information */}
-            <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
-                <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
-                  Edit Program Information
-                </h2>
-              </div>
+            <EditProgramInfoBlock
+              programId={activeProgramId!}
+              program={activeProgramDetails}
+              onSaved={handleSaved}
+            />
 
-              <div className="mb-6 grid grid-cols-4 gap-6">
-                <div className="col-span-3 flex flex-col gap-4">
-                  <div className="flex gap-4">
-                    <input 
-                      type="text" 
-                      defaultValue={activeProgramDetails.name} 
-                      className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-                      placeholder="Name of Program" 
-                    />
-                    <input 
-                      type="text" 
-                      defaultValue={activeProgramDetails.department?.name || ''} 
-                      className="h-10 flex-1 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-                      placeholder="Department" 
-                    />
-                  </div>
-                  <textarea 
-                    defaultValue={activeProgramDetails.description}
-                    className="flex-1 min-h-[140px] resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
-                    placeholder="About Graduate Program..."
-                  />
-                </div>
+            <CourseManagementBlock programId={activeProgramId!} />
 
-                <div className="col-span-1 flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[var(--line)] bg-[var(--surface-muted)] p-4 text-center transition hover:border-[var(--up-maroon)]">
-                   <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Featured Photo</span>
-                   <span className="mt-1 text-xs text-[var(--up-maroon)]">Click to upload</span>
-                </div>
-              </div>
+            <ApplicationSection
+              programId={activeProgramId!}
+              application={(activeProgramDetails as any).program_application}
+            />
 
-              <div className="mb-8">
-                {/* Pass the activeProgramId to the builder so it can fetch the specific 
-                  Courses, Study Plans, and Pools tied to this specific program in the database.
-                */}
-                <StudyPlanBuilder programId={activeProgramId} />
-              </div>
-
-              <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
-                <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Cancel</button>
-                <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Save</button>
-              </div>
-            </section>
-
-            {/* Block 2: Edit Application Information */}
-            <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
-                <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
-                  Edit Application Information
-                </h2>
-              </div>
-
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Qualifications</label>
-                  <textarea
-                    defaultValue={(activeProgramDetails as any).program_application?.qualifications ?? ''}
-                    className="min-h-[140px] w-full resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Enter qualifications..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Instructions</label>
-                  <textarea
-                    defaultValue={(activeProgramDetails as any).program_application?.application_instructions ?? ''}
-                    className="min-h-[140px] w-full resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Enter application instructions..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Requirements</label>
-                  <textarea
-                    className="min-h-[140px] w-full resize-none border border-[var(--line)] bg-[var(--page-bg)] p-4 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="Enter requirements..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Application URL</label>
-                  <input
-                    type="text"
-                    defaultValue={(activeProgramDetails as any).program_application?.application_url ?? ''}
-                    className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="https://..."
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Recommendation URL</label>
-                  <input
-                    type="text"
-                    defaultValue={(activeProgramDetails as any).program_application?.recommendation_url ?? ''}
-                    className="h-10 w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-                    placeholder="https://..."
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-4 border-t border-[var(--line)] mt-6 pt-6">
-                <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Save</button>
-              </div>
-            </section>
-
-            {/* Block 3: Faculty Management */}
             <section className="mb-10 border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
                 <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
@@ -336,7 +200,6 @@ export default function AdminPrograms() {
                   Faculty Management
                 </h2>
               </div>
-
               <FacultyPool programId={activeProgramId!} programName={activeProgramDetails.name} />
             </section>
           </>
@@ -345,55 +208,78 @@ export default function AdminPrograms() {
             Select a program from the left sidebar to edit.
           </div>
         )}
-        {/* Block 3: Forms & Fees File Management */}
-        {!isCreating && !isLoadingDetails && <section className="border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="h-4 w-1 bg-[var(--up-gold)]"></div>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
-              Forms & Fees File Management
-            </h2>
-          </div>
 
-          <div className="mb-8 flex h-[250px] flex-col overflow-hidden border border-[var(--line)] bg-white">
-            <div className="modern-scrollbar flex-1 overflow-y-auto p-4 space-y-3 bg-[var(--page-bg)]">
-              {activeProgramDetails?.forms && activeProgramDetails.forms.length > 0 ? (
-                activeProgramDetails.forms.map((file: any) => (
-                  <div 
-                    key={file.form_id} 
-                    className="flex items-center justify-between rounded border border-[var(--line)] bg-white p-4 shadow-sm transition hover:border-[var(--up-gold)] cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      {/* Document Icon Box */}
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-[var(--surface-muted)] font-bold text-[var(--up-maroon)] text-xs">
-                        {file.type === "PDF" ? "PDF" : "DOC"}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-sm text-[var(--text-primary)]">{file.name}</p>
-                        <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-                          Uploaded {new Date(file.upload_date).toLocaleDateString()} • {file.size}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {/* Select Checkbox (Visual Only) */}
-                    <div className="h-4 w-4 rounded-sm border border-[var(--text-muted)]"></div>
-                  </div>
-                ))
-              ) : (
-                <div className="flex h-full items-center justify-center text-sm text-[var(--text-muted)]">
-                  No forms or files uploaded for this program yet.
-                </div>
-              )}
+        {!isCreating && !isLoadingDetails && activeProgramDetails && (
+          <FormsFeesManagementBlock program={activeProgramDetails} />
+        )}
+      </main>
+
+      {/* Delete confirmation modal with password verification */}
+      {deleteTargetId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-sm border border-[var(--line)] bg-white p-8 shadow-lg">
+            <h3 className="mb-2 text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
+              Delete Program
+            </h3>
+            <p className="mb-5 text-sm text-[var(--text-secondary)]">
+              You are about to delete <span className="font-semibold">{deleteTargetName}</span>. This action cannot be undone. Enter your password to confirm.
+            </p>
+
+            <div className="mb-4">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-secondary)]">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showDeletePassword ? 'text' : 'password'}
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleDeleteConfirm()}
+                  placeholder="Enter your password"
+                  disabled={isDeleting}
+                  className="w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 py-2 pr-10 text-sm focus:border-red-400 focus:outline-none disabled:opacity-50"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowDeletePassword(!showDeletePassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  tabIndex={-1}
+                >
+                  {showDeletePassword ? (
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {deleteError && <p className="mb-4 text-xs text-red-600">{deleteError}</p>}
+
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => { setDeleteTargetId(null); setDeleteError(null); setDeletePassword(''); }}
+                disabled={isDeleting}
+                className="border border-[var(--text-muted)] px-6 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting || !deletePassword.trim()}
+                className="border border-red-600 bg-red-600 px-6 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-red-700 disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
             </div>
           </div>
-
-          <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
-            <button className="border border-[var(--up-maroon)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--up-maroon)] transition hover:bg-red-50">Delete</button>
-            <button className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Edit</button>
-            <button className="bg-[var(--up-maroon)] border border-[var(--up-maroon)] px-10 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">Upload File</button>
-          </div>
-        </section>}
-      </main>
+        </div>
+      )}
     </div>
   );
 }

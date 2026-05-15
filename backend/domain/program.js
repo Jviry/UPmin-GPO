@@ -10,7 +10,7 @@ export function validateProgramId(id) {
 }
 
 // Validate application details but allow partial updates as some fields are optional
-export function validateUpdateProgramApplication({ qualifications, application_instructions, application_requirements, application_url, recommendation_url, fees_url }) {
+export function validateUpdateProgramApplication({ qualifications, application_instructions, application_requirements }) {
   if (!qualifications || qualifications.trim() === '') {
     throw new DomainError('Qualifications is required');
   }
@@ -28,14 +28,5 @@ export function validateUpdateProgramApplication({ qualifications, application_i
   }
   if (typeof application_requirements !== 'string') {
     throw new DomainError('Application requirements must be a string');
-  }
-  if (!application_url) {
-    throw new DomainError('Application URL is required');
-  }
-  if (!recommendation_url) {
-    throw new DomainError('Recommendation URL is required');
-  }
-  if (!fees_url) {
-    throw new DomainError('Fees URL is required');
   }
 }
