@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import PlaceholderProfileImg from "@/components/PlaceholderProfileImg";
-import apiClient from '@/lib/apiClient';
+import FacultyImage from "@/components/FacultyImage";
+import apiClient, { getImageUrl } from '@/lib/apiClient';
 
 export default function AboutGPO() {
   const [office, setOffice] = useState<any>(null);
@@ -70,11 +71,7 @@ export default function AboutGPO() {
                 {/* Image area with gold bottom bar only */}
                 <div className="relative w-full aspect-[3/4] bg-[var(--surface-muted)] overflow-hidden">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    {c.photo ? (
-                      <img src={c.photo} alt={c.name} className="h-full w-full object-cover" />
-                    ) : (
-                      <PlaceholderProfileImg className="border-0 rounded-none" />
-                    )}
+                    <FacultyImage src={getImageUrl(c.photo)} alt={c.name} className="h-full w-full object-cover" />
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 h-3 bg-[var(--up-gold)]" />
                 </div>

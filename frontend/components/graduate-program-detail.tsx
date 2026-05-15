@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import PlaceholderProfileImg from '@/components/PlaceholderProfileImg';
-import apiClient from '@/lib/apiClient';
+import FacultyImage from '@/components/FacultyImage';
+import apiClient, { getImageUrl } from '@/lib/apiClient';
 
 type ActiveTab = 'structure' | 'application' | 'faculty';
 
@@ -331,11 +331,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                 >
                   <div className="relative aspect-[3/4] w-full bg-[var(--surface-muted)] overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center">
-                      {member.photo ? (
-                        <img src={member.photo} alt={member.name} className="h-full w-full object-cover" />
-                      ) : (
-                        <PlaceholderProfileImg className="rounded-none border-0" />
-                      )}
+                      <FacultyImage src={getImageUrl(member.photo)} alt={member.name} className="h-full w-full object-cover" />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 h-3 bg-[var(--up-gold)]" />
                   </div>
