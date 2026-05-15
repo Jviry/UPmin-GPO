@@ -1,0 +1,182 @@
+'use client';
+
+import { useState } from 'react';
+import { 
+  Course, 
+  StudyPlanTrack, 
+  generateSemesters, 
+  DraggablePaletteCourse, 
+  DroppableBucket 
+} from './SharedDnd';
+
+interface StudyPlanBlockProps {
+  tracks: StudyPlanTrack[];
+  activeTrackId: string | null;
+  setActiveTrackId: (id: string | null) => void;
+  corePlacements: Record<string, Record<string, (Course & { instanceId: string })[]>>;
+  onRemoveCourse: (instanceId: string, trackId: string, semId: string) => void;
+  onCreateTrack: (name: string, years: number) => void;
+  onDeleteTrack: (id: string) => void;
+  coreCatalog: Course[];
+  onSave: () => void;
+}
+
+export function StudyPlanBlock({
+  tracks,
+  activeTrackId,
+  setActiveTrackId,
+  corePlacements,
+  onRemoveCourse,
+  onCreateTrack,
+  onDeleteTrack,
+  coreCatalog,
+  onSave
+}: StudyPlanBlockProps) {
+  const [newPlanName, setNewPlanName] = useState('');
+  const [newPlanYears, setNewPlanYears] = useState<number>(2);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const activeTrack = tracks.find(t => t.id === activeTrackId);
+  const semesters = activeTrack ? generateSemesters(activeTrack.years) : [];
+
+  const handleCreateTrack = () => {
+    if (!newPlanName || newPlanYears < 1) return;
+    onCreateTrack(newPlanName, newPlanYears);
+    setNewPlanName('');
+    setNewPlanYears(2);
+  };
+
+  const filteredCatalog = coreCatalog.filter(c => 
+    c.code.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <section className="flex flex-col border border-[var(--line)] bg-[var(--surface)] p-6 shadow-sm">
+      <div className="mb-4 flex items-center justify-between border-b border-[var(--line)] pb-4">
+        <h2 className="text-lg font-bold uppercase tracking-widest text-[var(--up-maroon)]" style={{ fontFamily: 'var(--font-display)' }}>Study Plan</h2>
+        
+        <div className="flex items-center gap-4">
+          <input 
+            type="text" 
+            value={newPlanName} 
+            onChange={e => setNewPlanName(e.target.value)} 
+            className="h-8 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-xs focus:border-[var(--up-gold)] focus:outline-none w-48" 
+            placeholder="Plan Name (e.g., Master's)" 
+          />
+          <div className="flex items-center gap-2">
+            <label className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Years:</label>
+            <input 
+              type="number" 
+              min="1" 
+              max="10" 
+              value={newPlanYears} 
+              onChange={e => setNewPlanYears(Number(e.target.value))} 
+              className="h-8 w-16 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-xs focus:border-[var(--up-gold)] focus:outline-none" 
+            />
+          </div>
+          <button onClick={handleCreateTrack} className="h-8 border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-4 text-[0.6rem] font-bold uppercase tracking-widest text-white transition hover:bg-[#5c0709]">
+            Create Plan
+          </button>
+        </div>
+      </div>
+
+      {tracks.length > 0 && (
+        <div className="flex gap-2 mb-4 border-b border-[var(--line)]">
+          {tracks.map(track => (
+            <div 
+              key={track.id} 
+              className={`flex items-center transition-colors ${activeTrackId === track.id ? 'border-b-2 border-[var(--up-maroon)] bg-white' : 'hover:bg-[var(--surface-muted)]'}`}
+            >
+              <button 
+                onClick={() => setActiveTrackId(track.id)} 
+                className={`px-4 py-2.5 text-[0.65rem] font-bold uppercase tracking-widest ${activeTrackId === track.id ? 'text-[var(--up-maroon)]' : 'text-[var(--text-muted)]'}`}
+              >
+                {track.name} ({track.years} Yrs)
+              </button>
+              <button 
+                onClick={() => onDeleteTrack(track.id)} 
+                className={`pr-4 text-xs ${activeTrackId === track.id ? 'text-red-400 hover:text-red-700' : 'text-transparent hover:text-red-500'}`}
+                title="Delete Study Plan"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="flex gap-6">
+        <div className="flex-1 rounded border border-[var(--line)] bg-white p-4">
+          {activeTrackId ? (
+            <div className="grid grid-cols-2 gap-4">
+              {semesters.map((sem) => (
+                <DroppableBucket 
+                  key={sem.id} 
+                  id={sem.id} 
+                  label={sem.label} 
+                  bucketType="semester"
+                  placedCourses={corePlacements[activeTrackId]?.[sem.id] || []}
+                  onRemove={(instanceId) => onRemoveCourse(instanceId, activeTrackId, sem.id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex h-full min-h-[200px] items-center justify-center text-sm font-semibold text-[var(--text-muted)] uppercase tracking-widest text-center px-4">
+              Create a study plan above to begin placing core courses.
+            </div>
+          )}
+        </div>
+
+        <div className="flex h-[500px] w-64 shrink-0 flex-col rounded border border-[var(--line)] bg-[var(--surface-muted)] p-4">
+          <h3 className="mb-2 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">Core Courses Catalog</h3>
+          <div className="mb-3">
+            <input 
+              type="text" 
+              placeholder="Search code/title..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="h-8 w-full border border-[var(--line)] bg-white px-2 text-[0.65rem] focus:border-[var(--up-gold)] focus:outline-none"
+            />
+          </div>
+          <div className="modern-scrollbar overflow-y-auto overflow-x-hidden pr-1">
+            <div className="flex flex-col gap-3">
+            {/* Special Elective Slot Item - Only show if no search or if matches 'elective' */}
+            {(!searchTerm || 'elective'.includes(searchTerm.toLowerCase())) && (
+              <>
+                <DraggablePaletteCourse 
+                  id="special_elective_slot" 
+                  course={{
+                    code: 'ELECTIVE',
+                    name: 'Elective Slot',
+                    units: null,
+                    type: 'core',
+                    is_elective_slot: true
+                  }} 
+                />
+                <div className="border-t border-gray-200 my-2 pt-2"></div>
+              </>
+            )}
+            {filteredCatalog.map((course) => (
+              <DraggablePaletteCourse key={`core_${course.course_id || course.code}`} id={`core_${course.course_id || course.code}`} course={course} />
+            ))}
+            {filteredCatalog.length === 0 && searchTerm && (
+              <p className="text-center text-[0.6rem] text-gray-400 mt-4">No matching courses</p>
+            )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
+        <button className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Discard</button>
+        <button 
+          onClick={onSave}
+          className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]"
+        >
+          Save Study Plan
+        </button>
+      </div>
+    </section>
+  );
+}

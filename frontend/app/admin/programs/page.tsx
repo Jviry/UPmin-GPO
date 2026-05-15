@@ -11,6 +11,7 @@ import { EditProgramInfoBlock } from '@/components/admin/EditProgramInfoBlock';
 import { FormsFeesManagementBlock } from '@/components/admin/FormsFeesManagementBlock';
 import { ApplicationSection } from '@/components/admin/ApplicationSection';
 import { CourseManagementBlock } from '@/components/admin/CourseManagementBlock';
+import { CourseCatalogTable } from '@/components/admin/CourseCatalogTable';
 
 export type Program = {
   program_id: number;
@@ -180,6 +181,8 @@ export default function AdminPrograms() {
           <CreateProgramBlock onCancel={() => setIsCreating(false)} onCreated={handleCreated} />
         ) : activeProgramDetails ? (
           <>
+            <CourseCatalogTable />
+
             <EditProgramInfoBlock
               programId={activeProgramId!}
               program={activeProgramDetails}

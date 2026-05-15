@@ -1,207 +1,179 @@
 'use client';
 
-import { useState } from 'react';
-import { DndContext, pointerWithin, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core';
+import { useState, useEffect } from 'react';
+import { DndContext, pointerWithin, DragOverlay } from '@dnd-kit/core';
+import { apiClient } from '@/lib/apiClient';
+import * as api from '@/services/apiServices';
 
-// --- Types ---
-type CourseType = 'core' | 'pool';
-
-type Course = {
-  code: string;
-  name: string;
-  units: number;
-  type: CourseType;
-};
-
-type StudyPlanTrack = {
-  id: string;
-  name: string;
-  years: number;
-};
-
-// --- Helper Functions ---
-const generateSemesters = (years: number) => {
-  const semesters = [];
-  const yearLabels = ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'];
-  
-  for (let y = 0; y < years; y++) {
-    const yearLabel = yearLabels[y] || `${y + 1}th`;
-    semesters.push({ id: `y${y+1}-s1`, label: `${yearLabel} Year, 1st Sem` });
-    semesters.push({ id: `y${y+1}-s2`, label: `${yearLabel} Year, 2nd Sem` });
-  }
-  return semesters;
-};
-
-// --- Sub-Components ---
-
-function DraggablePaletteCourse({ id, course }: { id: string; course: Course }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: id,
-    data: { course, isPaletteItem: true },
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      className={`cursor-grab rounded border border-[var(--line)] bg-white p-2.5 shadow-sm transition hover:border-[var(--up-gold)] active:cursor-grabbing ${
-        isDragging ? 'opacity-40' : 'opacity-100'
-      }`}
-    >
-      <div className="flex items-start justify-between">
-        <p className="font-bold text-[var(--text-primary)] text-xs">{course.code}</p>
-        <span className="rounded bg-gray-100 px-1 py-0.5 text-[0.55rem] text-gray-600">{course.units}U</span>
-      </div>
-      <p className="mt-0.5 text-[0.65rem] text-[var(--text-secondary)] truncate">{course.name}</p>
-    </div>
-  );
-}
-
-function DraggablePlacedCourse({ course, instanceId, bucketId, onRemove }: { course: Course; instanceId: string; bucketId: string; onRemove: (id: string) => void }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: instanceId,
-    data: { course, isPlacedItem: true, instanceId, sourceBucketId: bucketId },
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      className={`group relative flex cursor-grab items-center justify-between rounded border border-gray-200 bg-white p-2 shadow-sm transition active:cursor-grabbing ${
-        isDragging ? 'opacity-40' : 'opacity-100'
-      }`}
-    >
-      <div>
-        <p className="text-[0.65rem] font-bold text-gray-700">{course.code}</p>
-        <p className="text-[0.55rem] text-gray-500 truncate w-28">{course.name}</p>
-      </div>
-      <button 
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={() => onRemove(instanceId)}
-        className="hidden group-hover:flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-red-600 hover:bg-red-200 text-xs"
-      >
-        ×
-      </button>
-    </div>
-  );
-}
-
-// UPDATED: Added onDeleteBucket to handle Pool deletion
-function DroppableBucket({ id, label, placedCourses, onRemove, bucketType, onDeleteBucket }: { id: string; label: string; placedCourses: (Course & { instanceId: string })[]; onRemove: (instanceId: string) => void, bucketType: 'semester' | 'pool', onDeleteBucket?: (id: string) => void }) {
-  const { isOver, setNodeRef } = useDroppable({ id });
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={`flex flex-col min-h-[120px] rounded border-2 p-3 transition-colors ${
-        isOver 
-          ? 'border-[var(--up-maroon)] bg-red-50/50' 
-          : 'border-[var(--line)] bg-[var(--surface-muted)]'
-      }`}
-    >
-      <div className="mb-3 flex items-start justify-between">
-        <h4 className="flex-1 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--up-maroon)]">
-          {label}
-        </h4>
-        {onDeleteBucket && (
-          <button 
-            onClick={() => onDeleteBucket(id)} 
-            className="ml-2 text-red-400 transition hover:text-red-700"
-            title="Delete Pool"
-          >
-            ×
-          </button>
-        )}
-      </div>
-      <div className="flex-1 space-y-2">
-        {placedCourses.map((c) => (
-          <DraggablePlacedCourse 
-            key={c.instanceId} 
-            course={c} 
-            instanceId={c.instanceId} 
-            bucketId={id} 
-            onRemove={onRemove} 
-          />
-        ))}
-        {placedCourses.length === 0 && (
-          <div className="flex h-full items-center justify-center text-[0.6rem] font-semibold tracking-widest text-gray-400 text-center px-2">
-            Drop {bucketType === 'semester' ? 'Core' : 'Pool'} Courses Here
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// --- Main Component ---
+import { Course, StudyPlanTrack, Pool } from './study-plan/SharedDnd';
+import { StudyPlanBlock } from './study-plan/StudyPlanBlock';
+import { CoursePoolBlock } from './study-plan/CoursePoolBlock';
 
 export function StudyPlanBuilder({ programId }: { programId: number | null }) {
-  const [catalog, setCatalog] = useState<Course[]>([
-    { code: 'MATH 26', name: 'Advanced Mathematics', units: 3, type: 'core' },
-    { code: 'CMSC 126', name: 'Theory of Computation', units: 3, type: 'core' },
-    { code: 'CMSC 203', name: 'Advanced Algorithms', units: 3, type: 'pool' },
-    { code: 'ABME 399', name: 'Graduate Seminar 1', units: 1, type: 'pool' },
-  ]);
-
-  const [newCourse, setNewCourse] = useState({ code: '', name: '', units: 3, type: 'core' as CourseType });
-
+  const [catalog, setCatalog] = useState<Course[]>([]);
   const [tracks, setTracks] = useState<StudyPlanTrack[]>([]);
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
   const [corePlacements, setCorePlacements] = useState<Record<string, Record<string, (Course & { instanceId: string })[]>>>({});
   
-  const [newPlanName, setNewPlanName] = useState('');
-  const [newPlanYears, setNewPlanYears] = useState<number>(2);
-
-  const [pools, setPools] = useState<{ id: string, name: string, courses: (Course & { instanceId: string })[] }[]>([
-    { id: 'pool_electives', name: 'Electives', courses: [] },
-  ]);
-  const [newPoolName, setNewPoolName] = useState('');
-
+  const [pools, setPools] = useState<Pool[]>([]);
   const [activeCourse, setActiveCourse] = useState<Course | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!programId) return;
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await apiClient.get(`/programs/${programId}`);
+        const program = res.data.program || res.data;
+
+        // 1. Tracks (Study Plans)
+        const fetchedTracks: StudyPlanTrack[] = (program.study_plans || []).map((sp: any) => ({
+          id: String(sp.study_plan_id),
+          name: sp.name,
+          years: sp.years
+        }));
+        setTracks(fetchedTracks);
+        if (fetchedTracks.length > 0) setActiveTrackId(fetchedTracks[0].id);
+
+        // 2. Placements
+        const fetchedPlacements: Record<string, Record<string, (Course & { instanceId: string })[]>> = {};
+        program.study_plans?.forEach((sp: any) => {
+          const trackPlacements: Record<string, (Course & { instanceId: string })[]> = {};
+          sp.program_courses?.forEach((pc: any) => {
+            const semId = `y${pc.year}-s${pc.semester}`;
+            if (!trackPlacements[semId]) trackPlacements[semId] = [];
+            
+            const courseData: Course = pc.is_elective_slot 
+              ? { code: 'ELECTIVE', name: 'Elective Slot', units: null, type: 'pool', is_elective_slot: true }
+              : { 
+                  course_id: pc.course.course_id, 
+                  code: pc.course.code, 
+                  name: pc.course.name, 
+                  units: pc.course.units, 
+                  type: pc.course.type as any 
+                };
+
+            trackPlacements[semId].push({
+              ...courseData,
+              instanceId: `${courseData.code}_${pc.program_course_id || Math.random()}`
+            });
+          });
+          fetchedPlacements[String(sp.study_plan_id)] = trackPlacements;
+        });
+        setCorePlacements(fetchedPlacements);
+
+        // 3. Pools
+        const fetchedPools: Pool[] = (program.course_pools || []).map((pool: any) => ({
+          id: String(pool.course_pool_id),
+          name: pool.name,
+          courses: (pool.entries || []).map((entry: any) => ({
+            course_id: entry.course.course_id,
+            code: entry.course.code,
+            name: entry.course.name,
+            units: entry.course.units,
+            type: entry.course.type,
+            instanceId: `${entry.course.code}_${entry.course_pool_entry_id}`
+          }))
+        }));
+        setPools(fetchedPools);
+
+        // 4. Catalog
+        const catalogRes = await apiClient.get('/courses', { params: { limit: 1000 } }).catch(() => ({ data: { courses: [] } }));
+        setCatalog(catalogRes.data.courses || []);
+
+      } catch (error) {
+        console.error("Failed to fetch study plan data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [programId]);
 
   // --- Handlers ---
-  const handleAddCourse = () => {
-    if (!newCourse.code || !newCourse.name) return;
-    setCatalog(prev => [...prev, newCourse]);
-    setNewCourse({ code: '', name: '', units: 3, type: 'core' }); 
+  const handleCreateTrack = async (name: string, years: number) => {
+    if (!programId) return;
+    try {
+      const newTrack = await api.createStudyPlan(programId, { name, years });
+      const track: StudyPlanTrack = {
+        id: String(newTrack.study_plan_id),
+        name: newTrack.name,
+        years: newTrack.years
+      };
+      setTracks(prev => [...prev, track]);
+      if (!activeTrackId) setActiveTrackId(track.id);
+    } catch (error) {
+      console.error("Failed to create study plan:", error);
+      alert("Failed to create study plan");
+    }
   };
 
-  const handleCreateTrack = () => {
-    if (!newPlanName || newPlanYears < 1) return;
-    const newId = `track_${Date.now()}`;
-    setTracks(prev => [...prev, { id: newId, name: newPlanName, years: newPlanYears }]);
-    if (!activeTrackId) setActiveTrackId(newId);
-    setNewPlanName('');
-    setNewPlanYears(2);
+  const handleDeleteTrack = async (trackId: string) => {
+    if (!programId) return;
+    if (!confirm("Are you sure you want to delete this study plan?")) return;
+    try {
+      await api.deleteStudyPlan(programId, parseInt(trackId));
+      setTracks(prev => {
+        const remaining = prev.filter(t => t.id !== trackId);
+        if (activeTrackId === trackId) {
+          setActiveTrackId(remaining.length > 0 ? remaining[0].id : null);
+        }
+        return remaining;
+      });
+      setCorePlacements(prev => {
+        const newPlacements = { ...prev };
+        delete newPlacements[trackId];
+        return newPlacements;
+      });
+    } catch (error) {
+      console.error("Failed to delete study plan:", error);
+      alert("Failed to delete study plan");
+    }
   };
 
-  // NEW: Handler for deleting a track
-  const handleDeleteTrack = (trackId: string) => {
-    setTracks(prev => {
-      const remaining = prev.filter(t => t.id !== trackId);
-      if (activeTrackId === trackId) {
-        setActiveTrackId(remaining.length > 0 ? remaining[0].id : null);
+  const handleCreatePool = async (name: string) => {
+    if (!programId) return;
+    try {
+      const newPool = await api.createCoursePool(programId, { name });
+      const pool: Pool = {
+        id: String(newPool.course_pool_id),
+        name: newPool.name,
+        courses: []
+      };
+      setPools(prev => [...prev, pool]);
+    } catch (error) {
+      console.error("Failed to create course pool:", error);
+      alert("Failed to create course pool");
+    }
+  };
+
+  const handleDeletePool = async (poolId: string) => {
+    if (!programId) return;
+    if (!confirm("Are you sure you want to delete this course pool?")) return;
+    try {
+      await api.deleteCoursePool(programId, parseInt(poolId));
+      setPools(prev => prev.filter(p => p.id !== poolId));
+    } catch (error) {
+      console.error("Failed to delete course pool:", error);
+      alert("Failed to delete course pool");
+    }
+  };
+
+  const handleRemoveCourseFromTrack = (instanceId: string, trackId: string, semId: string) => {
+    setCorePlacements(prev => ({
+      ...prev,
+      [trackId]: {
+        ...prev[trackId],
+        [semId]: (prev[trackId]?.[semId] || []).filter(c => c.instanceId !== instanceId)
       }
-      return remaining;
-    });
-    setCorePlacements(prev => {
-      const newPlacements = { ...prev };
-      delete newPlacements[trackId];
-      return newPlacements;
-    });
+    }));
   };
 
-  const handleCreatePool = () => {
-    if (!newPoolName) return;
-    setPools(prev => [...prev, { id: `pool_${Date.now()}`, name: newPoolName, courses: [] }]);
-    setNewPoolName('');
-  };
-
-  // NEW: Handler for deleting a pool
-  const handleDeletePool = (poolId: string) => {
-    setPools(prev => prev.filter(p => p.id !== poolId));
+  const handleRemoveCourseFromPool = (instanceId: string, poolId: string) => {
+    setPools(prev => prev.map(p => p.id === poolId ? { ...p, courses: p.courses.filter(c => c.instanceId !== instanceId) } : p));
   };
 
   const handleDragEnd = (event: any) => {
@@ -215,27 +187,22 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
 
     if (!over) {
       if (isPlacedItem) {
-        if (sourceBucketId.startsWith('pool_')) {
-          setPools(prev => prev.map(p => p.id === sourceBucketId ? { ...p, courses: p.courses.filter(c => c.instanceId !== instanceId) } : p));
+        if (sourceBucketId.startsWith('pool_') || sourceBucketId.startsWith('temp_pool_')) {
+          handleRemoveCourseFromPool(instanceId, sourceBucketId);
         } else if (activeTrackId) {
-          setCorePlacements(prev => ({
-            ...prev,
-            [activeTrackId]: {
-              ...(prev[activeTrackId] || {}),
-              [sourceBucketId]: (prev[activeTrackId]?.[sourceBucketId] || []).filter(c => c.instanceId !== instanceId)
-            }
-          }));
+          handleRemoveCourseFromTrack(instanceId, activeTrackId, sourceBucketId);
         }
       }
       return;
     }
 
     const overId = String(over.id);
+    const isOverPool = overId.includes('pool');
 
     if (isPaletteItem) {
       const newInstance = { ...course, instanceId: `${course.code}_${Date.now()}` };
 
-      if (course.type === 'core' && !overId.startsWith('pool_') && activeTrackId) {
+      if (course.type === 'core' && !isOverPool && activeTrackId) {
         setCorePlacements((prev) => ({
           ...prev,
           [activeTrackId]: {
@@ -244,7 +211,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
           }
         }));
       } 
-      else if (course.type === 'pool' && overId.startsWith('pool_')) {
+      else if (course.type === 'pool' && isOverPool) {
         setPools(prev => prev.map(pool => 
           pool.id === overId 
             ? { ...pool, courses: [...pool.courses, newInstance] } 
@@ -255,8 +222,6 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     else if (isPlacedItem) {
       if (sourceBucketId === overId) return;
 
-      const isOverPool = overId.startsWith('pool_');
-      
       if (course.type === 'core' && isOverPool) return;
       if (course.type === 'pool' && !isOverPool) return;
 
@@ -287,185 +252,85 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     }
   };
 
+  const handleSaveStudyPlans = async () => {
+    if (!programId) return;
+    if (!activeTrackId) {
+      alert("Please select or create a study plan first.");
+      return;
+    }
+    try {
+      const placements = corePlacements[activeTrackId] || {};
+      const courses = Object.entries(placements).flatMap(([semId, list]) => {
+        const match = semId.match(/y(\d+)-s(\d+)/);
+        const year = match ? parseInt(match[1]) : 1;
+        const semester = match ? parseInt(match[2]) : 1;
+        return list.map(c => ({
+          course_id: c.is_elective_slot ? null : c.course_id!,
+          is_elective_slot: !!c.is_elective_slot,
+          year,
+          semester
+        }));
+      });
+
+      await api.syncStudyPlanEntries(programId, parseInt(activeTrackId), courses);
+      alert('Study plan courses saved successfully!');
+    } catch (error) {
+      console.error("Failed to save study plan:", error);
+      alert('Failed to save study plan courses.');
+    }
+  };
+
+  const handleSaveCoursePools = async () => {
+    if (!programId) return;
+    try {
+      // Sync each pool one by one since backend endpoint is per pool
+      for (const pool of pools) {
+        const courseIds = pool.courses
+          .filter(c => !c.is_elective_slot && c.course_id)
+          .map(c => c.course_id!);
+        
+        await api.syncCoursePoolEntries(programId, parseInt(pool.id), courseIds);
+      }
+      alert('All course pools saved successfully!');
+    } catch (error) {
+      console.error("Failed to save course pools:", error);
+      alert('Failed to save some course pools.');
+    }
+  };
+
+  if (isLoading) return <div className="flex h-64 items-center justify-center text-[var(--up-maroon)] font-bold uppercase tracking-widest">Loading Study Plan Data...</div>;
+
   // --- Derived Data ---
-  const activeTrack = tracks.find(t => t.id === activeTrackId);
-  const semesters = activeTrack ? generateSemesters(activeTrack.years) : [];
   const coreCatalog = catalog.filter(c => c.type === 'core');
   const poolCatalog = catalog.filter(c => c.type === 'pool');
 
   return (
-    <DndContext collisionDetection={pointerWithin} onDragStart={(e) => setActiveCourse(e.active.data.current?.course)} onDragEnd={handleDragEnd}>
+    <DndContext 
+      collisionDetection={pointerWithin} 
+      onDragStart={(e) => setActiveCourse(e.active.data.current?.course)} 
+      onDragEnd={handleDragEnd}
+    >
       <div className="flex flex-col gap-8">
+        <StudyPlanBlock 
+          tracks={tracks}
+          activeTrackId={activeTrackId}
+          setActiveTrackId={setActiveTrackId}
+          corePlacements={corePlacements}
+          onRemoveCourse={handleRemoveCourseFromTrack}
+          onCreateTrack={handleCreateTrack}
+          onDeleteTrack={handleDeleteTrack}
+          coreCatalog={coreCatalog}
+          onSave={handleSaveStudyPlans}
+        />
 
-        {/* --- SECTION 1: ADD COURSE TO MASTER CATALOG --- */}
-        <div className="flex flex-col border border-[var(--line)] bg-[var(--surface-muted)] p-6 shadow-sm">
-          <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--up-maroon)]">
-            Add New Course to Database
-          </h3>
-          <div className="flex flex-col gap-4">
-            <div className="flex items-end gap-4">
-              <div className="w-1/3">
-                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Course Code</label>
-                <input type="text" value={newCourse.code} onChange={e => setNewCourse({...newCourse, code: e.target.value})} className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" placeholder="e.g., CMSC 206" />
-              </div>
-              <div className="flex-1">
-                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Course Title</label>
-                <input type="text" value={newCourse.name} onChange={e => setNewCourse({...newCourse, name: e.target.value})} className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" placeholder="e.g., Artificial Intelligence" />
-              </div>
-            </div>
-            <div className="flex items-end gap-4">
-              <div className="w-1/3">
-                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Units</label>
-                <input type="number" value={newCourse.units} onChange={e => setNewCourse({...newCourse, units: Number(e.target.value)})} min="1" className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" />
-              </div>
-              <div className="flex-1">
-                <label className="mb-2 block text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Course Category</label>
-                <select value={newCourse.type} onChange={e => setNewCourse({...newCourse, type: e.target.value as CourseType})} className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none">
-                  <option value="core">Core Course (Study Plan)</option>
-                  <option value="pool">Pool Course (Electives, Seminars)</option>
-                </select>
-              </div>
-              <button onClick={handleAddCourse} className="h-10 shrink-0 border border-[var(--line)] bg-white px-8 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">
-                Add to Catalog
-              </button>
-            </div>
-          </div>
-          <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
-            <button onClick={() => setNewCourse({ code: '', name: '', units: 3, type: 'core' })} className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Cancel</button>
-            <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
-              Save Course to Database
-            </button>
-          </div>
-        </div>
-
-        {/* --- SECTION 2: STUDY PLAN BUILDER --- */}
-        <section className="flex flex-col border border-[var(--line)] bg-[var(--surface)] p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between border-b border-[var(--line)] pb-4">
-            <h2 className="text-lg font-bold uppercase tracking-widest text-[var(--up-maroon)]" style={{ fontFamily: 'var(--font-display)' }}>Study Plan</h2>
-            
-            <div className="flex items-center gap-4">
-              <input 
-                type="text" 
-                value={newPlanName} 
-                onChange={e => setNewPlanName(e.target.value)} 
-                className="h-8 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-xs focus:border-[var(--up-gold)] focus:outline-none w-48" 
-                placeholder="Plan Name (e.g., Master's)" 
-              />
-              <div className="flex items-center gap-2">
-                <label className="text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-muted)]">Years:</label>
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="10" 
-                  value={newPlanYears} 
-                  onChange={e => setNewPlanYears(Number(e.target.value))} 
-                  className="h-8 w-16 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-xs focus:border-[var(--up-gold)] focus:outline-none" 
-                />
-              </div>
-              <button onClick={handleCreateTrack} className="h-8 border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-4 text-[0.6rem] font-bold uppercase tracking-widest text-white transition hover:bg-[#5c0709]">
-                Create Plan
-              </button>
-            </div>
-          </div>
-
-          {/* UPDATED: Tabs now have an inner delete button */}
-          {tracks.length > 0 && (
-            <div className="flex gap-2 mb-4 border-b border-[var(--line)]">
-              {tracks.map(track => (
-                <div 
-                  key={track.id} 
-                  className={`flex items-center transition-colors ${activeTrackId === track.id ? 'border-b-2 border-[var(--up-maroon)] bg-white' : 'hover:bg-[var(--surface-muted)]'}`}
-                >
-                  <button 
-                    onClick={() => setActiveTrackId(track.id)} 
-                    className={`px-4 py-2.5 text-[0.65rem] font-bold uppercase tracking-widest ${activeTrackId === track.id ? 'text-[var(--up-maroon)]' : 'text-[var(--text-muted)]'}`}
-                  >
-                    {track.name} ({track.years} Yrs)
-                  </button>
-                  <button 
-                    onClick={() => handleDeleteTrack(track.id)} 
-                    className={`pr-4 text-xs ${activeTrackId === track.id ? 'text-red-400 hover:text-red-700' : 'text-transparent hover:text-red-500'}`}
-                    title="Delete Study Plan"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="flex gap-6">
-            <div className="flex-1 rounded border border-[var(--line)] bg-white p-4">
-              {activeTrackId ? (
-                <div className="grid grid-cols-2 gap-4">
-                  {semesters.map((sem) => (
-                    <DroppableBucket key={sem.id} id={sem.id} label={sem.label} bucketType="semester"
-                      placedCourses={corePlacements[activeTrackId]?.[sem.id] || []}
-                      onRemove={(instanceId) => setCorePlacements(prev => ({ ...prev, [activeTrackId]: { ...prev[activeTrackId], [sem.id]: prev[activeTrackId][sem.id].filter(c => c.instanceId !== instanceId) } }))}
-                    />
-                  ))}
-                </div>
-              ) : <div className="flex h-full min-h-[200px] items-center justify-center text-sm font-semibold text-[var(--text-muted)] uppercase tracking-widest text-center px-4">Create a study plan above to begin placing core courses.</div>}
-            </div>
-
-            <div className="w-64 shrink-0 flex flex-col rounded border border-[var(--line)] bg-[var(--surface-muted)] p-4">
-              <h3 className="mb-4 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">Core Courses Catalog</h3>
-              <div className="modern-scrollbar flex-1 overflow-y-auto space-y-3 pr-1 h-[400px]">
-                {coreCatalog.map((course) => <DraggablePaletteCourse key={`core_${course.code}`} id={`core_${course.code}`} course={course} />)}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
-            <button className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Discard</button>
-            <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
-              Save Study Plan
-            </button>
-          </div>
-        </section>
-
-        {/* --- SECTION 3: COURSE POOL BUILDER --- */}
-        <section className="flex flex-col border border-[var(--line)] bg-[var(--surface)] p-6 shadow-sm">
-          <div className="mb-6 flex items-center justify-between border-b border-[var(--line)] pb-4">
-            <h2 className="text-lg font-bold uppercase tracking-widest text-[var(--up-maroon)]" style={{ fontFamily: 'var(--font-display)' }}>Course Pool Builder</h2>
-            <div className="flex items-center gap-2">
-              <input type="text" value={newPoolName} onChange={e => setNewPoolName(e.target.value)} className="h-8 border border-[var(--line)] bg-[var(--page-bg)] px-3 text-xs focus:border-[var(--up-gold)] focus:outline-none" placeholder="e.g. Electives, Seminars" />
-              <button onClick={handleCreatePool} className="h-8 border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-4 text-[0.6rem] font-bold uppercase tracking-widest text-white transition hover:bg-[#5c0709]">
-                Create Pool
-              </button>
-            </div>
-          </div>
-
-          <div className="flex gap-6">
-            <div className="flex-1 rounded border border-[var(--line)] bg-white p-4">
-               <div className="grid grid-cols-2 gap-4">
-                  {/* UPDATED: Pass onDeleteBucket to handle deleting the entire pool */}
-                  {pools.map((pool) => (
-                    <DroppableBucket key={pool.id} id={pool.id} label={pool.name} bucketType="pool"
-                      placedCourses={pool.courses}
-                      onRemove={(instanceId) => setPools(prev => prev.map(p => p.id === pool.id ? { ...p, courses: p.courses.filter(c => c.instanceId !== instanceId) } : p))}
-                      onDeleteBucket={handleDeletePool}
-                    />
-                  ))}
-               </div>
-            </div>
-
-            <div className="w-64 shrink-0 flex flex-col rounded border border-[var(--line)] bg-[var(--surface-muted)] p-4">
-              <h3 className="mb-4 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">Pool Courses Catalog</h3>
-              <div className="modern-scrollbar flex-1 overflow-y-auto space-y-3 pr-1 h-[400px]">
-                {poolCatalog.map((course) => <DraggablePaletteCourse key={`pool_${course.code}`} id={`pool_${course.code}`} course={course} />)}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
-            <button className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Discard</button>
-            <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
-              Save Course Pool
-            </button>
-          </div>
-        </section>
-
+        <CoursePoolBlock 
+          pools={pools}
+          onRemoveCourseFromPool={handleRemoveCourseFromPool}
+          onCreatePool={handleCreatePool}
+          onDeletePool={handleDeletePool}
+          poolCatalog={poolCatalog}
+          onSave={handleSaveCoursePools}
+        />
       </div>
 
       <DragOverlay>
@@ -473,7 +338,9 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
             <div className="opacity-90 rotate-2 scale-105 transition-transform cursor-grabbing rounded border-2 border-[var(--up-gold)] bg-white p-3 shadow-2xl w-48 z-50">
               <div className="flex items-start justify-between">
                 <p className="font-bold text-[var(--up-maroon)] text-xs">{activeCourse.code}</p>
-                <span className="rounded bg-gray-100 px-1 py-0.5 text-[0.55rem] text-gray-600">{activeCourse.units}U</span>
+                <span className="rounded bg-gray-100 px-1 py-0.5 text-[0.55rem] text-gray-600">
+                  {activeCourse.units !== null ? `${activeCourse.units}U` : '--'}
+                </span>
               </div>
               <p className="mt-0.5 text-[0.65rem] text-[var(--text-secondary)] truncate">{activeCourse.name}</p>
             </div>
