@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { DndContext, pointerWithin, DragOverlay } from '@dnd-kit/core';
 import { apiClient } from '@/lib/apiClient';
+import * as api from '@/services/apiServices';
 
 import { Course, StudyPlanTrack, Pool } from './study-plan/SharedDnd';
 import { StudyPlanBlock } from './study-plan/StudyPlanBlock';
@@ -93,33 +94,72 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
   }, [programId]);
 
   // --- Handlers ---
-  const handleCreateTrack = (name: string, years: number) => {
-    const newId = `temp_track_${Date.now()}`;
-    setTracks(prev => [...prev, { id: newId, name, years }]);
-    if (!activeTrackId) setActiveTrackId(newId);
+  const handleCreateTrack = async (name: string, years: number) => {
+    if (!programId) return;
+    try {
+      const newTrack = await api.createStudyPlan(programId, { name, years });
+      const track: StudyPlanTrack = {
+        id: String(newTrack.study_plan_id),
+        name: newTrack.name,
+        years: newTrack.years
+      };
+      setTracks(prev => [...prev, track]);
+      if (!activeTrackId) setActiveTrackId(track.id);
+    } catch (error) {
+      console.error("Failed to create study plan:", error);
+      alert("Failed to create study plan");
+    }
   };
 
-  const handleDeleteTrack = (trackId: string) => {
-    setTracks(prev => {
-      const remaining = prev.filter(t => t.id !== trackId);
-      if (activeTrackId === trackId) {
-        setActiveTrackId(remaining.length > 0 ? remaining[0].id : null);
-      }
-      return remaining;
-    });
-    setCorePlacements(prev => {
-      const newPlacements = { ...prev };
-      delete newPlacements[trackId];
-      return newPlacements;
-    });
+  const handleDeleteTrack = async (trackId: string) => {
+    if (!programId) return;
+    if (!confirm("Are you sure you want to delete this study plan?")) return;
+    try {
+      await api.deleteStudyPlan(programId, parseInt(trackId));
+      setTracks(prev => {
+        const remaining = prev.filter(t => t.id !== trackId);
+        if (activeTrackId === trackId) {
+          setActiveTrackId(remaining.length > 0 ? remaining[0].id : null);
+        }
+        return remaining;
+      });
+      setCorePlacements(prev => {
+        const newPlacements = { ...prev };
+        delete newPlacements[trackId];
+        return newPlacements;
+      });
+    } catch (error) {
+      console.error("Failed to delete study plan:", error);
+      alert("Failed to delete study plan");
+    }
   };
 
-  const handleCreatePool = (name: string) => {
-    setPools(prev => [...prev, { id: `temp_pool_${Date.now()}`, name, courses: [] }]);
+  const handleCreatePool = async (name: string) => {
+    if (!programId) return;
+    try {
+      const newPool = await api.createCoursePool(programId, { name });
+      const pool: Pool = {
+        id: String(newPool.course_pool_id),
+        name: newPool.name,
+        courses: []
+      };
+      setPools(prev => [...prev, pool]);
+    } catch (error) {
+      console.error("Failed to create course pool:", error);
+      alert("Failed to create course pool");
+    }
   };
 
-  const handleDeletePool = (poolId: string) => {
-    setPools(prev => prev.filter(p => p.id !== poolId));
+  const handleDeletePool = async (poolId: string) => {
+    if (!programId) return;
+    if (!confirm("Are you sure you want to delete this course pool?")) return;
+    try {
+      await api.deleteCoursePool(programId, parseInt(poolId));
+      setPools(prev => prev.filter(p => p.id !== poolId));
+    } catch (error) {
+      console.error("Failed to delete course pool:", error);
+      alert("Failed to delete course pool");
+    }
   };
 
   const handleRemoveCourseFromTrack = (instanceId: string, trackId: string, semId: string) => {
@@ -214,50 +254,47 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
 
   const handleSaveStudyPlans = async () => {
     if (!programId) return;
+    if (!activeTrackId) {
+      alert("Please select or create a study plan first.");
+      return;
+    }
     try {
-      const plansToSync = tracks.map(track => {
-        const placements = corePlacements[track.id] || {};
-        const courses = Object.entries(placements).flatMap(([semId, list]) => {
-          const match = semId.match(/y(\d+)-s(\d+)/);
-          const year = match ? parseInt(match[1]) : 1;
-          const semester = match ? parseInt(match[2]) : 1;
-          return list.map(c => ({
-            course_id: c.is_elective_slot ? null : c.course_id,
-            is_elective_slot: !!c.is_elective_slot,
-            year,
-            semester
-          }));
-        });
-        return {
-          study_plan_id: track.id.startsWith('temp_') ? undefined : parseInt(track.id),
-          name: track.name,
-          years: track.years,
-          courses
-        };
+      const placements = corePlacements[activeTrackId] || {};
+      const courses = Object.entries(placements).flatMap(([semId, list]) => {
+        const match = semId.match(/y(\d+)-s(\d+)/);
+        const year = match ? parseInt(match[1]) : 1;
+        const semester = match ? parseInt(match[2]) : 1;
+        return list.map(c => ({
+          course_id: c.is_elective_slot ? null : c.course_id!,
+          is_elective_slot: !!c.is_elective_slot,
+          year,
+          semester
+        }));
       });
 
-      await apiClient.put(`/programs/${programId}/study-plans`, { study_plans: plansToSync });
-      alert('Study plans saved successfully!');
+      await api.syncStudyPlanEntries(programId, parseInt(activeTrackId), courses);
+      alert('Study plan courses saved successfully!');
     } catch (error) {
-      console.error("Failed to save study plans:", error);
-      alert('Failed to save study plans.');
+      console.error("Failed to save study plan:", error);
+      alert('Failed to save study plan courses.');
     }
   };
 
   const handleSaveCoursePools = async () => {
     if (!programId) return;
     try {
-      const poolsToSync = pools.map(pool => ({
-        course_pool_id: pool.id.startsWith('temp_') ? undefined : parseInt(pool.id),
-        name: pool.name,
-        course_ids: pool.courses.filter(c => !c.is_elective_slot).map(c => c.course_id).filter(Boolean) as number[]
-      }));
-
-      await apiClient.put(`/programs/${programId}/course-pools`, { course_pools: poolsToSync });
-      alert('Course pools saved successfully!');
+      // Sync each pool one by one since backend endpoint is per pool
+      for (const pool of pools) {
+        const courseIds = pool.courses
+          .filter(c => !c.is_elective_slot && c.course_id)
+          .map(c => c.course_id!);
+        
+        await api.syncCoursePoolEntries(programId, parseInt(pool.id), courseIds);
+      }
+      alert('All course pools saved successfully!');
     } catch (error) {
       console.error("Failed to save course pools:", error);
-      alert('Failed to save course pools.');
+      alert('Failed to save some course pools.');
     }
   };
 

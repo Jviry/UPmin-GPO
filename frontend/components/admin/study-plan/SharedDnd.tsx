@@ -2,7 +2,6 @@
 
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 
-// --- Types ---
 export type CourseType = 'core' | 'pool';
 
 export type Course = {
