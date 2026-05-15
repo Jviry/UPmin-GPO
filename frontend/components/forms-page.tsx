@@ -3,6 +3,28 @@
 import { useEffect, useState } from 'react';
 import { apiClient } from '@/lib/apiClient';
 
+// helper to get file url
+const getFileUrl = (url: string) =>
+  url && url.startsWith('/')
+    ? `${process.env.NEXT_PUBLIC_API_URL}${url}`
+    : url;
+
+// helper to build forms list from program_application
+const getProgramForms = (application: any) => {
+  if (!application) return [];
+  const forms = [];
+  if (application.application_url && application.application_url !== 'TBA') {
+    forms.push({ name: 'Application Form', file_url: getFileUrl(application.application_url) });
+  }
+  if (application.recommendation_url && application.recommendation_url !== 'TBA') {
+    forms.push({ name: 'Recommendation Letter', file_url: getFileUrl(application.recommendation_url) });
+  }
+  if (application.fees_url && application.fees_url !== 'TBA') {
+    forms.push({ name: 'Fees', file_url: getFileUrl(application.fees_url) });
+  }
+  return forms;
+};
+
 function DownloadIcon() {
   return (
     <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
@@ -30,54 +52,55 @@ export function FormsPage() {
     <>
       <main className="min-h-screen bg-[var(--page-bg)] text-[var(--text-primary)]">
         <section className="border-b-4 border-[var(--up-gold)] px-4 pb-20 pt-16 sm:px-6 lg:px-10">
-        <div className="mx-auto w-full max-w-[1200px]">
-          <h1 className="[font-family:var(--font-display)] text-4xl font-bold text-[var(--text-primary)] md:text-5xl lg:text-[4rem]">
-            Forms &amp; Fees
-          </h1>
+          <div className="mx-auto w-full max-w-[1200px]">
+            <h1 className="[font-family:var(--font-display)] text-4xl font-bold text-[var(--text-primary)] md:text-5xl lg:text-[4rem]">
+              Forms &amp; Fees
+            </h1>
 
-          <div className="mt-12 space-y-10">
-            {programs.length > 0 ? programs.map((program) => (
-              <div key={program.program_id}>
-                <h2 className="[font-family:var(--font-display)] mb-3 text-xl font-bold text-[var(--text-primary)]">
-                  {program.name}
-                </h2>
+            <div className="mt-12 space-y-10">
+              {programs.length > 0 ? programs.map((program) => {
+                const forms = getProgramForms(program.program_application);
+                return (
+                  <div key={program.program_id}>
+                    <h2 className="[font-family:var(--font-display)] mb-3 text-xl font-bold text-[var(--text-primary)]">
+                      {program.name}
+                    </h2>
+                    <div className="w-full overflow-hidden rounded-sm border border-[rgba(118,9,12,0.15)]">
+                      {forms.length > 0 ? (
+                        forms.map((form, i) => (
+                          <div
+                            key={i}
+                            className={`grid grid-cols-[1fr_auto] items-center gap-6 px-5 py-3 ${i % 2 === 0 ? 'bg-[rgba(118,9,12,0.06)]' : 'bg-[rgba(118,9,12,0.11)]'
+                              } ${i < forms.length - 1 ? 'border-b border-[rgba(118,9,12,0.12)]' : ''}`}
+                          >
+                            <span className="text-sm text-[var(--text-primary)] sm:text-[0.95rem]">
+                              {form.name}
+                            </span>
 
-                <div className="w-full overflow-hidden rounded-sm border border-[rgba(118,9,12,0.15)]">
-                  {program.programForms && program.programForms.length > 0 ? (
-                    program.programForms.map((form: any, i: number) => (
-                      <div
-                        key={form.form_id || i}
-                        className={`grid grid-cols-[1fr_auto] items-center gap-6 px-5 py-3 ${
-                          i % 2 === 0 ? 'bg-[rgba(118,9,12,0.06)]' : 'bg-[rgba(118,9,12,0.11)]'
-                        } ${i < program.programForms.length - 1 ? 'border-b border-[rgba(118,9,12,0.12)]' : ''}`}
-                      >
-                        <span className="text-sm text-[var(--text-primary)] sm:text-[0.95rem]">
-                          {form.name}
-                        </span>
-                        <a
-                          href={form.file_url || '#'}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-sm bg-[var(--up-maroon)] px-4 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-150 hover:bg-[#5c0709]"
-                        >
-                          <DownloadIcon />
-                          Download
-                        </a>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="px-5 py-4 text-sm text-[var(--text-muted)] italic bg-[rgba(118,9,12,0.03)]">
-                      No specific forms or files uploaded for this program yet.
+                            <a href={form.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 rounded-sm bg-[var(--up-maroon)] px-4 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-150 hover:bg-[#5c0709]"
+                            >
+                              <DownloadIcon />
+                              Download
+                            </a>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-5 py-4 text-sm text-[var(--text-muted)] italic bg-[rgba(118,9,12,0.03)]">
+                          No forms or files uploaded for this program yet.
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
-            )) : (
-              <div className="text-[var(--text-muted)] italic">Loading program forms...</div>
-            )}
+                  </div>
+                );
+              }) : (
+                <div className="text-[var(--text-muted)] italic">Loading program forms...</div>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       </main>
     </>
   );

@@ -304,12 +304,22 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
           {/* Apply button */}
           <div className="flex justify-center gap-4 bg-[var(--page-bg)] px-4 py-12 sm:px-6 lg:px-10">
             {program.program_application?.application_url && (
-              <a href={program.program_application.application_url} target="_blank" rel="noopener noreferrer" className="flex-1 max-w-[200px] flex items-center justify-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]">
+              <a
+                href={`${process.env.NEXT_PUBLIC_API_URL}${program.program_application.application_url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 max-w-[200px] flex items-center justify-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]"
+              >
                 Apply Now
               </a>
             )}
             {program.program_application?.recommendation_url && (
-              <a href={program.program_application.recommendation_url} target="_blank" rel="noopener noreferrer" className="flex-1 max-w-[200px] flex items-center justify-center text-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]">
+              <a
+                href={`${process.env.NEXT_PUBLIC_API_URL}${program.program_application.recommendation_url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 max-w-[200px] flex items-center justify-center text-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]"
+              >
                 Recommendation Letter
               </a>
             )}
@@ -345,7 +355,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                     <div className="text-base font-bold uppercase tracking-wider text-[var(--text-primary)]">
                       {member.name}
                     </div>
-                    
+
                     {member.credentials?.length > 0 && (
                       <div className="mt-0.5 text-[0.65rem] font-medium text-[var(--text-primary)] opacity-75">
                         {member.credentials.map((c: any) => c.degree).join(', ')}
