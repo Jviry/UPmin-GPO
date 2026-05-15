@@ -352,3 +352,24 @@ export const deleteAdmin = async (id: number) => {
     throw new Error(message);
   }
 };
+
+
+// --- SCHOLARSHIP API ---
+export const getScholarships = async () => {
+  try {
+    const response = await apiClient.get('/scholarships');
+    return response.data.scholarships;
+  } catch (error) {
+    throw new Error(GENERIC_ERROR_MSG);
+  }
+};
+
+export const getScholarshipById = async (id: string) => {
+  try {
+    const response = await apiClient.get(`/scholarships/${id}`);
+    return response.data.scholarship;
+  } catch (error) {
+    throw new Error(GENERIC_ERROR_MSG);
+  }
+};
+

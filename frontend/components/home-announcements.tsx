@@ -142,22 +142,33 @@ export function HomeAnnouncements() {
                     href={`/announcements/${announcement.announcement_id}`}
                     key={announcement.announcement_id || index} 
                     ref={index === 0 ? firstCardRef as any : index === announcements.length - 1 ? lastCardRef as any : undefined}
-                    className="group relative flex h-full min-h-[380px] w-[272px] shrink-0 snap-start flex-col justify-between bg-[#faf6f0] p-6 text-left shadow-[0_8px_32px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px] block"
+                    className="group relative flex h-full min-h-[420px] w-[272px] shrink-0 snap-start flex-col bg-[#faf6f0] text-left shadow-[0_8px_32px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px] overflow-hidden"
                   >
-                    <div className="absolute inset-x-0 top-0 h-[3px] bg-[var(--up-gold)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-[var(--up-gold)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-                    <div>
-                      <div className="mb-4 flex items-center gap-2">
-                        <div className="h-[2px] w-6 bg-[var(--up-maroon)]" />
-                        <p className="text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[var(--up-maroon)]">Announcement</p>
-                      </div>
-                      <h3 className="font-[var(--font-display)] text-[1.35rem] leading-snug text-[var(--up-maroon)]">{announcement.title}</h3>
-                      <p className="mt-3 text-sm leading-[1.75] text-[#5a5450]">{announcement.content_description}</p>
+                    <div className="h-40 w-full shrink-0 overflow-hidden bg-[var(--up-maroon)] relative">
+                      <img
+                        src={announcement.image_url || "/hero-section-background.jpg"}
+                        alt={announcement.title || "Announcement image"}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-[rgba(90,6,9,0.2)] mix-blend-multiply" />
                     </div>
 
-                    <div className="mt-6 flex items-center justify-between border-t border-[rgba(118,9,12,0.12)] pt-4 text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[var(--up-maroon)]">
-                      <span>Read more</span>
-                      <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                    <div className="flex flex-1 flex-col justify-between p-6">
+                      <div>
+                        <div className="mb-4 flex items-center gap-2">
+                          <div className="h-[2px] w-6 bg-[var(--up-maroon)]" />
+                          <p className="text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[var(--up-maroon)]">Announcement</p>
+                        </div>
+                        <h3 className="font-[var(--font-display)] text-[1.25rem] leading-snug text-[var(--up-maroon)] line-clamp-2">{announcement.title}</h3>
+                        <p className="mt-3 text-sm leading-[1.6] text-[#5a5450] line-clamp-3">{announcement.content_description}</p>
+                      </div>
+
+                      <div className="mt-6 flex items-center justify-between border-t border-[rgba(118,9,12,0.12)] pt-4 text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[var(--up-maroon)]">
+                        <span>Read more</span>
+                        <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                      </div>
                     </div>
                   </Link>
                 ))}
