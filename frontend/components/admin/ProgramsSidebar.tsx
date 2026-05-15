@@ -8,12 +8,14 @@ export function ProgramsSidebar({
   isCreating,
   selectProgram,
   setIsCreating,
+  onDelete,
 }: {
   programs: any[];
   activeProgramId: number | null;
   isCreating: boolean;
   selectProgram: (id: number) => void;
   setIsCreating: (val: boolean) => void;
+  onDelete: (id: number) => void;
 }) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -61,7 +63,6 @@ export function ProgramsSidebar({
               {prog.name}
             </button>
 
-            {/* Three-dot button — visible on hover or when menu is open */}
             <button
               onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === prog.program_id ? null : prog.program_id); }}
               className={`mr-2 flex h-6 w-6 shrink-0 items-center justify-center text-[var(--text-muted)] transition hover:text-[var(--text-primary)] ${openMenuId === prog.program_id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
@@ -75,11 +76,14 @@ export function ProgramsSidebar({
               </svg>
             </button>
 
-            {/* Dropdown */}
             {openMenuId === prog.program_id && (
               <div className="absolute right-2 top-full z-50 mt-0.5 w-32 border border-[var(--line)] bg-white shadow-md">
                 <button
-                  onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenMenuId(null);
+                    onDelete(prog.program_id);
+                  }}
                   className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-widest text-red-600 transition hover:bg-red-50"
                 >
                   Delete
