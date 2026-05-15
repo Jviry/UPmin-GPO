@@ -43,7 +43,7 @@ export function HomePrograms() {
 
           <div className="flex min-h-0 flex-col justify-stretch lg:pl-8">
             <div className="modern-scrollbar h-full min-h-0 overflow-y-auto pr-3 [scrollbar-gutter:stable]">
-              
+
               {/* Loading State UI */}
               {isLoading && (
                 <div className="py-10 text-center text-[var(--text-secondary)]">
@@ -75,7 +75,10 @@ export function HomePrograms() {
                       className="group relative block aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)] cursor-pointer"
                     >
                       <img
-                        src={program.photo || "/hero-section-background.jpg"}
+                        src={program.image_url
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${program.image_url}`
+                          : "/hero-section-background.jpg"
+                        }
                         alt={program.name}
                         className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                         onError={(e) => {
