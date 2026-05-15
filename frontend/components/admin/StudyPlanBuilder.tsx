@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DndContext, pointerWithin, DragOverlay } from '@dnd-kit/core';
+import { apiClient } from '@/lib/apiClient';
 
 import { Course, StudyPlanTrack, Pool } from './study-plan/SharedDnd';
 import { MasterCatalogBlock } from './study-plan/MasterCatalogBlock';
@@ -9,22 +10,88 @@ import { StudyPlanBlock } from './study-plan/StudyPlanBlock';
 import { CoursePoolBlock } from './study-plan/CoursePoolBlock';
 
 export function StudyPlanBuilder({ programId }: { programId: number | null }) {
-  const [catalog, setCatalog] = useState<Course[]>([
-    { code: 'MATH 26', name: 'Advanced Mathematics', units: 3, type: 'core' },
-    { code: 'CMSC 126', name: 'Theory of Computation', units: 3, type: 'core' },
-    { code: 'CMSC 203', name: 'Advanced Algorithms', units: 3, type: 'pool' },
-    { code: 'ABME 399', name: 'Graduate Seminar 1', units: 1, type: 'pool' },
-  ]);
-
+  const [catalog, setCatalog] = useState<Course[]>([]);
   const [tracks, setTracks] = useState<StudyPlanTrack[]>([]);
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
   const [corePlacements, setCorePlacements] = useState<Record<string, Record<string, (Course & { instanceId: string })[]>>>({});
   
-  const [pools, setPools] = useState<Pool[]>([
-    { id: 'pool_electives', name: 'Electives', courses: [] },
-  ]);
-
+  const [pools, setPools] = useState<Pool[]>([]);
   const [activeCourse, setActiveCourse] = useState<Course | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!programId) return;
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await apiClient.get(`/programs/${programId}`);
+        const program = res.data.program || res.data;
+
+        // 1. Tracks (Study Plans)
+        const fetchedTracks: StudyPlanTrack[] = (program.study_plans || []).map((sp: any) => ({
+          id: String(sp.study_plan_id),
+          name: sp.name,
+          years: sp.years
+        }));
+        setTracks(fetchedTracks);
+        if (fetchedTracks.length > 0) setActiveTrackId(fetchedTracks[0].id);
+
+        // 2. Placements
+        const fetchedPlacements: Record<string, Record<string, (Course & { instanceId: string })[]>> = {};
+        program.study_plans?.forEach((sp: any) => {
+          const trackPlacements: Record<string, (Course & { instanceId: string })[]> = {};
+          sp.program_courses?.forEach((pc: any) => {
+            const semId = `y${pc.year}-s${pc.semester}`;
+            if (!trackPlacements[semId]) trackPlacements[semId] = [];
+            
+            const courseData: Course = pc.is_elective_slot 
+              ? { code: 'ELECTIVE', name: 'Elective Slot', units: null, type: 'pool', is_elective_slot: true }
+              : { 
+                  course_id: pc.course.course_id, 
+                  code: pc.course.code, 
+                  name: pc.course.name, 
+                  units: pc.course.units, 
+                  type: pc.course.type as any 
+                };
+
+            trackPlacements[semId].push({
+              ...courseData,
+              instanceId: `${courseData.code}_${pc.program_course_id || Math.random()}`
+            });
+          });
+          fetchedPlacements[String(sp.study_plan_id)] = trackPlacements;
+        });
+        setCorePlacements(fetchedPlacements);
+
+        // 3. Pools
+        const fetchedPools: Pool[] = (program.course_pools || []).map((pool: any) => ({
+          id: String(pool.course_pool_id),
+          name: pool.name,
+          courses: (pool.entries || []).map((entry: any) => ({
+            course_id: entry.course.course_id,
+            code: entry.course.code,
+            name: entry.course.name,
+            units: entry.course.units,
+            type: entry.course.type,
+            instanceId: `${entry.course.code}_${entry.course_pool_entry_id}`
+          }))
+        }));
+        setPools(fetchedPools);
+
+        // 4. Catalog
+        const catalogRes = await apiClient.get('/courses').catch(() => ({ data: { courses: [] } }));
+        setCatalog(catalogRes.data.courses || []);
+
+      } catch (error) {
+        console.error("Failed to fetch study plan data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [programId]);
 
   // --- Handlers ---
   const handleAddCourse = (course: Course) => {
@@ -32,7 +99,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
   };
 
   const handleCreateTrack = (name: string, years: number) => {
-    const newId = `track_${Date.now()}`;
+    const newId = `temp_track_${Date.now()}`;
     setTracks(prev => [...prev, { id: newId, name, years }]);
     if (!activeTrackId) setActiveTrackId(newId);
   };
@@ -53,7 +120,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
   };
 
   const handleCreatePool = (name: string) => {
-    setPools(prev => [...prev, { id: `pool_${Date.now()}`, name, courses: [] }]);
+    setPools(prev => [...prev, { id: `temp_pool_${Date.now()}`, name, courses: [] }]);
   };
 
   const handleDeletePool = (poolId: string) => {
@@ -85,7 +152,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
 
     if (!over) {
       if (isPlacedItem) {
-        if (sourceBucketId.startsWith('pool_')) {
+        if (sourceBucketId.startsWith('pool_') || sourceBucketId.startsWith('temp_pool_')) {
           handleRemoveCourseFromPool(instanceId, sourceBucketId);
         } else if (activeTrackId) {
           handleRemoveCourseFromTrack(instanceId, activeTrackId, sourceBucketId);
@@ -95,11 +162,12 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     }
 
     const overId = String(over.id);
+    const isOverPool = overId.includes('pool');
 
     if (isPaletteItem) {
       const newInstance = { ...course, instanceId: `${course.code}_${Date.now()}` };
 
-      if (course.type === 'core' && !overId.startsWith('pool_') && activeTrackId) {
+      if (course.type === 'core' && !isOverPool && activeTrackId) {
         setCorePlacements((prev) => ({
           ...prev,
           [activeTrackId]: {
@@ -108,7 +176,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
           }
         }));
       } 
-      else if (course.type === 'pool' && overId.startsWith('pool_')) {
+      else if (course.type === 'pool' && isOverPool) {
         setPools(prev => prev.map(pool => 
           pool.id === overId 
             ? { ...pool, courses: [...pool.courses, newInstance] } 
@@ -119,8 +187,6 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     else if (isPlacedItem) {
       if (sourceBucketId === overId) return;
 
-      const isOverPool = overId.startsWith('pool_');
-      
       if (course.type === 'core' && isOverPool) return;
       if (course.type === 'pool' && !isOverPool) return;
 
@@ -151,6 +217,57 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     }
   };
 
+  const handleSaveStudyPlans = async () => {
+    if (!programId) return;
+    try {
+      const plansToSync = tracks.map(track => {
+        const placements = corePlacements[track.id] || {};
+        const courses = Object.entries(placements).flatMap(([semId, list]) => {
+          const match = semId.match(/y(\d+)-s(\d+)/);
+          const year = match ? parseInt(match[1]) : 1;
+          const semester = match ? parseInt(match[2]) : 1;
+          return list.map(c => ({
+            course_id: c.is_elective_slot ? null : c.course_id,
+            is_elective_slot: !!c.is_elective_slot,
+            year,
+            semester
+          }));
+        });
+        return {
+          study_plan_id: track.id.startsWith('temp_') ? undefined : parseInt(track.id),
+          name: track.name,
+          years: track.years,
+          courses
+        };
+      });
+
+      await apiClient.put(`/programs/${programId}/study-plans`, { study_plans: plansToSync });
+      alert('Study plans saved successfully!');
+    } catch (error) {
+      console.error("Failed to save study plans:", error);
+      alert('Failed to save study plans.');
+    }
+  };
+
+  const handleSaveCoursePools = async () => {
+    if (!programId) return;
+    try {
+      const poolsToSync = pools.map(pool => ({
+        course_pool_id: pool.id.startsWith('temp_') ? undefined : parseInt(pool.id),
+        name: pool.name,
+        course_ids: pool.courses.filter(c => !c.is_elective_slot).map(c => c.course_id).filter(Boolean) as number[]
+      }));
+
+      await apiClient.put(`/programs/${programId}/course-pools`, { course_pools: poolsToSync });
+      alert('Course pools saved successfully!');
+    } catch (error) {
+      console.error("Failed to save course pools:", error);
+      alert('Failed to save course pools.');
+    }
+  };
+
+  if (isLoading) return <div className="flex h-64 items-center justify-center text-[var(--up-maroon)] font-bold uppercase tracking-widest">Loading Study Plan Data...</div>;
+
   // --- Derived Data ---
   const coreCatalog = catalog.filter(c => c.type === 'core');
   const poolCatalog = catalog.filter(c => c.type === 'pool');
@@ -173,6 +290,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
           onCreateTrack={handleCreateTrack}
           onDeleteTrack={handleDeleteTrack}
           coreCatalog={coreCatalog}
+          onSave={handleSaveStudyPlans}
         />
 
         <CoursePoolBlock 
@@ -181,6 +299,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
           onCreatePool={handleCreatePool}
           onDeletePool={handleDeletePool}
           poolCatalog={poolCatalog}
+          onSave={handleSaveCoursePools}
         />
       </div>
 
@@ -189,7 +308,9 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
             <div className="opacity-90 rotate-2 scale-105 transition-transform cursor-grabbing rounded border-2 border-[var(--up-gold)] bg-white p-3 shadow-2xl w-48 z-50">
               <div className="flex items-start justify-between">
                 <p className="font-bold text-[var(--up-maroon)] text-xs">{activeCourse.code}</p>
-                <span className="rounded bg-gray-100 px-1 py-0.5 text-[0.55rem] text-gray-600">{activeCourse.units}U</span>
+                <span className="rounded bg-gray-100 px-1 py-0.5 text-[0.55rem] text-gray-600">
+                  {activeCourse.units !== null ? `${activeCourse.units}U` : '--'}
+                </span>
               </div>
               <p className="mt-0.5 text-[0.65rem] text-[var(--text-secondary)] truncate">{activeCourse.name}</p>
             </div>

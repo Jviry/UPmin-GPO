@@ -14,6 +14,7 @@ interface CoursePoolBlockProps {
   onCreatePool: (name: string) => void;
   onDeletePool: (id: string) => void;
   poolCatalog: Course[];
+  onSave: () => void;
 }
 
 export function CoursePoolBlock({
@@ -21,7 +22,8 @@ export function CoursePoolBlock({
   onRemoveCourseFromPool,
   onCreatePool,
   onDeletePool,
-  poolCatalog
+  poolCatalog,
+  onSave
 }: CoursePoolBlockProps) {
   const [newPoolName, setNewPoolName] = useState('');
 
@@ -70,7 +72,7 @@ export function CoursePoolBlock({
           <h3 className="mb-4 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">Pool Courses Catalog</h3>
           <div className="modern-scrollbar flex-1 overflow-y-auto space-y-3 pr-1 h-[400px]">
             {poolCatalog.map((course) => (
-              <DraggablePaletteCourse key={`pool_${course.code}`} id={`pool_${course.code}`} course={course} />
+              <DraggablePaletteCourse key={`pool_${course.course_id || course.code}`} id={`pool_${course.course_id || course.code}`} course={course} />
             ))}
           </div>
         </div>
@@ -78,7 +80,10 @@ export function CoursePoolBlock({
 
       <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
         <button className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Discard</button>
-        <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+        <button 
+          onClick={onSave}
+          className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]"
+        >
           Save Course Pool
         </button>
       </div>

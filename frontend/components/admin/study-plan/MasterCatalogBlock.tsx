@@ -21,6 +21,19 @@ export function MasterCatalogBlock({ onAddCourse }: MasterCatalogBlockProps) {
     setNewCourse({ code: '', name: '', units: 3, type: 'core' }); 
   };
 
+  const handleSaveToDatabase = async () => {
+    if (!newCourse.code || !newCourse.name) return;
+    try {
+      await apiClient.post('/courses', newCourse);
+      onAddCourse(newCourse);
+      setNewCourse({ code: '', name: '', units: 3, type: 'core' });
+      alert('Course saved to database!');
+    } catch (error) {
+      console.error("Failed to save course:", error);
+      alert('Failed to save course to database.');
+    }
+  };
+
   return (
     <div className="flex flex-col border border-[var(--line)] bg-[var(--surface-muted)] p-6 shadow-sm">
       <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--up-maroon)]">
@@ -86,7 +99,10 @@ export function MasterCatalogBlock({ onAddCourse }: MasterCatalogBlockProps) {
         >
           Cancel
         </button>
-        <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+        <button 
+          onClick={handleSaveToDatabase}
+          className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]"
+        >
           Save Course to Database
         </button>
       </div>

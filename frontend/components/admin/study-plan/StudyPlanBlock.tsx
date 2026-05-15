@@ -18,6 +18,7 @@ interface StudyPlanBlockProps {
   onCreateTrack: (name: string, years: number) => void;
   onDeleteTrack: (id: string) => void;
   coreCatalog: Course[];
+  onSave: () => void;
 }
 
 export function StudyPlanBlock({
@@ -28,7 +29,8 @@ export function StudyPlanBlock({
   onRemoveCourse,
   onCreateTrack,
   onDeleteTrack,
-  coreCatalog
+  coreCatalog,
+  onSave
 }: StudyPlanBlockProps) {
   const [newPlanName, setNewPlanName] = useState('');
   const [newPlanYears, setNewPlanYears] = useState<number>(2);
@@ -123,8 +125,20 @@ export function StudyPlanBlock({
         <div className="w-64 shrink-0 flex flex-col rounded border border-[var(--line)] bg-[var(--surface-muted)] p-4">
           <h3 className="mb-4 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">Core Courses Catalog</h3>
           <div className="modern-scrollbar flex-1 overflow-y-auto space-y-3 pr-1 h-[400px]">
+            {/* Special Elective Slot Item */}
+            <DraggablePaletteCourse 
+              id="special_elective_slot" 
+              course={{
+                code: 'ELECTIVE',
+                name: 'Elective Slot',
+                units: null,
+                type: 'core',
+                is_elective_slot: true
+              }} 
+            />
+            <div className="border-t border-gray-200 my-2 pt-2"></div>
             {coreCatalog.map((course) => (
-              <DraggablePaletteCourse key={`core_${course.code}`} id={`core_${course.code}`} course={course} />
+              <DraggablePaletteCourse key={`core_${course.course_id || course.code}`} id={`core_${course.course_id || course.code}`} course={course} />
             ))}
           </div>
         </div>
@@ -132,7 +146,10 @@ export function StudyPlanBlock({
 
       <div className="flex justify-end gap-3 border-t border-[var(--line)] mt-6 pt-4">
         <button className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50">Discard</button>
-        <button className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]">
+        <button 
+          onClick={onSave}
+          className="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]"
+        >
           Save Study Plan
         </button>
       </div>
