@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link"; // <-- Here is the built-in Next.js Link import
-import { getAnnouncements } from "../services/apiServices"; 
+import { getAnnouncements } from "../services/apiServices";
 
 export function HomeAnnouncements() {
   const [announcements, setAnnouncements] = useState<any[]>([]);
@@ -94,7 +94,7 @@ export function HomeAnnouncements() {
         </div>
 
         <div className="relative flex flex-1 min-h-0 items-stretch">
-          
+
           {isLoading && (
             <div className="flex w-full items-center justify-center">
               <p className="text-lg text-white opacity-80 tracking-wide">Loading latest announcements...</p>
@@ -140,7 +140,7 @@ export function HomeAnnouncements() {
                 {announcements.map((announcement, index) => (
                   <Link
                     href={`/announcements/${announcement.announcement_id}`}
-                    key={announcement.announcement_id || index} 
+                    key={announcement.announcement_id || index}
                     ref={index === 0 ? firstCardRef as any : index === announcements.length - 1 ? lastCardRef as any : undefined}
                     className="group relative flex h-full min-h-[420px] w-[272px] shrink-0 snap-start flex-col bg-[#faf6f0] text-left shadow-[0_8px_32px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px] overflow-hidden"
                   >
@@ -148,7 +148,10 @@ export function HomeAnnouncements() {
 
                     <div className="h-40 w-full shrink-0 overflow-hidden bg-[var(--up-maroon)] relative">
                       <img
-                        src={announcement.image_url || "/hero-section-background.jpg"}
+                        src={announcement.image_url
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${announcement.image_url}`
+                          : "/hero-section-background.jpg"
+                        }
                         alt={announcement.title || "Announcement image"}
                         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />

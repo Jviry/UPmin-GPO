@@ -17,7 +17,7 @@ export function AnnouncementManagementBlock() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Search State
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -101,7 +101,7 @@ export function AnnouncementManagementBlock() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title.trim() || !formData.content_description.trim()) {
       setError('Please fill in the title and description.');
       return;
@@ -245,14 +245,14 @@ export function AnnouncementManagementBlock() {
               </thead>
               <tbody>
                 {filteredAnnouncements.map((announcement, index) => (
-                  <tr 
-                    key={announcement.announcement_id} 
+                  <tr
+                    key={announcement.announcement_id}
                     className={`border-b border-[var(--line)] hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'}`}
                   >
                     <td className="py-4 px-6">
                       {announcement.image_url ? (
-                        <img 
-                          src={announcement.image_url} 
+                        <img
+                          src={`${process.env.NEXT_PUBLIC_API_URL}${announcement.image_url}`}
                           alt={announcement.title}
                           className="w-10 h-10 object-cover rounded"
                         />
@@ -319,14 +319,14 @@ export function AnnouncementManagementBlock() {
                 <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-3">
                   Cover Image
                 </label>
-                
+
                 {/* Image Preview */}
                 {imagePreview && (
                   <div className="mb-3">
                     <div className="relative inline-block">
-                      <img 
-                        src={imagePreview} 
-                        alt="Preview" 
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
                         className="w-32 h-32 object-cover rounded border border-[var(--line)]"
                       />
                       <button
@@ -418,8 +418,8 @@ export function AnnouncementManagementBlock() {
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={submitting}
                   className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
