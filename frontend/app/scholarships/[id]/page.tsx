@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getScholarshipById } from '../../../services/apiServices'; 
+import { getScholarshipById } from '../../../services/apiServices';
 import { ScholarshipImage } from '../../../components/ScholarshipImage';
 import { ScholarshipInfoBlock } from '../../../components/ScholarshipInfoBlock';
 import { ScholarshipActionButtons } from '../../../components/ScholarshipActionButtons';
