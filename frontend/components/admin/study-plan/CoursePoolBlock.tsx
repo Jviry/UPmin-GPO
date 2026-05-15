@@ -13,6 +13,7 @@ interface CoursePoolBlockProps {
   onRemoveCourseFromPool: (instanceId: string, poolId: string) => void;
   onCreatePool: (name: string) => void;
   onDeletePool: (id: string) => void;
+  onSyncPool: (id: string) => void;
   poolCatalog: Course[];
   onSave: () => void;
 }
@@ -22,6 +23,7 @@ export function CoursePoolBlock({
   onRemoveCourseFromPool,
   onCreatePool,
   onDeletePool,
+  onSyncPool,
   poolCatalog,
   onSave
 }: CoursePoolBlockProps) {
@@ -69,6 +71,7 @@ export function CoursePoolBlock({
                   placedCourses={pool.courses}
                   onRemove={(instanceId) => onRemoveCourseFromPool(instanceId, pool.id)}
                   onDeleteBucket={onDeletePool}
+                  onSyncBucket={onSyncPool}
                 />
               ))}
            </div>

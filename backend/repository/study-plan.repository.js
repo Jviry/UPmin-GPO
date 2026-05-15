@@ -19,7 +19,7 @@ export function createStudyPlanRepository(prisma) {
         await tx.programCourse.createMany({
           data: courses.map(({ course_id, year, semester, is_elective_slot }) => ({
             study_plan_id: Number(study_plan_id),
-            course_id: Number(course_id),
+            course_id: course_id ? Number(course_id) : null,
             year: Number(year),
             semester: Number(semester),
             is_elective_slot: Boolean(is_elective_slot)
