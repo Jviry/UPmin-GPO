@@ -18,6 +18,8 @@ type ProgramGroup = {
 export function SiteHeader() {
   const [programsOpen, setProgramsOpen] = useState(false);
   const [programGroups, setProgramGroups] = useState<ProgramGroup[]>([]);
+  // State to hold the Apply Now URL, defaulting to a safe fallback
+  const [applyUrl, setApplyUrl] = useState<string>('/forms'); 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,14 +31,17 @@ export function SiteHeader() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     
-    // Fetch programs and group them by their type (e.g., "Graduate Program", "Diploma Program")
-    const fetchPrograms = async () => {
+    // Fetch both programs and office data simultaneously
+    const fetchHeaderData = async () => {
       try {
-        const res = await apiClient.get('/programs');
-        const data: ProgramData[] = res.data.programs || res.data;
+        const [programsRes, officeRes] = await Promise.all([
+          apiClient.get('/programs'),
+          apiClient.get('/office')
+        ]);
 
-        // Dynamically group the fetched programs by their Type
-        const grouped = data.reduce((acc, curr) => {
+        // 1. Process Programs
+        const programData: ProgramData[] = programsRes.data.programs || programsRes.data;
+        const grouped = programData.reduce((acc, curr) => {
           const groupName = curr.type || 'Other Programs';
           let group = acc.find(g => g.name === groupName);
           
@@ -47,19 +52,26 @@ export function SiteHeader() {
           
           group.programs.push({
             label: curr.name,
-            slug: String(curr.program_id) // We use program_id as the slug
+            slug: String(curr.program_id)
           });
           
           return acc;
         }, [] as ProgramGroup[]);
 
         setProgramGroups(grouped);
+
+        // 2. Process Office Data for the Apply button
+        const officeData = officeRes.data.office || officeRes.data[0] || officeRes.data;
+        if (officeData?.application_google_url) {
+          setApplyUrl(officeData.application_google_url);
+        }
+        
       } catch (error) {
-        console.error("Failed to load programs for header:", error);
+        console.error("Failed to load header data:", error);
       }
     };
 
-    fetchPrograms();
+    fetchHeaderData();
 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -127,9 +139,10 @@ export function SiteHeader() {
 
           <a href="/forms" className="transition-colors duration-200 hover:text-[var(--up-maroon)]">Forms</a>
         </nav>
-
         <a
-          href="#forms"
+          href={applyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center justify-center rounded-full border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-5 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-transform duration-200 hover:-translate-y-0.5 hover:bg-[#5c0709] hover:border-[#5c0709]"
         >
           Apply Now
