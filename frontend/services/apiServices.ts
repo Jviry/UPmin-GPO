@@ -61,10 +61,77 @@ export const updateGoogleFormUrl = async (url: string) => {
 export const getPrograms = async () => {
   try {
     const response = await apiClient.get('/programs');
-    // Map response shape: { message, programs }[span_8](start_span)[span_8](end_span)
     return response.data.programs;
   } catch (error) {
     throw new Error(GENERIC_ERROR_MSG);
+  }
+};
+
+export const createProgram = async (data: {
+  type: string;
+  name: string;
+  description: string;
+  history: string;
+  photoFile?: File | null;
+}) => {
+  try {
+    const form = new FormData();
+    form.append('type', data.type);
+    form.append('name', data.name);
+    form.append('description', data.description);
+    form.append('history', data.history);
+    if (data.photoFile) form.append('photo', data.photoFile);
+
+    const response = await apiClient.post('/programs', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.program;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const updateProgram = async (
+  id: number,
+  data: {
+    type: string;
+    name: string;
+    description: string;
+    history: string;
+    existingPhoto?: string;
+    photoFile?: File | null;
+  }
+) => {
+  try {
+    const form = new FormData();
+    form.append('type', data.type);
+    form.append('name', data.name);
+    form.append('description', data.description);
+    form.append('history', data.history);
+    if (data.photoFile) {
+      form.append('photo', data.photoFile);
+    } else if (data.existingPhoto) {
+      form.append('photo', data.existingPhoto);
+    }
+
+    const response = await apiClient.put(`/programs/${id}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.program;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteProgram = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`/programs/${id}`);
+    return response.data.deletedProgram;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
   }
 };
 
