@@ -34,6 +34,7 @@ export function StudyPlanBlock({
 }: StudyPlanBlockProps) {
   const [newPlanName, setNewPlanName] = useState('');
   const [newPlanYears, setNewPlanYears] = useState<number>(2);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const activeTrack = tracks.find(t => t.id === activeTrackId);
   const semesters = activeTrack ? generateSemesters(activeTrack.years) : [];
@@ -44,6 +45,11 @@ export function StudyPlanBlock({
     setNewPlanName('');
     setNewPlanYears(2);
   };
+
+  const filteredCatalog = coreCatalog.filter(c => 
+    c.code.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <section className="flex flex-col border border-[var(--line)] bg-[var(--surface)] p-6 shadow-sm">
@@ -122,24 +128,42 @@ export function StudyPlanBlock({
           )}
         </div>
 
-        <div className="w-64 shrink-0 flex flex-col rounded border border-[var(--line)] bg-[var(--surface-muted)] p-4">
-          <h3 className="mb-4 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">Core Courses Catalog</h3>
-          <div className="modern-scrollbar flex-1 overflow-y-auto space-y-3 pr-1 h-[400px]">
-            {/* Special Elective Slot Item */}
-            <DraggablePaletteCourse 
-              id="special_elective_slot" 
-              course={{
-                code: 'ELECTIVE',
-                name: 'Elective Slot',
-                units: null,
-                type: 'core',
-                is_elective_slot: true
-              }} 
+        <div className="flex h-[500px] w-64 shrink-0 flex-col rounded border border-[var(--line)] bg-[var(--surface-muted)] p-4">
+          <h3 className="mb-2 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">Core Courses Catalog</h3>
+          <div className="mb-3">
+            <input 
+              type="text" 
+              placeholder="Search code/title..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="h-8 w-full border border-[var(--line)] bg-white px-2 text-[0.65rem] focus:border-[var(--up-gold)] focus:outline-none"
             />
-            <div className="border-t border-gray-200 my-2 pt-2"></div>
-            {coreCatalog.map((course) => (
+          </div>
+          <div className="modern-scrollbar overflow-y-auto overflow-x-hidden pr-1">
+            <div className="flex flex-col gap-3">
+            {/* Special Elective Slot Item - Only show if no search or if matches 'elective' */}
+            {(!searchTerm || 'elective'.includes(searchTerm.toLowerCase())) && (
+              <>
+                <DraggablePaletteCourse 
+                  id="special_elective_slot" 
+                  course={{
+                    code: 'ELECTIVE',
+                    name: 'Elective Slot',
+                    units: null,
+                    type: 'core',
+                    is_elective_slot: true
+                  }} 
+                />
+                <div className="border-t border-gray-200 my-2 pt-2"></div>
+              </>
+            )}
+            {filteredCatalog.map((course) => (
               <DraggablePaletteCourse key={`core_${course.course_id || course.code}`} id={`core_${course.course_id || course.code}`} course={course} />
             ))}
+            {filteredCatalog.length === 0 && searchTerm && (
+              <p className="text-center text-[0.6rem] text-gray-400 mt-4">No matching courses</p>
+            )}
+            </div>
           </div>
         </div>
       </div>

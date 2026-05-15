@@ -5,7 +5,6 @@ import { DndContext, pointerWithin, DragOverlay } from '@dnd-kit/core';
 import { apiClient } from '@/lib/apiClient';
 
 import { Course, StudyPlanTrack, Pool } from './study-plan/SharedDnd';
-import { MasterCatalogBlock } from './study-plan/MasterCatalogBlock';
 import { StudyPlanBlock } from './study-plan/StudyPlanBlock';
 import { CoursePoolBlock } from './study-plan/CoursePoolBlock';
 
@@ -80,7 +79,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
         setPools(fetchedPools);
 
         // 4. Catalog
-        const catalogRes = await apiClient.get('/courses').catch(() => ({ data: { courses: [] } }));
+        const catalogRes = await apiClient.get('/courses', { params: { limit: 1000 } }).catch(() => ({ data: { courses: [] } }));
         setCatalog(catalogRes.data.courses || []);
 
       } catch (error) {
@@ -94,10 +93,6 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
   }, [programId]);
 
   // --- Handlers ---
-  const handleAddCourse = (course: Course) => {
-    setCatalog(prev => [...prev, course]);
-  };
-
   const handleCreateTrack = (name: string, years: number) => {
     const newId = `temp_track_${Date.now()}`;
     setTracks(prev => [...prev, { id: newId, name, years }]);
@@ -279,8 +274,6 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
       onDragEnd={handleDragEnd}
     >
       <div className="flex flex-col gap-8">
-        <MasterCatalogBlock onAddCourse={handleAddCourse} />
-
         <StudyPlanBlock 
           tracks={tracks}
           activeTrackId={activeTrackId}

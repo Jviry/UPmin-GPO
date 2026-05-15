@@ -10,6 +10,7 @@ import { EditProgramInfoBlock } from '@/components/admin/EditProgramInfoBlock';
 import { FormsFeesManagementBlock } from '@/components/admin/FormsFeesManagementBlock';
 import { ApplicationSection } from '@/components/admin/ApplicationSection';
 import { CourseManagementBlock } from '@/components/admin/CourseManagementBlock';
+import { CourseCatalogTable } from '@/components/admin/CourseCatalogTable';
 
 // Type based on Prisma Schema (Department completely removed)
 export type Program = {
@@ -94,6 +95,8 @@ export default function AdminPrograms() {
           <CreateProgramBlock onCancel={() => setIsCreating(false)} />
         ) : activeProgramDetails ? (
           <>
+            <CourseCatalogTable />
+
             <EditProgramInfoBlock programId={activeProgramId!} program={activeProgramDetails} />
 
             <CourseManagementBlock programId={activeProgramId!} />
