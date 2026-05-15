@@ -24,11 +24,11 @@ export function syncStudyPlanCoursesUsecase({ studyPlanRepo, courseRepo }) {
     const courses = await Promise.all(
       coreCourses.map(c => courseRepo.findByID(c.course_id))
     );
-    const invalid = courses.filter(course => course.type !== 'core');
+    const invalid = courses.filter(course => !course || course.type !== 'core');
     if (invalid.length > 0) {
-      throw new DomainError(`Courses must be of type core: ${invalid.map(c => c.code).join(', ')}`);
+      throw new DomainError(`Courses must be of type core: ${invalid.map(c => c ? c.code : 'Unknown').join(', ')}`);
     }
 
-    return await studyPlanRepo.syncEntries({ study_plan_id, courses: coreCourses });
+    return await studyPlanRepo.syncEntries({ study_plan_id, courses: entryCourses });
   }
 }

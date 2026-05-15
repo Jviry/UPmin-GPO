@@ -72,10 +72,22 @@ export function DraggablePaletteCourse({ id, course }: { id: string; course: Cou
   );
 }
 
-export function DraggablePlacedCourse({ course, instanceId, bucketId, onRemove }: { course: Course; instanceId: string; bucketId: string; onRemove: (id: string) => void }) {
+export function DraggablePlacedCourse({ 
+  course, 
+  instanceId, 
+  bucketId, 
+  sourceBucketType,
+  onRemove 
+}: { 
+  course: Course; 
+  instanceId: string; 
+  bucketId: string; 
+  sourceBucketType: 'semester' | 'pool';
+  onRemove: (id: string) => void 
+}) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: instanceId,
-    data: { course, isPlacedItem: true, instanceId, sourceBucketId: bucketId },
+    data: { course, isPlacedItem: true, instanceId, sourceBucketId: bucketId, sourceBucketType },
   });
 
   const isElective = course.is_elective_slot;
@@ -106,8 +118,27 @@ export function DraggablePlacedCourse({ course, instanceId, bucketId, onRemove }
   );
 }
 
-export function DroppableBucket({ id, label, placedCourses, onRemove, bucketType, onDeleteBucket }: { id: string; label: string; placedCourses: (Course & { instanceId: string })[]; onRemove: (instanceId: string) => void, bucketType: 'semester' | 'pool', onDeleteBucket?: (id: string) => void }) {
-  const { isOver, setNodeRef } = useDroppable({ id });
+export function DroppableBucket({ 
+  id, 
+  label, 
+  placedCourses, 
+  onRemove, 
+  bucketType, 
+  onDeleteBucket,
+  onSyncBucket 
+}: { 
+  id: string; 
+  label: string; 
+  placedCourses: (Course & { instanceId: string })[]; 
+  onRemove: (instanceId: string) => void; 
+  bucketType: 'semester' | 'pool'; 
+  onDeleteBucket?: (id: string) => void;
+  onSyncBucket?: (id: string) => void;
+}) {
+  const { isOver, setNodeRef } = useDroppable({ 
+    id,
+    data: { bucketType }
+  });
 
   return (
     <div
@@ -117,18 +148,33 @@ export function DroppableBucket({ id, label, placedCourses, onRemove, bucketType
           : 'border-[var(--line)] bg-[var(--surface-muted)]'
         }`}
     >
-      <div className="mb-3 flex items-start justify-between">
+      <div className="mb-3 flex items-center justify-between gap-2">
         <h4 className="flex-1 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--up-maroon)]">
           {label}
         </h4>
-        {onDeleteBucket && (
-          <button
-            onClick={() => onDeleteBucket(id)}
-            className="ml-2 text-red-400 transition hover:text-red-700"
-            title="Delete Pool"
-          >
-            ×
-          </button>
+        {(onSyncBucket || onDeleteBucket) && (
+          <div className="flex items-center gap-1">
+            {onSyncBucket && (
+              <button
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={() => onSyncBucket(id)}
+                className="text-blue-500 transition hover:text-blue-700 p-1"
+                title="Sync Entries"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+              </button>
+            )}
+            {onDeleteBucket && (
+              <button
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={() => onDeleteBucket(id)}
+                className="text-red-400 transition hover:text-red-700 p-1"
+                title="Delete Pool"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            )}
+          </div>
         )}
       </div>
       <div className="flex-1 space-y-2">
@@ -138,6 +184,7 @@ export function DroppableBucket({ id, label, placedCourses, onRemove, bucketType
             course={c}
             instanceId={c.instanceId}
             bucketId={id}
+            sourceBucketType={bucketType}
             onRemove={onRemove}
           />
         ))}

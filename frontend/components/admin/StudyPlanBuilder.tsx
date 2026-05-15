@@ -46,7 +46,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
             if (!trackPlacements[semId]) trackPlacements[semId] = [];
             
             const courseData: Course = pc.is_elective_slot 
-              ? { code: 'ELECTIVE', name: 'Elective Slot', units: null, type: 'pool', is_elective_slot: true }
+              ? { code: 'ELECTIVE', name: 'Elective Slot', units: null, type: 'core', is_elective_slot: true }
               : { 
                   course_id: pc.course.course_id, 
                   code: pc.course.code, 
@@ -181,13 +181,13 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     setActiveCourse(null);
 
     const activeData = active.data.current || {};
-    const { course, isPaletteItem, isPlacedItem, instanceId, sourceBucketId } = activeData;
+    const { course, isPaletteItem, isPlacedItem, instanceId, sourceBucketId, sourceBucketType } = activeData;
 
     if (!course) return;
 
     if (!over) {
       if (isPlacedItem) {
-        if (sourceBucketId.startsWith('pool_') || sourceBucketId.startsWith('temp_pool_')) {
+        if (sourceBucketType === 'pool') {
           handleRemoveCourseFromPool(instanceId, sourceBucketId);
         } else if (activeTrackId) {
           handleRemoveCourseFromTrack(instanceId, activeTrackId, sourceBucketId);
@@ -197,7 +197,8 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     }
 
     const overId = String(over.id);
-    const isOverPool = overId.includes('pool');
+    const overData = over.data.current || {};
+    const isOverPool = overData.bucketType === 'pool';
 
     if (isPaletteItem) {
       const newInstance = { ...course, instanceId: `${course.code}_${Date.now()}` };
@@ -280,6 +281,24 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
     }
   };
 
+  const handleSyncPool = async (poolId: string) => {
+    if (!programId) return;
+    const pool = pools.find(p => p.id === poolId);
+    if (!pool) return;
+
+    try {
+      const courseIds = pool.courses
+        .filter(c => !c.is_elective_slot && c.course_id)
+        .map(c => c.course_id!);
+      
+      await api.syncCoursePoolEntries(programId, parseInt(poolId), courseIds);
+      alert(`Pool "${pool.name}" synced successfully!`);
+    } catch (error) {
+      console.error("Failed to sync course pool:", error);
+      alert(`Failed to sync pool "${pool.name}".`);
+    }
+  };
+
   const handleSaveCoursePools = async () => {
     if (!programId) return;
     try {
@@ -328,6 +347,7 @@ export function StudyPlanBuilder({ programId }: { programId: number | null }) {
           onRemoveCourseFromPool={handleRemoveCourseFromPool}
           onCreatePool={handleCreatePool}
           onDeletePool={handleDeletePool}
+          onSyncPool={handleSyncPool}
           poolCatalog={poolCatalog}
           onSave={handleSaveCoursePools}
         />
