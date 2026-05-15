@@ -829,36 +829,36 @@ async function main() {
       { study_plan_id: mmStudyPlan.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
 
       // PhD by Research Study Plan 1 (4 years)
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 1, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 2, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 1, semester: 2, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 2, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 3, semester: 2, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 4, semester: 1, is_elective_slot: true },
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 4, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 4, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 4, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 4, semester: 2, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan1.study_plan_id, course_id: null, year: 4, semester: 2, is_elective_slot: true },
 
       // PhD by Research Study Plan 2 (3 years)
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan2.study_plan_id, course_id: null, year: 1, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 1, semester: 2, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan2.study_plan_id, course_id: null, year: 1, semester: 2, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan2.study_plan_id, course_id: null, year: 2, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan2.study_plan_id, course_id: null, year: 2, semester: 2, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan2.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
+      { study_plan_id: phdByResearchStudyPlan2.study_plan_id, course_id: null, year: 3, semester: 1, is_elective_slot: true },
 
-      { study_plan_id: phdByResearchProgram.study_plan_id, course_id: null, year: 3, semester: 2, is_elective_slot: true },   
+      { study_plan_id: phdByResearchStudyPlan2.study_plan_id, course_id: null, year: 3, semester: 2, is_elective_slot: true },   
       
       // Master of Science in Biology Study Plan
       { study_plan_id: msbStudyPlan.study_plan_id, course_id: getCourse("BIO 220").course_id, year: 1, semester: 1 },
