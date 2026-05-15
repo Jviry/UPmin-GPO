@@ -75,8 +75,8 @@ export function HomePrograms() {
                       className="group relative block aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)] cursor-pointer"
                     >
                       <img
-                        src={program.image_url
-                          ? `${process.env.NEXT_PUBLIC_API_URL}${program.image_url}`
+                        src={program.photo
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${program.photo}`
                           : "/hero-section-background.jpg"
                         }
                         alt={program.name}
