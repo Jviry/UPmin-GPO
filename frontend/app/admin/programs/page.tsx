@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { apiClient } from '@/lib/apiClient';
-import { deleteProgram } from '@/services/apiServices';
+import { deleteProgram, verifyPassword } from '@/services/apiServices';
 import LoadingScreen from '@/components/admin/LoadingScreen';
 import FacultyPool from '@/components/admin/FacultyPool';
 import { ProgramsSidebar } from '@/components/admin/ProgramsSidebar';
@@ -39,6 +39,8 @@ export default function AdminPrograms() {
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
 
   const fetchProgramDetails = async (id: number) => {
     const res = await apiClient.get(`/programs/${id}`);
@@ -114,14 +116,21 @@ export default function AdminPrograms() {
 
   const handleDeleteRequest = (id: number) => {
     setDeleteError(null);
+    setDeletePassword('');
+    setShowDeletePassword(false);
     setDeleteTargetId(id);
   };
 
   const handleDeleteConfirm = async () => {
     if (deleteTargetId === null) return;
+    if (!deletePassword.trim()) {
+      setDeleteError('Please enter your password to confirm.');
+      return;
+    }
     setIsDeleting(true);
     setDeleteError(null);
     try {
+      await verifyPassword(deletePassword);
       await deleteProgram(deleteTargetId);
       const remaining = programs.filter((p) => p.program_id !== deleteTargetId);
       setPrograms(remaining);
@@ -140,6 +149,7 @@ export default function AdminPrograms() {
         }
       }
       setDeleteTargetId(null);
+      setDeletePassword('');
     } catch (err: any) {
       setDeleteError(err.message);
     } finally {
@@ -204,20 +214,56 @@ export default function AdminPrograms() {
         )}
       </main>
 
-      {/* Delete confirmation modal */}
+      {/* Delete confirmation modal with password verification */}
       {deleteTargetId !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-sm border border-[var(--line)] bg-white p-8 shadow-lg">
             <h3 className="mb-2 text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">
               Delete Program
             </h3>
-            <p className="mb-6 text-sm text-[var(--text-secondary)]">
-              Are you sure you want to delete <span className="font-semibold">{deleteTargetName}</span>? This action cannot be undone.
+            <p className="mb-5 text-sm text-[var(--text-secondary)]">
+              You are about to delete <span className="font-semibold">{deleteTargetName}</span>. This action cannot be undone. Enter your password to confirm.
             </p>
+
+            <div className="mb-4">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-secondary)]">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showDeletePassword ? 'text' : 'password'}
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleDeleteConfirm()}
+                  placeholder="Enter your password"
+                  disabled={isDeleting}
+                  className="w-full border border-[var(--line)] bg-[var(--page-bg)] px-3 py-2 pr-10 text-sm focus:border-red-400 focus:outline-none disabled:opacity-50"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowDeletePassword(!showDeletePassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  tabIndex={-1}
+                >
+                  {showDeletePassword ? (
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
             {deleteError && <p className="mb-4 text-xs text-red-600">{deleteError}</p>}
+
             <div className="flex justify-end gap-4">
               <button
-                onClick={() => { setDeleteTargetId(null); setDeleteError(null); }}
+                onClick={() => { setDeleteTargetId(null); setDeleteError(null); setDeletePassword(''); }}
                 disabled={isDeleting}
                 className="border border-[var(--text-muted)] px-6 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50 disabled:opacity-50"
               >
@@ -225,7 +271,7 @@ export default function AdminPrograms() {
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                disabled={isDeleting}
+                disabled={isDeleting || !deletePassword.trim()}
                 className="border border-red-600 bg-red-600 px-6 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-red-700 disabled:opacity-50"
               >
                 {isDeleting ? 'Deleting...' : 'Delete'}

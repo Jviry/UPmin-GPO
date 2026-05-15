@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { createProgram } from '@/services/apiServices';
+import { ConfirmDialog } from '@/components/admin/ConfirmDialog';
 
 const PROGRAM_TYPES = ['Graduate Program', 'Diploma Program'];
 
@@ -20,7 +21,18 @@ export function CreateProgramBlock({
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showDiscard, setShowDiscard] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const hasChanges = name.trim() !== '' || description.trim() !== '' || history.trim() !== '' || photoFile !== null;
+
+  const handleCancel = () => {
+    if (hasChanges) {
+      setShowDiscard(true);
+    } else {
+      onCancel();
+    }
+  };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -110,13 +122,23 @@ export function CreateProgramBlock({
         </div>
       </div>
 
-      {error && (
-        <p className="mb-4 text-xs text-red-600">{error}</p>
+      {error && <p className="mb-4 text-xs text-red-600">{error}</p>}
+
+      {showDiscard && (
+        <ConfirmDialog
+          title="Discard Changes?"
+          message="You have unsaved changes. Are you sure you want to discard them?"
+          confirmLabel="Discard"
+          cancelLabel="Keep Editing"
+          confirmClassName="border border-[var(--up-maroon)] bg-[var(--up-maroon)] px-6 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709] disabled:opacity-50"
+          onConfirm={onCancel}
+          onCancel={() => setShowDiscard(false)}
+        />
       )}
 
       <div className="flex justify-end gap-4 border-t border-[var(--line)] pt-6">
         <button
-          onClick={onCancel}
+          onClick={handleCancel}
           disabled={isSaving}
           className="border border-[var(--text-muted)] px-8 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50 disabled:opacity-50"
         >
