@@ -74,10 +74,15 @@ export function HomePrograms() {
                       href={`/programs/${program.program_id}`}
                       className="group relative block aspect-[4/3] overflow-hidden bg-[var(--surface-muted)] shadow-[0_10px_30px_rgba(0,0,0,0.04)] cursor-pointer"
                     >
+                      <img
+                        src={program.photo || "/hero-section-background.jpg"}
+                        alt={program.name}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                        onError={(e) => {
+                          e.currentTarget.src = "/hero-section-background.jpg";
+                        }}
+                      />
                       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(0,0,0,0.12))]" />
-                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold tracking-[0.45em] text-[rgba(0,0,0,0.18)] transition-transform duration-300 group-hover:scale-[1.02]">
-                        PLACEHOLDER
-                      </div>
                       <div className="absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.84))]" />
                       <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
                         <p className="max-w-[75%] text-sm font-semibold uppercase tracking-[0.18em] text-white sm:text-[0.95rem]">
