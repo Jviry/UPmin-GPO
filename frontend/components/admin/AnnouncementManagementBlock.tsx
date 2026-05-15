@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { apiClient } from '@/lib/apiClient';
 
 type Announcement = {
@@ -29,9 +29,12 @@ export function AnnouncementManagementBlock() {
   const [formData, setFormData] = useState({
     title: '',
     content_description: '',
-    image_url: '',
     attached_link: '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadAnnouncements();
@@ -42,7 +45,7 @@ export function AnnouncementManagementBlock() {
       setLoading(true);
       setError(null);
       const res = await apiClient.get('/announcements');
-      setAnnouncements(res.data.announcements || res.data || []);
+      setAnnouncements(res.data.announcements || []);
     } catch (err: any) {
       setError(err.message || 'Failed to load announcements');
     } finally {
@@ -55,9 +58,13 @@ export function AnnouncementManagementBlock() {
     setFormData({
       title: '',
       content_description: '',
-      image_url: '',
       attached_link: '',
     });
+    setImageFile(null);
+    setImagePreview('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     setIsModalOpen(true);
   };
 
@@ -66,9 +73,13 @@ export function AnnouncementManagementBlock() {
     setFormData({
       title: announcement.title,
       content_description: announcement.content_description,
-      image_url: announcement.image_url || '',
       attached_link: announcement.attached_link || '',
     });
+    setImageFile(null);
+    setImagePreview(announcement.image_url || '');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     setIsModalOpen(true);
   };
 
@@ -77,6 +88,15 @@ export function AnnouncementManagementBlock() {
       ...prev,
       [field]: value
     }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -89,18 +109,39 @@ export function AnnouncementManagementBlock() {
 
     try {
       setError(null);
+      setSubmitting(true);
 
-      // We use plural endpoints (/announcements) to match your Express routes perfectly
+      // Create FormData for multipart upload
+      const submitFormData = new FormData();
+      submitFormData.append('title', formData.title);
+      submitFormData.append('content_description', formData.content_description);
+      if (formData.attached_link) {
+        submitFormData.append('attached_link', formData.attached_link);
+      }
+      if (imageFile) {
+        submitFormData.append('image', imageFile);
+      }
+
       if (editingId) {
-        await apiClient.put(`/announcements/${editingId}`, formData);
+        await apiClient.put(`/announcements/${editingId}`, submitFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
       } else {
-        await apiClient.post('/announcements', formData);
+        await apiClient.post('/announcements', submitFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
       }
 
       setIsModalOpen(false);
       await loadAnnouncements();
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Failed to save announcement');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -125,10 +166,17 @@ export function AnnouncementManagementBlock() {
     setFormData({
       title: '',
       content_description: '',
-      image_url: '',
       attached_link: '',
     });
+    if (imagePreview && !imageFile && imagePreview.startsWith('blob:')) {
+      URL.revokeObjectURL(imagePreview);
+    }
+    setImageFile(null);
+    setImagePreview('');
     setError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const filteredAnnouncements = announcements.filter((announcement) =>
@@ -189,6 +237,7 @@ export function AnnouncementManagementBlock() {
             <table className="w-full text-sm">
               <thead className="sticky top-0">
                 <tr className="border-b border-[var(--line)] bg-[var(--surface-muted)]">
+                  <th className="text-left py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Image</th>
                   <th className="text-left py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Title</th>
                   <th className="text-left py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Date Posted</th>
                   <th className="text-right py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Actions</th>
@@ -200,6 +249,19 @@ export function AnnouncementManagementBlock() {
                     key={announcement.announcement_id} 
                     className={`border-b border-[var(--line)] hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'}`}
                   >
+                    <td className="py-4 px-6">
+                      {announcement.image_url ? (
+                        <img 
+                          src={announcement.image_url} 
+                          alt={announcement.title}
+                          className="w-10 h-10 object-cover rounded"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 bg-gray-100 flex items-center justify-center text-xs text-gray-400">
+                          No img
+                        </div>
+                      )}
+                    </td>
                     <td className="py-4 px-6 text-[var(--text-secondary)] font-semibold">
                       {announcement.title}
                     </td>
@@ -252,6 +314,64 @@ export function AnnouncementManagementBlock() {
                 </div>
               )}
 
+              {/* Image Upload to replace prev Image URL */}
+              <div>
+                <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-3">
+                  Cover Image
+                </label>
+                
+                {/* Image Preview */}
+                {imagePreview && (
+                  <div className="mb-3">
+                    <div className="relative inline-block">
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="w-32 h-32 object-cover rounded border border-[var(--line)]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (imagePreview && !imageFile && imagePreview.startsWith('blob:')) {
+                            URL.revokeObjectURL(imagePreview);
+                          }
+                          setImageFile(null);
+                          setImagePreview('');
+                          if (fileInputRef.current) {
+                            fileInputRef.current.value = '';
+                          }
+                        }}
+                        className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-700 transition"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Upload Box Section */}
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-[var(--line)] cursor-pointer bg-[var(--bg-secondary)] hover:border-[var(--up-maroon)] transition-colors rounded">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 mb-2 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4" />
+                  </svg>
+                  {imageFile ? (
+                    <span className="text-[0.7rem] text-[var(--up-maroon)] font-semibold">{imageFile.name}</span>
+                  ) : imagePreview && !imageFile ? (
+                    <span className="text-[0.7rem] text-[var(--text-secondary)]">Current image: {imagePreview.split('/').pop()?.slice(-30)}</span>
+                  ) : (
+                    <span className="text-[0.7rem] text-[var(--text-muted)]">Click to upload cover image</span>
+                  )}
+                  <span className="text-[0.65rem] text-[var(--text-muted)] mt-1">PNG, JPG, GIF up to 5MB</span>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              </div>
+
               <div>
                 <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-3">
                   Title <span className="text-red-600">*</span>
@@ -279,19 +399,6 @@ export function AnnouncementManagementBlock() {
 
               <div>
                 <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-3">
-                  Cover Image URL
-                </label>
-                <input
-                  type="text"
-                  value={formData.image_url}
-                  onChange={(e) => handleInputChange('image_url', e.target.value)}
-                  className="w-full px-3 py-2 border border-[var(--line)] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--up-maroon)]"
-                  placeholder="https://... (Optional)"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[0.7rem] font-bold uppercase tracking-widest text-[var(--text-primary)] mb-3">
                   Attached Link
                 </label>
                 <input
@@ -304,11 +411,19 @@ export function AnnouncementManagementBlock() {
               </div>
 
               <div className="flex gap-3 justify-end pt-4 border-t border-[var(--line)] mt-8">
-                <button type="button" onClick={handleCloseModal} className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="px-8 py-2.5 border border-[var(--text-muted)] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] hover:bg-gray-50 transition"
+                >
                   Cancel
                 </button>
-                <button type="submit" className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition">
-                  {editingId ? 'Update' : 'Post'} Announcement
+                <button 
+                  type="submit" 
+                  disabled={submitting}
+                  className="px-10 py-2.5 bg-[var(--up-maroon)] text-white text-[0.7rem] font-bold uppercase tracking-[0.2em] hover:bg-[#5c0709] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submitting ? (editingId ? 'Updating...' : 'Posting...') : (editingId ? 'Update' : 'Post')}
                 </button>
               </div>
             </form>
