@@ -353,6 +353,26 @@ export const deleteAdmin = async (id: number) => {
   }
 };
 
+
+// --- SCHOLARSHIP API ---
+export const getScholarships = async () => {
+  try {
+    const response = await apiClient.get('/scholarships');
+    return response.data.scholarships;
+  } catch (error) {
+    throw new Error(GENERIC_ERROR_MSG);
+  }
+};
+
+export const getScholarshipById = async (id: string) => {
+  try {
+    const response = await apiClient.get(`/scholarships/${id}`);
+    return response.data.scholarship;
+  } catch (error) {
+    throw new Error(GENERIC_ERROR_MSG);
+  }
+};
+
 // --- STUDY PLAN API ---
 export const createStudyPlan = async (programId: number, data: { name: string; years: number }) => {
   try {

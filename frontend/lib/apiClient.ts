@@ -37,4 +37,11 @@ apiClient.interceptors.response.use(
   }
 );
 
+export const getImageUrl = (url?: string | null) => {
+  if (!url || url === 'null' || url.trim() === '') return null;
+  if (url.startsWith('http') || url.startsWith('data:')) return url;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+};
+
 export default apiClient;
