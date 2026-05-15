@@ -4,6 +4,7 @@ import { createCourseRepository } from '../repository/course.repository.js';
 import { createCourseUsecase } from '../usecase/course/createCourse.usecase.js';
 import { getCourseByTypeUsecase } from '../usecase/course/getCourseByType.usecase.js';
 import { deleteCourseUsecase } from '../usecase/course/deleteCourse.usecase.js';
+import { getAllCoursesUsecase } from '../usecase/course/getAllCourses.usecase.js';
 import { authenticate } from '../middleware/authenticate.middleware.js';
 import { authenticateRole } from '../middleware/authenticateRole.middleware.js';
 import { AdminRole } from '../domain/admin.js';
@@ -14,19 +15,29 @@ const courseRepo = createCourseRepository(prisma);
 const addCourse = createCourseUsecase(courseRepo);
 const getCourseByType = getCourseByTypeUsecase(courseRepo);
 const deleteCourse = deleteCourseUsecase(courseRepo);
+const getAllCourses = getAllCoursesUsecase(courseRepo);
 
 router.get('/courses', async (req, res) => {
   try {
-    const { type } = req.query;
-    const courses = await getCourseByType(type);
+    const { type, page, limit, search } = req.query;
+    
+    if (type) {
+      const courses = await getCourseByType(type);
+      return res.status(200).json({
+        message: `${type} courses retrieved`,
+        courses
+      });
+    }
+
+    const result = await getAllCourses({ page, limit, search });
 
     res.status(200).json({
-      message: `${type} courses retrieved`,
-      courses
+      message: `Courses retrieved`,
+      ...result
     });
-    return res.status(400).json({ message: error.message });
   } catch (error) {
     if (error.isDomainError) {
+      return res.status(400).json({ message: error.message });
     }
     res.status(500).json({ message: error.message });
   }

@@ -352,3 +352,65 @@ export const deleteAdmin = async (id: number) => {
     throw new Error(message);
   }
 };
+
+// --- STUDY PLAN API ---
+export const createStudyPlan = async (programId: number, data: { name: string; years: number }) => {
+  try {
+    const response = await apiClient.post(`/programs/${programId}/study-plan`, data);
+    return response.data.studyPlan;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteStudyPlan = async (programId: number, studyPlanId: number) => {
+  try {
+    const response = await apiClient.delete(`/programs/${programId}/study-plan/${studyPlanId}`);
+    return response.data.deletedStudyPlan;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const syncStudyPlanEntries = async (programId: number, studyPlanId: number, courses: { course_id: number | null; is_elective_slot: boolean; year: number; semester: number }[]) => {
+  try {
+    const response = await apiClient.post(`/programs/${programId}/study-plan/${studyPlanId}/entries`, { courses });
+    return response.data.studyPlanCourses;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+// --- COURSE POOL API ---
+export const createCoursePool = async (programId: number, data: { name: string }) => {
+  try {
+    const response = await apiClient.post(`/programs/${programId}/course-pool`, data);
+    return response.data.coursePool;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const deleteCoursePool = async (programId: number, coursePoolId: number) => {
+  try {
+    const response = await apiClient.delete(`/programs/${programId}/course-pool/${coursePoolId}`);
+    return response.data.deletedCoursePool;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
+
+export const syncCoursePoolEntries = async (programId: number, coursePoolId: number, courseIds: number[]) => {
+  try {
+    const response = await apiClient.post(`/programs/${programId}/course-pool/${coursePoolId}/entries`, { course_ids: courseIds });
+    return response.data.coursePoolEntries;
+  } catch (error: any) {
+    const message = error.response?.data?.message || GENERIC_ERROR_MSG;
+    throw new Error(message);
+  }
+};
