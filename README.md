@@ -15,8 +15,6 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -39,8 +37,6 @@
     <a href="https://github.com/[PLACEHOLDER_USER]/UPmin-GPO/issues">Request Feature</a>
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -68,8 +64,6 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -78,6 +72,7 @@
 The **UPMin-GPO System** is a dedicated web-based platform designed to digitize and streamline the operations of the Graduate Programs Office (GPO) at the University of the Philippines Mindanao. As a constituent university of the UP System, UP Mindanao is committed to academic excellence and administrative efficiency.
 
 This system serves as a central hub for:
+
 * **Graduate Admissions & Applications:** Digital processing of program applications, qualifications, and requirements.
 * **Curriculum & Study Plans:** Managing degree programs, course pools, and individual study plans for master's and doctoral students.
 * **Faculty & Academic Records:** Maintaining faculty credentials and their associations with various graduate programs.
@@ -87,8 +82,6 @@ This system serves as a central hub for:
 By transitioning from manual processes to a unified digital environment, the GPO can better serve its students, faculty, and administrative staff, ensuring that the graduate education experience at UP Mindanao remains world-class.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 ### Built With
 
@@ -104,8 +97,6 @@ The UPMin-GPO system is built using a modern full-stack JavaScript/TypeScript ar
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -115,45 +106,56 @@ To get a local copy up and running, follow these simple steps.
 
 * Node.js (v18 or higher)
 * npm
+
   ```sh
   npm install npm@latest -g
   ```
+
 * PostgreSQL database instance
 
 ### Installation
 
 1. Clone the repo
+
    ```sh
    git clone https://github.com/[PLACEHOLDER_USER]/UPmin-GPO.git
    ```
+
 2. **Setup Backend**
+
    ```sh
    cd backend
    npm install
    ```
+
    * Create a `.env` file in the `backend` directory:
+
      ```env
      DATABASE_URL="postgresql://user:password@localhost:5432/upmin_gpo"
      JWT_SECRET="[PLACEHOLDER_SECRET]"
      ```
+
    * Run Prisma migrations and seed the database:
+
      ```sh
      npx prisma migrate dev
      node prisma/seed.js
      ```
+
 3. **Setup Frontend**
+
    ```sh
    cd ../frontend
    npm install
    ```
+
    * Create a `.env.local` file in the `frontend` directory:
+
      ```env
-     NEXT_PUBLIC_API_URL="http://localhost:5000/api"
+     NEXT_PUBLIC_API_URL="http://localhost:3001/api"
      ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -167,22 +169,18 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Thesis and Dissertation Tracking Module
-- [ ] Automated Enrollment Integration
-- [ ] Inter-office Document Routing
-- [ ] Multi-language Support (English/Cebuano)
-- [ ] Enhanced Analytics Dashboard for Program Directors
+* [ ] Thesis and Dissertation Tracking Module
+* [ ] Automated Enrollment Integration
+* [ ] Inter-office Document Routing
+* [ ] Multi-language Support (English/Cebuano)
+* [ ] Enhanced Analytics Dashboard for Program Directors
 
 See the [open issues](https://github.com/[PLACEHOLDER_USER]/UPmin-GPO/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -200,16 +198,12 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTACT -->
 ## Contact
@@ -222,8 +216,6 @@ Project Link: [https://github.com/[PLACEHOLDER_USER]/UPmin-GPO](https://github.c
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
@@ -234,8 +226,6 @@ Project Link: [https://github.com/[PLACEHOLDER_USER]/UPmin-GPO](https://github.c
 * [Img Shields](https://shields.io)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
