@@ -20,8 +20,11 @@ export function ScholarshipManagementBlock() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Search State
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const PAGE_SIZE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -152,10 +155,16 @@ export function ScholarshipManagementBlock() {
     setError(null);
   };
 
-  const filteredScholarships = scholarships.filter((scholarship) =>
-    scholarship.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    scholarship.covered_programs.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredScholarships = [...scholarships]
+    .filter(s =>
+      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.covered_programs.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+  const totalPages = Math.max(1, Math.ceil(filteredScholarships.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const displayedScholarships = filteredScholarships.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const emptyRows = PAGE_SIZE - displayedScholarships.length;
 
   return (
     <section className="mb-10 border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm">
@@ -172,79 +181,151 @@ export function ScholarshipManagementBlock() {
         </div>
       )}
 
-      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div className="flex flex-1 items-center gap-4">
-          <input
-            type="text"
-            placeholder="Search Scholarships..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-10 w-full max-w-[300px] border border-[var(--line)] bg-[var(--page-bg)] px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
-          />
-        </div>
-        <button
-          onClick={handleAddClick}
-          className="bg-[var(--up-maroon)] px-6 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]"
-        >
-          + Add Scholarship
-        </button>
-      </div>
-
       <div className="flex flex-col border border-[var(--line)] bg-white">
-        <div className="flex items-center justify-between border-b border-[var(--line)] bg-[var(--surface-muted)] px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] bg-[var(--surface-muted)] px-6 py-4">
           <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-primary)]">Scholarships List</h3>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <svg xmlns="http://www.w3.org/2000/svg" className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                placeholder="Search by title..."
+                className="h-8 w-48 border border-[var(--line)] bg-white pl-8 pr-3 text-[0.72rem] text-[var(--text-secondary)] placeholder-[var(--text-muted)] focus:border-[var(--up-maroon)] focus:outline-none"
+              />
+            </div>
+            <button
+              onClick={() => setSortOrder(o => o === 'asc' ? 'desc' : 'asc')}
+              className="flex h-8 items-center gap-1.5 border border-[var(--line)] bg-white px-3 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-[var(--text-secondary)] transition hover:bg-gray-50"
+              title={sortOrder === 'asc' ? 'Name: A → Z (click to reverse)' : 'Name: Z → A (click to reverse)'}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d={sortOrder === 'asc' ? 'M3 4h13M3 8h9M3 12h5m8 0l3 3m0 0l3-3m-3 3V8' : 'M3 4h13M3 8h9M3 12h5m8 8l3-3m0 0l3 3m-3-3V8'} />
+              </svg>
+              {sortOrder === 'asc' ? 'A–Z' : 'Z–A'}
+            </button>
+            <button
+              onClick={handleAddClick}
+              className="h-8 bg-[var(--up-maroon)] px-5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-[#5c0709]"
+            >
+              + Add Scholarship
+            </button>
+          </div>
         </div>
 
         {loading ? (
           <div className="text-center py-8 text-[var(--text-muted)]">
             Loading scholarships...
           </div>
-        ) : filteredScholarships.length === 0 ? (
+        ) : scholarships.length === 0 ? (
           <div className="text-center py-8 text-[var(--text-muted)]">
             No scholarships found.
           </div>
+        ) : displayedScholarships.length === 0 ? (
+          <div className="py-8 text-center text-[var(--text-muted)] text-sm">No results match &ldquo;{searchQuery}&rdquo;.</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="sticky top-0">
-                <tr className="border-b border-[var(--line)] bg-[var(--surface-muted)]">
-                  <th className="text-left py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Title</th>
-                  <th className="text-left py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Covered Programs</th>
-                  <th className="text-right py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Actions</th>
+          <table className="w-full text-sm">
+            <thead className="sticky top-0">
+              <tr className="border-b border-[var(--line)] bg-[var(--surface-muted)]">
+                <th className="text-left py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Title</th>
+                <th className="text-left py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Covered Programs</th>
+                <th className="text-right py-3 px-6 font-bold uppercase tracking-widest text-[0.6rem] text-[var(--text-muted)]">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayedScholarships.map((scholarship, index) => (
+                <tr
+                  key={scholarship.scholarship_id}
+                  className={`border-b border-[var(--line)] hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'}`}
+                >
+                  <td className="py-4 px-6 text-[var(--text-secondary)] font-semibold">{scholarship.name}</td>
+                  <td className="py-4 px-6 text-[var(--text-secondary)]">
+                    <span className="inline-block rounded px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-widest bg-[var(--surface-muted)] border border-[var(--line)]">
+                      {scholarship.covered_programs}
+                    </span>
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    <div className="inline-flex items-center gap-2">
+                      <div className="relative group">
+                        <button
+                          onClick={() => handleEditClick(scholarship)}
+                          className="p-1.5 text-[var(--text-secondary)] border border-[var(--text-muted)] hover:bg-gray-50 transition"
+                          aria-label="Edit"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z" />
+                          </svg>
+                        </button>
+                        <span className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap bg-gray-800 px-2 py-0.5 text-[0.6rem] text-white opacity-0 transition group-hover:opacity-100">
+                          Edit
+                        </span>
+                      </div>
+                      <div className="relative group">
+                        <button
+                          onClick={() => handleDelete(scholarship.scholarship_id)}
+                          className="p-1.5 text-red-600 border border-red-200 hover:bg-red-50 transition"
+                          aria-label="Delete"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a1 1 0 01-1-1V5a1 1 0 011-1h6a1 1 0 011 1v1a1 1 0 01-1 1H9z" />
+                          </svg>
+                        </button>
+                        <span className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap bg-gray-800 px-2 py-0.5 text-[0.6rem] text-white opacity-0 transition group-hover:opacity-100">
+                          Delete
+                        </span>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredScholarships.map((scholarship, index) => (
-                  <tr 
-                    key={scholarship.scholarship_id} 
-                    className={`border-b border-[var(--line)] hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'}`}
-                  >
-                    <td className="py-4 px-6 text-[var(--text-secondary)] font-semibold">
-                      {scholarship.name}
-                    </td>
-                    <td className="py-4 px-6 text-[var(--text-secondary)]">
-                      <span className="inline-block rounded px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-widest bg-[var(--surface-muted)] border border-[var(--line)]">
-                        {scholarship.covered_programs}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-right">
-                      <button
-                        onClick={() => handleEditClick(scholarship)}
-                        className="px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] border border-[var(--text-muted)] hover:bg-gray-50 transition mr-2"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(scholarship.scholarship_id)}
-                        className="px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-red-600 border border-red-200 hover:bg-red-50 transition"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+              {emptyRows > 0 && Array.from({ length: emptyRows }).map((_, i) => (
+                <tr key={`empty-${i}`} className={`border-b border-[var(--line)] ${(displayedScholarships.length + i) % 2 === 0 ? 'bg-white' : 'bg-[var(--page-bg)]'}`}>
+                  <td className="py-4 px-6">&nbsp;</td>
+                  <td className="py-4 px-6" />
+                  <td className="py-4 px-6" />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {!loading && scholarships.length > 0 && filteredScholarships.length > 0 && totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-[var(--line)] px-6 py-4">
+            <span className="text-[0.7rem] text-[var(--text-muted)]">
+              Showing {(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filteredScholarships.length)} of {filteredScholarships.length}
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={safePage === 1}
+                className="px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.15em] border border-[var(--line)] text-[var(--text-secondary)] hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Prev
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                <button
+                  key={p}
+                  onClick={() => setCurrentPage(p)}
+                  className={`px-3 py-1.5 text-[0.7rem] font-bold border transition ${
+                    p === safePage
+                      ? 'bg-[var(--up-maroon)] border-[var(--up-maroon)] text-white'
+                      : 'border-[var(--line)] text-[var(--text-secondary)] hover:bg-gray-50'
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={safePage === totalPages}
+                className="px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.15em] border border-[var(--line)] text-[var(--text-secondary)] hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>

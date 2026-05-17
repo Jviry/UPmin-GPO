@@ -30,9 +30,9 @@ const syncProgramFaculty = syncProgramFacultyUsecase({ facultyRepo, programRepo 
 
 router.get('/faculty', async (req, res) => {
   try {
-    const { position, page, limit } = req.query;
+    const { position, page, limit, all } = req.query;
     const parsedPage = page ? parseInt(page, 10) : 1;
-    const parsedLimit = limit ? parseInt(limit, 10) : 10;
+    const parsedLimit = all === 'true' ? undefined : (limit ? parseInt(limit, 10) : 10);
 
     const result = await getFaculty(position, { page: parsedPage, limit: parsedLimit });
 
@@ -42,7 +42,7 @@ router.get('/faculty', async (req, res) => {
       total: result.total,
       page: result.page,
       limit: result.limit,
-      totalPages: Math.ceil(result.total / result.limit),
+      totalPages: parsedLimit != null ? Math.ceil(result.total / parsedLimit) : 1,
     });
   } catch (error) {
     if (error.isDomainError) {

@@ -165,9 +165,11 @@ export const updateProgramApplication = async (
   }
 };
 // --- FACULTY API ---
-export const getFaculty = async (position?: string, page = 1, limit = 10) => {
+export const getFaculty = async (position?: string, page = 1, limit?: number) => {
   try {
-    const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+    const params = new URLSearchParams({ page: String(page) });
+    if (limit != null) params.set('limit', String(limit));
+    else params.set('all', 'true');
     if (position) params.set('position', position);
     const response = await apiClient.get(`/faculty?${params}`);
     return {
