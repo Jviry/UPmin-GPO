@@ -137,15 +137,18 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
 
   return (
     <>
-      <section id="introduction" className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 pb-20 pt-16 text-white sm:px-6 lg:px-10 lg:pt-20">
+      <section id="introduction" className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 pb-14 pt-10 text-white sm:px-6 sm:pb-20 sm:pt-14 lg:px-10 lg:pb-24 lg:pt-20">
         <div className="mx-auto w-full max-w-[1200px]">
-          <h1 className="max-w-[14ch] [font-family:var(--font-display)] text-[2.75rem] font-bold leading-[0.94] sm:text-[3.6rem] lg:text-[4.35rem]">
+          {/* Gold accent bar above title */}
+          <div className="mb-4 h-[3px] w-10 bg-[var(--up-gold)] sm:mb-5 sm:w-14" />
+
+          <h1 className="max-w-[16ch] [font-family:var(--font-display)] text-[2.1rem] font-bold leading-[1.05] sm:text-[3rem] sm:leading-[0.96] lg:text-[4.35rem] lg:leading-[0.94]">
             {program.name}
           </h1>
 
-          <div className="mt-8 max-w-[1120px] space-y-6 text-[0.96rem] font-normal leading-8 text-[rgba(255,255,255,0.94)] sm:text-[1rem] sm:leading-8 lg:mt-10 lg:text-[1.08rem] lg:leading-9">
+          <div className="mt-6 max-w-[1120px] space-y-4 border-l-2 border-[var(--up-gold)] pl-4 text-[0.75rem] font-normal leading-6 text-[rgba(255,255,255,0.88)] sm:mt-8 sm:pl-5 sm:text-[0.88rem] sm:leading-7 lg:mt-10 lg:text-[1rem] lg:leading-8">
             {descriptionParagraphs.map((paragraph: string, i: number) => (
-              <p key={i}>{paragraph}</p>
+              <p key={i} className="text-justify">{paragraph}</p>
             ))}
           </div>
         </div>
@@ -175,7 +178,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
           <section id="program-structure" className="border-b-4 border-[var(--up-gold)] px-4 pb-16 pt-20 sm:px-6 lg:px-10">
             <div className="mx-auto w-full max-w-[1200px]">
               <div className="space-y-6">
-                <h2 className="[font-family:var(--font-display)] text-4xl font-bold text-[var(--text-primary)] md:text-5xl lg:text-[4rem]">
+                <h2 className="[font-family:var(--font-display)] text-2xl font-bold text-[var(--text-primary)] sm:text-3xl md:text-5xl lg:text-[4rem]">
                   Program Structure
                 </h2>
                 <p className="text-[0.95rem] leading-7 text-[var(--text-secondary)] sm:text-[1rem]">
@@ -205,7 +208,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
           <section id="study-plan" className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 pb-16 pt-12 sm:px-6 lg:px-10">
             <div className="mx-auto w-full max-w-[1200px]">
               <div>
-                <h2 className="[font-family:var(--font-display)] text-4xl font-bold text-white md:text-5xl lg:text-[4rem]">
+                <h2 className="[font-family:var(--font-display)] text-2xl font-bold text-white sm:text-3xl md:text-5xl lg:text-[4rem]">
                   Study Plan
                 </h2>
                 <div className="mt-3 h-[3px] w-16 bg-[var(--up-gold)]" />
@@ -255,29 +258,29 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
 
       {activeTab === 'application' && (
         <>
-          <div className="h-16 bg-[var(--page-bg)]" />
+          <div className="h-10 bg-[var(--page-bg)] sm:h-16" />
 
           {/* Qualifications */}
-          <div className="bg-[var(--up-maroon)] px-4 py-20 sm:px-6 lg:px-10">
-            <div className="mx-auto grid w-full max-w-[1200px] items-center gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-14">
-              <h2 className="[font-family:var(--font-display)] text-3xl font-bold leading-tight text-white sm:text-4xl">
+          <div className="bg-[var(--up-maroon)] px-4 py-10 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
+            <div className="mx-auto grid w-full max-w-[1200px] items-start gap-4 md:grid-cols-[280px_minmax(0,1fr)] md:items-center md:gap-14">
+              <h2 className="[font-family:var(--font-display)] text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
                 Qualifications
               </h2>
-              <p className="text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem] whitespace-pre-wrap">
+              <p className="text-[0.78rem] leading-6 text-[rgba(255,255,255,0.88)] sm:text-[0.9rem] sm:leading-7 lg:text-[0.95rem] lg:leading-7 whitespace-pre-wrap">
                 {appQualifications}
               </p>
             </div>
           </div>
 
-          <div className="h-8 bg-[var(--page-bg)]" />
+          <div className="h-4 bg-[var(--page-bg)] sm:h-8" />
 
           {/* Instructions for Applicants */}
-          <div className="bg-[var(--up-maroon)] px-4 py-20 sm:px-6 lg:px-10">
-            <div className="mx-auto grid w-full max-w-[1200px] items-center gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-14">
-              <h2 className="[font-family:var(--font-display)] text-3xl font-bold leading-tight text-white sm:text-4xl">
+          <div className="bg-[var(--up-maroon)] px-4 py-10 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
+            <div className="mx-auto grid w-full max-w-[1200px] items-start gap-4 md:grid-cols-[280px_minmax(0,1fr)] md:items-center md:gap-14">
+              <h2 className="[font-family:var(--font-display)] text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
                 Instructions<br />for Applicants
               </h2>
-              <ol className="list-decimal space-y-1 pl-5 text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem]">
+              <ol className="list-decimal space-y-1.5 pl-5 text-[0.78rem] leading-6 text-[rgba(255,255,255,0.88)] sm:text-[0.9rem] sm:leading-7 lg:text-[0.95rem]">
                 {appInstructions.map((item: string, i: number) => (
                   <li key={i} className="font-semibold">{item}</li>
                 ))}
@@ -285,15 +288,15 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
             </div>
           </div>
 
-          <div className="h-8 bg-[var(--page-bg)]" />
+          <div className="h-4 bg-[var(--page-bg)] sm:h-8" />
 
           {/* Application Requirements */}
-          <div className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 py-20 sm:px-6 lg:px-10">
-            <div className="mx-auto grid w-full max-w-[1200px] items-center gap-8 md:grid-cols-[280px_minmax(0,1fr)] md:gap-14">
-              <h2 className="[font-family:var(--font-display)] text-3xl font-bold leading-tight text-white sm:text-4xl">
+          <div className="border-b-4 border-[var(--up-gold)] bg-[var(--up-maroon)] px-4 py-10 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
+            <div className="mx-auto grid w-full max-w-[1200px] items-start gap-4 md:grid-cols-[280px_minmax(0,1fr)] md:items-center md:gap-14">
+              <h2 className="[font-family:var(--font-display)] text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
                 Application<br />Requirements
               </h2>
-              <ol className="list-decimal space-y-1 pl-5 text-[0.95rem] leading-7 text-[rgba(255,255,255,0.88)] sm:text-[1rem]">
+              <ol className="list-decimal space-y-1.5 pl-5 text-[0.78rem] leading-6 text-[rgba(255,255,255,0.88)] sm:text-[0.9rem] sm:leading-7 lg:text-[0.95rem]">
                 {appRequirements.map((item: string, i: number) => (
                   <li key={i} className="font-semibold">{item}</li>
                 ))}
@@ -301,14 +304,14 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
             </div>
           </div>
 
-          {/* Apply button */}
-          <div className="flex justify-center gap-4 bg-[var(--page-bg)] px-4 py-12 sm:px-6 lg:px-10">
+          {/* Apply buttons */}
+          <div className="flex flex-col gap-3 bg-[var(--page-bg)] px-4 py-10 sm:flex-row sm:justify-center sm:gap-4 sm:px-6 sm:py-12 lg:px-10">
             {program.program_application?.application_url && (
               <a
                 href={`${process.env.NEXT_PUBLIC_API_URL}${program.program_application.application_url}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 max-w-[200px] flex items-center justify-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]"
+                className="flex w-full items-center justify-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e] sm:w-auto sm:max-w-[200px] sm:flex-1"
               >
                 Apply Now
               </a>
@@ -318,7 +321,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                 href={`${process.env.NEXT_PUBLIC_API_URL}${program.program_application.recommendation_url}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 max-w-[200px] flex items-center justify-center text-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e]"
+                className="flex w-full items-center justify-center text-center rounded-sm bg-[var(--up-green)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#025c2e] sm:w-auto sm:max-w-[200px] sm:flex-1"
               >
                 Recommendation Letter
               </a>
@@ -330,14 +333,14 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
       {activeTab === 'faculty' && (
         <section className="border-b-4 border-[var(--up-gold)] bg-white py-14">
           <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-10">
-            <h2 className="[font-family:var(--font-display)] mb-8 text-4xl font-bold text-[var(--up-maroon)] md:text-5xl lg:text-[4rem]">
+            <h2 className="[font-family:var(--font-display)] mb-6 text-2xl font-bold text-[var(--up-maroon)] sm:text-3xl md:mb-8 md:text-5xl lg:text-[4rem]">
               Faculty
             </h2>
             <div className="flex flex-row flex-wrap">
               {facultyList.length > 0 ? facultyList.map((member: any, i: number) => (
                 <div
                   key={member.faculty_id || i}
-                  className="flex w-1/2 flex-col border-r border-[var(--line)] px-6 pb-8 pt-2 last:border-r-0 sm:w-1/3 lg:w-1/4"
+                  className="flex w-1/2 flex-col border-r border-[var(--line)] px-3 pb-8 pt-2 even:border-r-0 sm:w-1/3 sm:px-6 sm:even:border-r sm:[&:nth-child(3n)]:border-r-0 lg:w-1/4 lg:[&:nth-child(3n)]:border-r lg:[&:nth-child(4n)]:border-r-0 last:border-r-0"
                 >
                   <div className="relative aspect-[3/4] w-full bg-[var(--surface-muted)] overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -351,8 +354,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                     </span>
                   </div>
                   <div className="pt-3">
-                    {/* OPTION 1: Credentials under Name */}
-                    <div className="text-base font-bold uppercase tracking-wider text-[var(--text-primary)]">
+                    <div className="text-sm font-bold uppercase tracking-wider text-[var(--text-primary)] sm:text-base">
                       {member.name}
                     </div>
 
@@ -362,7 +364,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
                       </div>
                     )}
 
-                    <div className="mt-1.5 text-xs tracking-widest text-[var(--text-secondary)]">
+                    <div className="mt-1.5 break-all text-[0.65rem] tracking-wide text-[var(--text-secondary)] sm:text-xs sm:tracking-widest">
                       {member.email}
                     </div>
                   </div>
