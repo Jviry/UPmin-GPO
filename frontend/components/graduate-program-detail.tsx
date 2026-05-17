@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import FacultyImage from '@/components/FacultyImage';
 import apiClient, { getImageUrl } from '@/lib/apiClient';
+import { LoadingScreen } from '@/components/LoadingSpinner';
 
 type ActiveTab = 'structure' | 'application' | 'faculty';
 
@@ -76,7 +77,7 @@ export function GraduateProgramDetail({ programId }: { programId: string }) {
   }, [programId]);
 
   if (isLoading) {
-    return <div className="flex min-h-screen items-center justify-center text-[var(--up-maroon)]">Loading...</div>;
+    return <LoadingScreen />;
   }
 
   if (!program) {

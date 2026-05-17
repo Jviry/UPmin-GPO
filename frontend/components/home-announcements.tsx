@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link"; // <-- Here is the built-in Next.js Link import
+import Link from "next/link";
 import { getAnnouncements } from "../services/apiServices";
+import { LoadingBlock } from "@/components/LoadingSpinner";
 
 export function HomeAnnouncements() {
   const [announcements, setAnnouncements] = useState<any[]>([]);
@@ -95,11 +96,7 @@ export function HomeAnnouncements() {
 
         <div className="relative flex flex-1 min-h-0 items-stretch">
 
-          {isLoading && (
-            <div className="flex w-full items-center justify-center">
-              <p className="text-lg text-white opacity-80 tracking-wide">Loading latest announcements...</p>
-            </div>
-          )}
+          {isLoading && <LoadingBlock variant="white" />}
 
           {error && (
             <div className="flex w-full items-center justify-center">

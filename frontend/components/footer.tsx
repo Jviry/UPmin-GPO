@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getOfficeInfo } from '../services/apiServices';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export function Footer() {
   const [office, setOffice] = useState<any>(null);
@@ -31,11 +32,11 @@ export function Footer() {
           <p className="text-[0.6rem] uppercase tracking-[0.3em] text-[var(--text-muted)] md:text-xs">
             {office?.name || 'Graduate Programs Office'}
           </p>
-          <p className="mt-2 max-w-sm md:mt-3">
+          <div className="mt-2 max-w-sm md:mt-3">
             {isLoading
-              ? 'Loading summary...'
-              : office?.objectives || 'Excellence in graduate education.'}
-          </p>
+              ? <LoadingSpinner size="sm" variant="maroon" />
+              : <p>{office?.objectives || 'Excellence in graduate education.'}</p>}
+          </div>
         </div>
 
         {/* Column 2: Quick Links */}
@@ -53,7 +54,7 @@ export function Footer() {
           <p className="text-[0.6rem] uppercase tracking-[0.3em] text-[var(--text-muted)] md:text-xs">Contact</p>
           <div className="mt-2 space-y-1.5 md:mt-3 md:space-y-2">
             {isLoading ? (
-              <p>Loading contact info...</p>
+              <LoadingSpinner size="sm" variant="maroon" />
             ) : (
               <>
                 <p>{office?.location || 'University Campus'}</p>

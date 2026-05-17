@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { getOfficeInfo } from '../services/apiServices';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export function HomeAbout() {
   const [office, setOffice] = useState<any>(null);
@@ -72,7 +73,7 @@ export function HomeAbout() {
             >
               {isLoading ? (
                 <div className="flex h-full w-full items-center justify-center">
-                  <span className="text-sm tracking-widest text-[var(--text-muted)] animate-pulse">LOADING...</span>
+                  <LoadingSpinner size="md" variant="maroon" />
                 </div>
               ) : hasPhotos && currentPhotoUrl ? (
                 <>
@@ -125,7 +126,9 @@ export function HomeAbout() {
           <div className="flex min-h-0 flex-col justify-between overflow-hidden bg-[var(--surface)] p-4 sm:p-5 lg:p-6">
             <div className="modern-scrollbar max-w-none space-y-6 overflow-y-auto pr-3 text-sm leading-7 text-[var(--text-secondary)] sm:text-base lg:max-w-[760px] lg:text-[1.02rem] lg:leading-8">
               {isLoading ? (
-                <p className="animate-pulse">Loading office details...</p>
+                <div className="flex justify-start">
+                  <LoadingSpinner size="sm" variant="maroon" />
+                </div>
               ) : error ? (
                 <p className="text-red-500">{error}</p>
               ) : office ? (

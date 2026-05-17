@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getPrograms } from '../services/apiServices'; // Adjust this path if necessary
+import { getPrograms } from '../services/apiServices';
+import { LoadingBlock } from '@/components/LoadingSpinner';
 
 export function HomePrograms() {
   const [programs, setPrograms] = useState<any[]>([]);
@@ -44,12 +45,7 @@ export function HomePrograms() {
           <div className="flex flex-col justify-stretch lg:min-h-0 lg:pl-8">
             <div className="modern-scrollbar lg:h-full lg:min-h-0 overflow-y-auto pr-1 lg:pr-3 [scrollbar-gutter:stable]">
 
-              {/* Loading State UI */}
-              {isLoading && (
-                <div className="py-10 text-center text-[var(--text-secondary)]">
-                  Loading programs...
-                </div>
-              )}
+              {isLoading && <LoadingBlock />}
 
               {/* Error State UI */}
               {error && (

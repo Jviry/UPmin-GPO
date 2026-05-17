@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getScholarships } from "../services/apiServices";
+import { LoadingBlock } from "@/components/LoadingSpinner";
 
 export function ScholarshipCarousel() {
   const [scholarships, setScholarships] = useState<any[]>([]);
@@ -92,11 +93,7 @@ export function ScholarshipCarousel() {
 
         <div className="relative flex w-full items-stretch">
           
-          {isLoading && (
-            <div className="flex w-full items-center py-10">
-              <p className="text-lg text-[var(--text-secondary)] animate-pulse">Loading scholarships...</p>
-            </div>
-          )}
+          {isLoading && <LoadingBlock />}
 
           {error && (
             <div className="flex w-full items-center py-10">
