@@ -8,7 +8,6 @@ import FacultyPool from '@/components/admin/FacultyPool';
 import { ProgramsSidebar } from '@/components/admin/ProgramsSidebar';
 import { CreateProgramBlock } from '@/components/admin/CreateProgramBlock';
 import { EditProgramInfoBlock } from '@/components/admin/EditProgramInfoBlock';
-import { FormsFeesManagementBlock } from '@/components/admin/FormsFeesManagementBlock';
 import { ApplicationSection } from '@/components/admin/ApplicationSection';
 import { CourseManagementBlock } from '@/components/admin/CourseManagementBlock';
 import { CourseCatalogTable } from '@/components/admin/CourseCatalogTable';
@@ -20,13 +19,6 @@ export type Program = {
   description: string;
   history: string;
   photo?: string | null;
-  forms?: {
-    form_id: number;
-    name: string;
-    type: string;
-    size: string;
-    upload_date: string;
-  }[];
   program_application?: any;
 };
 
@@ -212,9 +204,6 @@ export default function AdminPrograms() {
           </div>
         )}
 
-        {!isCreating && !isLoadingDetails && activeProgramDetails && (
-          <FormsFeesManagementBlock program={activeProgramDetails} />
-        )}
       </main>
 
       {/* Delete confirmation modal with password verification */}
