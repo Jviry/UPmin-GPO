@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link"; // <-- Here is the built-in Next.js Link import
+import Link from "next/link";
 import { getAnnouncements } from "../services/apiServices";
+import { LoadingBlock } from "@/components/LoadingSpinner";
 
 export function HomeAnnouncements() {
   const [announcements, setAnnouncements] = useState<any[]>([]);
@@ -95,11 +96,7 @@ export function HomeAnnouncements() {
 
         <div className="relative flex flex-1 min-h-0 items-stretch">
 
-          {isLoading && (
-            <div className="flex w-full items-center justify-center">
-              <p className="text-lg text-white opacity-80 tracking-wide">Loading latest announcements...</p>
-            </div>
-          )}
+          {isLoading && <LoadingBlock variant="white" />}
 
           {error && (
             <div className="flex w-full items-center justify-center">
@@ -127,7 +124,7 @@ export function HomeAnnouncements() {
                   type="button"
                   aria-label="Previous announcements"
                   onClick={() => scrollTrack(-1)}
-                  className="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(90,6,9,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(90,6,9,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)]"
+                  className="absolute left-2 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(90,6,9,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(90,6,9,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)] md:flex"
                 >
                   <span className="-translate-x-px leading-none transition-transform duration-200 hover:-translate-x-0.5">←</span>
                 </button>
@@ -142,11 +139,11 @@ export function HomeAnnouncements() {
                     href={`/announcements/${announcement.announcement_id}`}
                     key={announcement.announcement_id || index}
                     ref={index === 0 ? firstCardRef as any : index === announcements.length - 1 ? lastCardRef as any : undefined}
-                    className="group relative flex h-full min-h-[420px] w-[272px] shrink-0 snap-start flex-col bg-[#faf6f0] text-left shadow-[0_8px_32px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px] overflow-hidden"
+                    className="group relative flex h-full min-h-[380px] w-[272px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-[rgba(255,255,255,0.12)] bg-[var(--surface)] text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] sm:w-[288px] lg:w-[308px]"
                   >
                     <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-[var(--up-gold)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-                    <div className="h-40 w-full shrink-0 overflow-hidden bg-[var(--up-maroon)] relative">
+                    <div className="h-40 w-full shrink-0 overflow-hidden bg-[var(--surface-muted)] relative">
                       <img
                         src={announcement.image_url
                           ? `${process.env.NEXT_PUBLIC_API_URL}${announcement.image_url}`
@@ -155,7 +152,6 @@ export function HomeAnnouncements() {
                         alt={announcement.title || "Announcement image"}
                         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-[rgba(90,6,9,0.2)] mix-blend-multiply" />
                     </div>
 
                     <div className="flex flex-1 flex-col justify-between p-6">
@@ -165,10 +161,10 @@ export function HomeAnnouncements() {
                           <p className="text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-[var(--up-maroon)]">Announcement</p>
                         </div>
                         <h3 className="font-[var(--font-display)] text-[1.25rem] leading-snug text-[var(--up-maroon)] line-clamp-2">{announcement.title}</h3>
-                        <p className="mt-3 text-sm leading-[1.6] text-[#5a5450] line-clamp-3">{announcement.content_description}</p>
+                        <p className="mt-3 text-sm leading-[1.6] text-[var(--text-secondary)] line-clamp-3">{announcement.content_description}</p>
                       </div>
 
-                      <div className="mt-6 flex items-center justify-between border-t border-[rgba(118,9,12,0.12)] pt-4 text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[var(--up-maroon)]">
+                      <div className="mt-6 flex items-center justify-between border-t border-[var(--line)] pt-4 text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[var(--up-maroon)]">
                         <span>Read more</span>
                         <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                       </div>
@@ -182,7 +178,7 @@ export function HomeAnnouncements() {
                   type="button"
                   aria-label="Next announcements"
                   onClick={() => scrollTrack(1)}
-                  className="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(90,6,9,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(90,6,9,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)]"
+                  className="absolute right-2 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(255,255,255,0.25)] bg-[rgba(90,6,9,0.85)] text-lg text-[var(--up-gold)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[rgba(90,6,9,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(243,170,44,0.6)] md:flex"
                 >
                   <span className="translate-x-px leading-none transition-transform duration-200 hover:translate-x-0.5">→</span>
                 </button>

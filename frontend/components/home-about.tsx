@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getOfficeInfo } from '../services/apiServices';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export function HomeAbout() {
   const [office, setOffice] = useState<any>(null);
@@ -33,15 +34,25 @@ export function HomeAbout() {
   const currentPhotoUrl = hasPhotos ? `http://localhost:3001${photos[currentPhotoIndex].url}` : null;
 
   const handleNextPhoto = () => {
-    if (hasPhotos) {
-      setCurrentPhotoIndex((prev) => (prev + 1) % photos.length);
-    }
+    if (hasPhotos) setCurrentPhotoIndex((prev) => (prev + 1) % photos.length);
   };
 
   const handlePrevPhoto = () => {
-    if (hasPhotos) {
-      setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
-    }
+    if (hasPhotos) setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  };
+
+  // --- Touch swipe ---
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) delta > 0 ? handleNextPhoto() : handlePrevPhoto();
+    touchStartX.current = null;
   };
 
   return (
@@ -55,10 +66,14 @@ export function HomeAbout() {
         <div className="mt-6 grid flex-1 min-h-0 gap-8 overflow-hidden lg:grid-cols-[minmax(0,1.02fr)_minmax(0,1fr)] lg:gap-10">
           
           <div className="flex min-h-0 items-stretch">
-            <div className="group flex h-full w-full items-stretch overflow-hidden bg-[var(--surface-muted)] relative">
+            <div
+              className="group flex h-full w-full items-stretch overflow-hidden bg-[var(--surface-muted)] relative"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               {isLoading ? (
                 <div className="flex h-full w-full items-center justify-center">
-                  <span className="text-sm tracking-widest text-[var(--text-muted)] animate-pulse">LOADING...</span>
+                  <LoadingSpinner size="md" variant="maroon" />
                 </div>
               ) : hasPhotos && currentPhotoUrl ? (
                 <>
@@ -72,14 +87,14 @@ export function HomeAbout() {
                     <>
                       <button
                         onClick={handlePrevPhoto}
-                        className="absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-xl text-white backdrop-blur-md transition-all hover:bg-[var(--up-maroon)] focus:outline-none focus:ring-2 focus:ring-[var(--up-gold)]"
+                        className="absolute left-4 top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-xl text-white backdrop-blur-md transition-all hover:bg-[var(--up-maroon)] focus:outline-none focus:ring-2 focus:ring-[var(--up-gold)] md:flex"
                         aria-label="Previous photo"
                       >
                         ←
                       </button>
                       <button
                         onClick={handleNextPhoto}
-                        className="absolute right-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-xl text-white backdrop-blur-md transition-all hover:bg-[var(--up-maroon)] focus:outline-none focus:ring-2 focus:ring-[var(--up-gold)]"
+                        className="absolute right-4 top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-xl text-white backdrop-blur-md transition-all hover:bg-[var(--up-maroon)] focus:outline-none focus:ring-2 focus:ring-[var(--up-gold)] md:flex"
                         aria-label="Next photo"
                       >
                         →
@@ -111,7 +126,9 @@ export function HomeAbout() {
           <div className="flex min-h-0 flex-col justify-between overflow-hidden bg-[var(--surface)] p-4 sm:p-5 lg:p-6">
             <div className="modern-scrollbar max-w-none space-y-6 overflow-y-auto pr-3 text-sm leading-7 text-[var(--text-secondary)] sm:text-base lg:max-w-[760px] lg:text-[1.02rem] lg:leading-8">
               {isLoading ? (
-                <p className="animate-pulse">Loading office details...</p>
+                <div className="flex justify-start">
+                  <LoadingSpinner size="sm" variant="maroon" />
+                </div>
               ) : error ? (
                 <p className="text-red-500">{error}</p>
               ) : office ? (
