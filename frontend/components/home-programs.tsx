@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getPrograms } from '../services/apiServices'; // Adjust this path if necessary
+import { getPrograms } from '../services/apiServices';
+import { LoadingBlock } from '@/components/LoadingSpinner';
 
 export function HomePrograms() {
   const [programs, setPrograms] = useState<any[]>([]);
@@ -27,29 +28,24 @@ export function HomePrograms() {
 
   return (
     <section id="programs" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--surface)] px-6 py-0 sm:px-10 lg:px-16">
-      <div className="mx-auto flex h-[calc(100dvh-var(--header-height))] max-w-[1400px] flex-col py-6 sm:py-8 lg:py-10">
-        <div className="grid flex-1 min-h-0 gap-8 overflow-hidden lg:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] lg:gap-10">
+      <div className="mx-auto flex max-w-[1400px] flex-col py-8 sm:py-10 lg:h-[calc(100dvh-var(--header-height))] lg:py-10">
+        <div className="grid gap-6 lg:flex-1 lg:min-h-0 lg:overflow-hidden lg:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] lg:gap-10">
           <aside className="border-b border-[var(--line)] pb-5 lg:border-b-0 lg:border-r lg:border-[var(--line)] lg:pr-8 lg:pb-0 lg:pt-2">
             <div className="lg:max-w-[280px]">
-              <h2 className="[font-family:var(--font-display)] text-[2.75rem] font-semibold leading-[0.95] text-[var(--up-maroon)] sm:text-5xl lg:text-[4rem]">
+              <h2 className="[font-family:var(--font-display)] text-[2rem] font-semibold leading-[1] text-[var(--up-maroon)] sm:text-[2.75rem] lg:text-[4rem] lg:leading-[0.95]">
                 Graduate Programs
               </h2>
-              <p className="mt-5 max-w-sm text-sm leading-7 text-[var(--text-secondary)] sm:text-base lg:text-[1.02rem] lg:leading-8">
+              <p className="mt-3 max-w-sm text-sm leading-7 text-[var(--text-secondary)] sm:mt-5 lg:text-[1.02rem] lg:leading-8">
                 Placeholder definition for the graduate programs offered. This text stays pinned on the left while the list scrolls vertically on
                 the right.
               </p>
             </div>
           </aside>
 
-          <div className="flex min-h-0 flex-col justify-stretch lg:pl-8">
-            <div className="modern-scrollbar h-full min-h-0 overflow-y-auto pr-3 [scrollbar-gutter:stable]">
+          <div className="flex flex-col justify-stretch lg:min-h-0 lg:pl-8">
+            <div className="modern-scrollbar lg:h-full lg:min-h-0 overflow-y-auto pr-1 lg:pr-3 [scrollbar-gutter:stable]">
 
-              {/* Loading State UI */}
-              {isLoading && (
-                <div className="py-10 text-center text-[var(--text-secondary)]">
-                  Loading programs...
-                </div>
-              )}
+              {isLoading && <LoadingBlock />}
 
               {/* Error State UI */}
               {error && (

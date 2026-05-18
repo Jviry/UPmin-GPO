@@ -33,11 +33,11 @@ export default function AboutGPO() {
     <div className="w-full">
       {/* Header + Org Chart */}
       <section className="bg-white border-b-4 border-[var(--up-gold)] pb-0">
-        <div className="max-w-6xl mx-auto px-4 pt-12 pb-8 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
-          <h1 className="text-5xl md:text-6xl leading-tight text-[var(--up-maroon)]" style={{ fontFamily: 'var(--font-display)' }}>
+        <div className="max-w-6xl mx-auto px-4 pt-10 pb-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16 items-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-[var(--up-maroon)]" style={{ fontFamily: 'var(--font-display)' }}>
             About the Graduate Program Office
           </h1>
-          <p className="text-[var(--text-secondary)] text-base leading-relaxed whitespace-pre-wrap">
+          <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
             {office?.history || "Information currently unavailable."}
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function AboutGPO() {
       {/* Program Coordinators */}
       <section className="bg-white border-b-4 border-[var(--up-gold)] py-14">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8 text-[var(--up-maroon)]" style={{ fontFamily: 'var(--font-display)' }}>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-[var(--up-maroon)]" style={{ fontFamily: 'var(--font-display)' }}>
             Program Coordinators
           </h2>
           <div className="flex flex-row flex-wrap">
@@ -96,11 +96,11 @@ export default function AboutGPO() {
 
       {/* Graduate Testimonials */}
       <section className="bg-[var(--up-maroon)] border-t-4 border-[var(--up-gold)] border-b-4 py-16">
-        <div className="max-w-6xl mx-auto px-8 flex flex-col md:flex-row gap-0">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 flex flex-col md:flex-row gap-0">
           {/* Left: title */}
-          <div className="md:w-2/5 flex flex-col justify-start pr-10 pb-10 md:pb-0">
+          <div className="md:w-2/5 flex flex-col justify-start pr-0 md:pr-10 pb-8 md:pb-0">
             <h2
-              className="text-4xl sm:text-5xl font-bold text-white leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight"
               style={{ fontFamily: 'var(--font-display)' }}
             >
               What Our<br />Graduates Say
@@ -114,7 +114,7 @@ export default function AboutGPO() {
             {testimonies.length > 0 ? testimonies.map((t, i) => (
               <div key={i} className="py-8 first:pt-0 last:pb-0">
                 <div className="text-white/30 text-6xl leading-none mb-2 select-none" style={{ fontFamily: 'var(--font-display)', lineHeight: 1 }}>&ldquo;</div>
-                <p className="text-white text-lg leading-relaxed mb-5">"{t.testimony_description}"</p>
+                <p className="text-white text-sm sm:text-base lg:text-lg leading-relaxed mb-5">"{t.testimony_description}"</p>
                 <div className="text-[var(--up-gold)] font-bold text-xs uppercase tracking-widest">{t.alumnus_name}</div>
                 <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">{t.alumnus_graduate_program}</div>
               </div>

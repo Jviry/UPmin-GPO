@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getScholarships } from "../services/apiServices";
+import { LoadingBlock } from "@/components/LoadingSpinner";
 
 export function ScholarshipCarousel() {
   const [scholarships, setScholarships] = useState<any[]>([]);
@@ -92,11 +93,7 @@ export function ScholarshipCarousel() {
 
         <div className="relative flex w-full items-stretch">
           
-          {isLoading && (
-            <div className="flex w-full items-center py-10">
-              <p className="text-lg text-[var(--text-secondary)] animate-pulse">Loading scholarships...</p>
-            </div>
-          )}
+          {isLoading && <LoadingBlock />}
 
           {error && (
             <div className="flex w-full items-center py-10">
@@ -124,7 +121,7 @@ export function ScholarshipCarousel() {
                   type="button"
                   aria-label="Previous scholarships"
                   onClick={() => scrollTrack(-1)}
-                  className="absolute left-0 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(118,9,12,0.15)] bg-white text-lg text-[var(--up-maroon)] shadow-md transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[var(--up-maroon)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)]"
+                  className="absolute left-0 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(118,9,12,0.15)] bg-white text-lg text-[var(--up-maroon)] shadow-md transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[var(--up-maroon)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] md:flex"
                 >
                   <span className="-translate-x-px leading-none transition-transform duration-200 hover:-translate-x-0.5">←</span>
                 </button>
@@ -176,7 +173,7 @@ export function ScholarshipCarousel() {
                   type="button"
                   aria-label="Next scholarships"
                   onClick={() => scrollTrack(1)}
-                  className="absolute right-0 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(118,9,12,0.15)] bg-white text-lg text-[var(--up-maroon)] shadow-md transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[var(--up-maroon)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)]"
+                  className="absolute right-0 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(118,9,12,0.15)] bg-white text-lg text-[var(--up-maroon)] shadow-md transition-all duration-200 hover:border-[var(--up-gold)] hover:bg-[var(--up-maroon)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--up-gold)] md:flex"
                 >
                   <span className="translate-x-px leading-none transition-transform duration-200 hover:translate-x-0.5">→</span>
                 </button>
