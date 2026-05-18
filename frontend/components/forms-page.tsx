@@ -72,7 +72,7 @@ export function FormsPage() {
                   Interested? Apply Now!
                 </h2>
                 <p className="mt-2 text-[0.95rem] leading-relaxed text-[var(--text-secondary)] sm:text-base">
-                  Move up to higher heights with UP Mindanao's Graduate Programs. The digital application Google form can be accessed and completed via the button below.
+                  Move up to higher heights with UP Mindanao's Graduate Programs. The application Google form can be accessed and completed via the button below.
                 </p>
               </div>
               <div className="shrink-0">
