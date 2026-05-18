@@ -18,6 +18,7 @@ export function ProgramsSidebar({
   onDelete: (id: number) => void;
 }) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -44,8 +45,23 @@ export function ProgramsSidebar({
           +
         </button>
       </div>
-      <div className="mt-4 flex flex-col" ref={menuRef}>
-        {programs.map((prog) => (
+      <div className="mt-4 px-6">
+        <div className="relative">
+          <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search programs..."
+            className="w-full border border-[var(--line)] bg-white py-1.5 pl-8 pr-3 text-xs text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--up-maroon)] focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <div className="mt-3 flex flex-col" ref={menuRef}>
+        {programs.filter((prog) => prog.name.toLowerCase().includes(search.toLowerCase())).map((prog) => (
           <div
             key={prog.program_id}
             className={`group relative flex items-center border-l-4 transition-colors ${!isCreating && activeProgramId === prog.program_id

@@ -1,17 +1,21 @@
 export function createFacultyRepository(prisma) {
   return {
-    async findAll(position, { page = 1, limit = 10 } = {}) {
+    async findAll(position, { page = 1, limit } = {}) {
       const where = position ? { position } : {};
-      const skip = (page - 1) * limit;
+
+      const queryOptions = {
+        where,
+        include: { credentials: true },
+        orderBy: { faculty_id: 'asc' },
+      };
+
+      if (limit != null) {
+        queryOptions.skip = (page - 1) * limit;
+        queryOptions.take = limit;
+      }
 
       const [faculties, total] = await Promise.all([
-        prisma.faculty.findMany({
-          where,
-          include: { credentials: true },
-          skip,
-          take: limit,
-          orderBy: { faculty_id: 'asc' },
-        }),
+        prisma.faculty.findMany(queryOptions),
         prisma.faculty.count({ where }),
       ]);
 
