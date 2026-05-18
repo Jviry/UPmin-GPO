@@ -35,6 +35,7 @@ function DownloadIcon() {
 
 export function FormsPage() {
   const [programs, setPrograms] = useState<any[]>([]);
+  const [applicationUrl, setApplicationUrl] = useState<string>('#');
 
   useEffect(() => {
     const fetchPrograms = async () => {
@@ -45,7 +46,23 @@ export function FormsPage() {
         console.error("Failed to fetch programs for forms page:", error);
       }
     };
+    
+    const fetchOffice = async () => {
+      try {
+        const res = await apiClient.get('/office');
+        // Fallback added here to safely catch the office data!
+        const officeData = res.data.office || res.data[0]; 
+        
+        if (officeData?.application_google_url) {
+          setApplicationUrl(officeData.application_google_url);
+        }
+      } catch (error) {
+        console.error("Failed to fetch office data for forms page:", error);
+      }
+    };
+    
     fetchPrograms();
+    fetchOffice();
   }, []);
 
   return (
@@ -53,6 +70,7 @@ export function FormsPage() {
       <main className="min-h-screen bg-[var(--page-bg)] text-[var(--text-primary)]">
         <section className="border-b-4 border-[var(--up-gold)] px-4 pb-20 pt-16 sm:px-6 lg:px-10">
           <div className="mx-auto w-full max-w-[1200px]">
+            
             <h1 className="[font-family:var(--font-display)] text-4xl font-bold text-[var(--text-primary)] md:text-5xl lg:text-[4rem]">
               Forms &amp; Fees
             </h1>
@@ -99,6 +117,29 @@ export function FormsPage() {
                 <div className="text-[var(--text-muted)] italic">Loading program forms...</div>
               )}
             </div>
+
+            {/* Application CTA Banner - Moved below the programs list for a better layout flow */}
+            <div className="mt-16 flex flex-col justify-between overflow-hidden rounded-sm border border-[var(--line)] border-l-4 border-l-[var(--up-gold)] bg-white p-8 shadow-[0_8px_24px_rgba(0,0,0,0.06)] md:flex-row md:items-center sm:p-10">
+              <div className="mb-6 md:mb-0 md:mr-8">
+                <h2 className="[font-family:var(--font-display)] text-2xl font-bold text-[var(--up-maroon)] sm:text-3xl">
+                  Interested? Apply Now!
+                </h2>
+                <p className="mt-2 text-[0.95rem] leading-relaxed text-[var(--text-secondary)] sm:text-base">
+                  Move up to higher heights with UP Mindanao's Graduate Programs. The application Google form can be accessed and completed via the button below.
+                </p>
+              </div>
+              <div className="shrink-0">
+                <a
+                  href={applicationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-sm bg-[var(--up-green)] px-8 py-3.5 text-xs font-bold uppercase tracking-[0.24em] text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#025c2e] hover:shadow-md"
+                >
+                  Open Form →
+                </a>
+              </div>
+            </div>
+
           </div>
         </section>
       </main>
