@@ -173,13 +173,13 @@ export default function AdminPrograms() {
           <CreateProgramBlock onCancel={() => setIsCreating(false)} onCreated={handleCreated} />
         ) : activeProgramDetails ? (
           <>
-            <CourseCatalogTable />
 
             <EditProgramInfoBlock
               programId={activeProgramId!}
               program={activeProgramDetails}
               onSaved={handleSaved}
             />
+            <CourseCatalogTable />
 
             <CourseManagementBlock programId={activeProgramId!} />
 

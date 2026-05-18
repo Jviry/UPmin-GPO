@@ -103,7 +103,15 @@ function AssignedDropZone({ faculties, onRemove }: { faculties: Faculty[]; onRem
   );
 }
 
-function AvailableSidebar({ faculties }: { faculties: Faculty[] }) {
+function AvailableSidebar({ 
+  faculties, 
+  searchQuery, 
+  onSearchChange 
+}: { 
+  faculties: Faculty[]; 
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+}) {
   const { isOver, setNodeRef } = useDroppable({ id: 'available' });
 
   return (
@@ -113,14 +121,25 @@ function AvailableSidebar({ faculties }: { faculties: Faculty[] }) {
         isOver ? 'border-[var(--up-maroon)] bg-red-50/30' : 'border-[var(--line)] bg-[var(--surface-muted)]'
       }`}
     >
-      <h3 className="mb-4 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">
+      <h3 className="mb-2 text-center text-[0.65rem] font-bold uppercase tracking-widest text-[var(--text-primary)]">
         Available Faculty
         <span className="text-[var(--text-muted)] font-normal ml-2">({faculties.length})</span>
       </h3>
+
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search faculty..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="w-full rounded border border-[var(--line)] bg-white px-3 py-1.5 text-[0.65rem] focus:border-[var(--up-maroon)] focus:outline-none transition-colors"
+        />
+      </div>
+
       <div className="modern-scrollbar overflow-y-auto space-y-3 pr-1 h-[400px]">
         {faculties.length === 0 ? (
           <div className="flex h-full items-center justify-center text-[0.6rem] font-semibold tracking-widest text-gray-400 uppercase text-center px-2">
-            All faculty assigned
+            {searchQuery ? 'No matching faculty' : 'All faculty assigned'}
           </div>
         ) : (
           faculties.map((faculty) => (
@@ -144,6 +163,7 @@ export default function FacultyPool({ programId, programName }: FacultyPoolProps
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     loadFacultyData();
@@ -184,6 +204,14 @@ export default function FacultyPool({ programId, programName }: FacultyPoolProps
   const availableFaculty = allFaculty.filter(
     (f) => !assignedFaculty.some((a) => a.faculty_id === f.faculty_id)
   );
+
+  const filteredAvailableFaculty = availableFaculty.filter((f) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      f.name.toLowerCase().includes(query) || 
+      f.position.toLowerCase().includes(query)
+    );
+  });
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -248,7 +276,11 @@ export default function FacultyPool({ programId, programName }: FacultyPoolProps
       >
         <div className="flex gap-6">
           <AssignedDropZone faculties={assignedFaculty} onRemove={handleRemove} />
-          <AvailableSidebar faculties={availableFaculty} />
+          <AvailableSidebar 
+            faculties={filteredAvailableFaculty} 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
         </div>
 
         <DragOverlay>
