@@ -44,9 +44,9 @@ export function CourseCatalogTable() {
     if (!newCourse.code || !newCourse.name) return;
     try {
       await apiClient.post('/courses', newCourse);
+      alert('Course saved to database!');
       setNewCourse({ code: '', name: '', units: 3, type: 'core' });
       fetchCourses();
-      alert('Course saved to database!');
     } catch (error: any) {
       console.error("Failed to save course:", error);
       alert(error.response?.data?.message || 'Failed to save course to database.');
@@ -85,7 +85,7 @@ export function CourseCatalogTable() {
               type="text" 
               value={newCourse.code} 
               onChange={e => setNewCourse({...newCourse, code: e.target.value})} 
-              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
+              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-maroon)] focus:outline-none" 
               placeholder="e.g., CMSC 206" 
             />
           </div>
@@ -95,7 +95,7 @@ export function CourseCatalogTable() {
               type="text" 
               value={newCourse.name} 
               onChange={e => setNewCourse({...newCourse, name: e.target.value})} 
-              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
+              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-maroon)] focus:outline-none" 
               placeholder="e.g., Artificial Intelligence" 
             />
           </div>
@@ -106,7 +106,7 @@ export function CourseCatalogTable() {
               value={newCourse.units || 0} 
               onChange={e => setNewCourse({...newCourse, units: Number(e.target.value)})} 
               min="1" 
-              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none" 
+              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-maroon)] focus:outline-none" 
             />
           </div>
           <div>
@@ -114,7 +114,7 @@ export function CourseCatalogTable() {
             <select 
               value={newCourse.type} 
               onChange={e => setNewCourse({...newCourse, type: e.target.value as CourseType})} 
-              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-gold)] focus:outline-none"
+              className="h-10 w-full border border-[var(--line)] bg-white px-3 text-sm focus:border-[var(--up-maroon)] focus:outline-none"
             >
               <option value="core">Core Course (Study Plan)</option>
               <option value="pool">Pool Course (Electives, Seminars)</option>
@@ -123,7 +123,9 @@ export function CourseCatalogTable() {
         </div>
         <div className="flex justify-end gap-3 pt-4 border-t border-[var(--line)]">
           <button 
-            onClick={() => setNewCourse({ code: '', name: '', units: 3, type: 'core' })} 
+            onClick={() => {
+              setNewCourse({ code: '', name: '', units: 3, type: 'core' });
+            }} 
             className="border border-[var(--text-muted)] px-8 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] transition hover:bg-gray-50"
           >
             Clear
@@ -146,7 +148,7 @@ export function CourseCatalogTable() {
               placeholder="Search courses..." 
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="h-9 w-full border border-[var(--line)] bg-white pl-8 pr-3 text-xs focus:border-[var(--up-gold)] focus:outline-none"
+              className="h-9 w-full border border-[var(--line)] bg-white pl-8 pr-3 text-xs focus:border-[var(--up-maroon)] focus:outline-none"
             />
             <span className="absolute left-2.5 top-2.5 text-gray-400">
                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -191,12 +193,22 @@ export function CourseCatalogTable() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <button 
-                        onClick={() => handleDeleteCourse(course.course_id!)}
-                        className="text-red-500 hover:text-red-700 font-bold text-xs uppercase tracking-widest"
-                      >
-                        Delete
-                      </button>
+                      <div className="inline-flex items-center gap-2">
+                        <div className="relative group">
+                          <button 
+                            onClick={() => handleDeleteCourse(course.course_id!)}
+                            className="p-1.5 text-red-600 border border-red-200 hover:bg-red-50 transition"
+                            aria-label="Delete"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a1 1 0 01-1-1V5a1 1 0 011-1h6a1 1 0 011 1v1a1 1 0 01-1 1H9z" />
+                            </svg>
+                          </button>
+                          <span className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap bg-gray-800 px-2 py-0.5 text-[0.6rem] text-white opacity-0 transition group-hover:opacity-100">
+                            Delete
+                          </span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ))
